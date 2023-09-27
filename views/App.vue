@@ -69,5 +69,3 @@ button:hover {
   background-color: #0056b3;
 }
 </style>
-<script setup>
-</script>
