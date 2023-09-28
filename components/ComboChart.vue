@@ -1,6 +1,9 @@
 <template>
   <div class="chart-container">
-    <div id="combochart" :style="{ width: chartWidth, height: chartHeight, margin:chartMargin }"></div>
+    <div
+      id="combochart"
+      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
+    ></div>
   </div>
 </template>
 
@@ -10,15 +13,15 @@ export default {
   props: {
     chartWidth: {
       type: String,
-      default: "900px"
+      default: "900px",
     },
     chartHeight: {
       type: String,
-      default: "500px"
+      default: "500px",
     },
     chartMargin: {
       type: String,
-      default: "auto"
+      default: "auto",
     },
     transactionCount: {
       type: Number,
@@ -81,7 +84,7 @@ export default {
       if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
         this.drawChart();
       }
-    }
+    },
   },
   methods: {
     drawChart() {
@@ -97,10 +100,52 @@ export default {
 
           const options = {
             title: "Spending by Category",
-            vAxis: { title: "Amount" },
-            hAxis: { title: "Category" },
+            vAxis: {
+              title: "Amount",
+              titleTextStyle: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--header-text"),
+              },
+              textStyle: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
+              },
+            },
+            hAxis: {
+              title: "Category",
+              titleTextStyle: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--header-text"),
+              },
+              textStyle: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
+              },
+            },
             seriesType: "bars",
             series: { 1: { type: "line" } }, // This line makes it a combo chart
+            backgroundColor: getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--background-color"),
+            titleColor: getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--header-text"),
+            annotations: {
+              textStyle: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
+              },
+              stem: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
+              },
+            },
           };
 
           const chart = new google.visualization.ComboChart(

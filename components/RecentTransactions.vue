@@ -44,7 +44,7 @@ export default {
   border-radius: 5px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background-color: var(--white);
+  background-color: var(--background-color);
 }
 
 .recent-transactions h2 {

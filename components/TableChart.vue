@@ -1,23 +1,26 @@
 <template>
   <div class="chart-container">
-    <div id="tablechart" :style="{ width: chartWidth, height: chartHeight, margin:chartMargin }"></div>
+    <div
+      id="tablechart"
+      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
+    ></div>
   </div>
 </template>
 <script>
 export default {
-  name: 'TableChart',
+  name: "TableChart",
   props: {
     chartWidth: {
       type: String,
-      default: "750px"
+      default: "750px",
     },
     chartHeight: {
       type: String,
-      default: "460px"
+      default: "460px",
     },
     chartMargin: {
       type: String,
-      default: "auto"
+      default: "auto",
     },
     transactionCount: {
       type: Number,
@@ -54,7 +57,7 @@ export default {
       if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
         this.drawChart();
       }
-    }
+    },
   },
   computed: {
     categoryTotals() {
@@ -91,17 +94,36 @@ export default {
         }
       });
 
-      google.charts.load('current', {'packages': ['table']});
+      google.charts.load("current", { packages: ["table"] });
       google.charts.setOnLoadCallback(() => {
         try {
           const data = new google.visualization.DataTable();
           data.addColumn("string", "Category");
           data.addColumn("number", "Amount");
           data.addRows([...Object.entries(this.categoryTotals)]);
+          const cssClassNames = {
+            headerRow: "header-row",
+            tableRow: "table-row",
+            oddTableRow: "odd-table-row",
+            selectedTableRow: "selected-table-row",
+            hoverTableRow: "hover-table-row",
+            headerCell: "header-cell",
+            tableCell: "table-cell",
+            rowNumberCell: "row-number-cell",
+          };
 
-          const table = new google.visualization.Table(document.getElementById('tablechart'));
+          const options = {
+            showRowNumber: true,
+            width: "100%",
+            height: "100%",
+            cssClassNames: cssClassNames,
+          };
 
-          table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+          const table = new google.visualization.Table(
+            document.getElementById("tablechart")
+          );
+
+          table.draw(data, options);
         } catch (error) {
           console.error("Error drawing the table:", error);
         }
@@ -150,5 +172,30 @@ div.summary {
   display: flex;
   justify-content: space-around;
   margin-bottom: 20px;
+}
+</style>
+
+<style>
+@import url("../assets/css/variables.css");
+.header-row {
+  background-color: var(--table-header);
+  color: var(--black);
+  font-weight: bold;
+}
+
+.table-row {
+  background-color: var(--table-row);
+  /* background-color: green; */
+  color: var(--text);
+}
+
+.odd-table-row {
+  background-color: var(--table-row-odd);
+  color: var(--text);
+}
+
+.hover-table-row {
+  background-color: var(--table-row-hover);
+  color: var(--text);
 }
 </style>

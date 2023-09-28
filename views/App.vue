@@ -14,21 +14,36 @@
   <div id="app">
     <router-view></router-view>
   </div>
+  <footer>
+    <a href="/about/">
+      <text class="footer-btn">About Us</text>
+      <text class="footer-btn">Contact</text>
+    </a>
+    <text class="footer-btn">Privacy Policy</text>
+    <text class="footer-btn">Terms of Service</text>
+  </footer>
 </template>
+
 <script>
 export default {
-  name: 'App',
+  name: "App",
   created() {
     this.populateTransactions(); // Call the function when the component is created
   },
-  computed:{
+  computed: {
     myTransactionsArray() {
-      return this.$store.state.myTransactionsArray
-    }
+      return this.$store.state.myTransactionsArray;
+    },
   },
   methods: {
     populateTransactions() {
-      const descriptions = ["Utilities", "Dining", "Travel", "Entertainment", "Groceries"];
+      const descriptions = [
+        "Utilities",
+        "Dining",
+        "Travel",
+        "Entertainment",
+        "Groceries",
+      ];
 
       function getRandomDescription() {
         const randomIndex = Math.floor(Math.random() * descriptions.length);
@@ -54,16 +69,29 @@ export default {
           description: getRandomDescription(),
           amount: getRandomAmount(20, 120),
           date: formatDate(date),
-          rawDate: date // Keep the original Date object for later comparison
+          rawDate: date, // Keep the original Date object for later comparison
         });
       }
-      const todayDate = new Date()
-      this.$store.commit('SET_INITIAL_TRANSACTIONS', this.myTransactionsArray);
-      this.$store.commit('SET_TRANSACTIONS', this.myTransactionsArray.filter(t => t.rawDate < todayDate).filter(t => t.rawDate > todayDate - 31 * 24 * 60 * 60 * 1000));
-      this.$store.commit('SET_DAYS', Math.round((todayDate.getTime() - (new Date(2023, 0)).getTime() ) / (1000 * 60 * 60 * 24)));}
-  }
-}
+      const todayDate = new Date();
+      this.$store.commit("SET_INITIAL_TRANSACTIONS", this.myTransactionsArray);
+      this.$store.commit(
+        "SET_TRANSACTIONS",
+        this.myTransactionsArray
+          .filter((t) => t.rawDate < todayDate)
+          .filter((t) => t.rawDate > todayDate - 31 * 24 * 60 * 60 * 1000)
+      );
+      this.$store.commit(
+        "SET_DAYS",
+        Math.round(
+          (todayDate.getTime() - new Date(2023, 0).getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
+      );
+    },
+  },
+};
 </script>
+
 <style scoped>
 @import url("../assets/css/variables.css");
 .header {
@@ -100,16 +128,37 @@ img {
   font-weight: 600;
 }
 
-button {
-  padding: 10px 20px;
-  background-color: var(--button);
-  color: var(--white);
+footer {
+  background-color: var(--background);
+  color: var(--black);
+  padding: 10px 15px;
+  margin-top: -13px;
+  border-radius: 8px 8px 0 0;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-btn {
+  background-color: var(--footer-btn);
   border: none;
-  border-radius: 4px;
+  margin: 0 30px;
+  font-size: 15px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: var(--button-hover);
+.footer-btn:hover {
+  background-color: var(--footer-hover);
+}
+
+footer a {
+  text-decoration: none;
+  color: var(--black);
 }
 </style>

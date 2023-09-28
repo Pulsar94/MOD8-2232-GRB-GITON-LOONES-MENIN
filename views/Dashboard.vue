@@ -1,12 +1,24 @@
 <template>
   <div class="home-container">
-    <TotalAndAverageExpenses :transactions="myTransactionsArray"/>
+    <TotalAndAverageExpenses :transactions="myTransactionsArray" />
     <div class="container">
       <NavBar @changeChart="handleChangeChart" />
-      <PieChart v-if="currentChart === 'Pie'" :transactions="myTransactionsArray"/>
-      <ComboChart v-if="currentChart === 'Combo'" :transactions="myTransactionsArray"/>
-      <LineChart v-if="currentChart === 'Line'" :transactions="myTransactionsArray"/>
-      <Table v-if="currentChart === 'Table'" :transactions="myTransactionsArray"/>
+      <PieChart
+        v-if="currentChart === 'Pie'"
+        :transactions="myTransactionsArray"
+      />
+      <ComboChart
+        v-if="currentChart === 'Combo'"
+        :transactions="myTransactionsArray"
+      />
+      <LineChart
+        v-if="currentChart === 'Line'"
+        :transactions="myTransactionsArray"
+      />
+      <Table
+        v-if="currentChart === 'Table'"
+        :transactions="myTransactionsArray"
+      />
     </div>
 
     <RecentTransactions :transactions="myTransactionsArray" />
@@ -23,17 +35,25 @@ import RecentTransactions from "../components/RecentTransactions.vue";
 import TotalAndAverageExpenses from "../components/TotalAndAverageExpenses.vue";
 
 export default {
-  components: {TotalAndAverageExpenses, Table, LineChart, PieChart, RecentTransactions, ComboChart, NavBar},
+  components: {
+    TotalAndAverageExpenses,
+    Table,
+    LineChart,
+    PieChart,
+    RecentTransactions,
+    ComboChart,
+    NavBar,
+  },
 
   data() {
     return {
-      currentChart: 'Pie',
-    }
+      currentChart: "Pie",
+    };
   },
-  computed:{
+  computed: {
     myTransactionsArray() {
-      return this.$store.state.myTransactionsArray
-    }
+      return this.$store.state.myTransactionsArray;
+    },
   },
   methods: {
     handleChangeChart(chartType) {
@@ -68,7 +88,7 @@ export default {
 .home-container {
   text-align: center;
   margin-top: 50px;
-  background-color: var(--white);
+  background-color: var(--background-color);
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

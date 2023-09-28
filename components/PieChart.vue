@@ -1,8 +1,10 @@
 <template>
   <div class="chart-container">
-    <div :style="{ width: chartWidth, height: chartHeight, margin:chartMargin }" id="piechart"></div>
+    <div
+      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
+      id="piechart"
+    ></div>
   </div>
-
 </template>
 <script>
 export default {
@@ -10,15 +12,15 @@ export default {
   props: {
     chartWidth: {
       type: String,
-      default: "900px"
+      default: "900px",
     },
     chartHeight: {
       type: String,
-      default: "500px"
+      default: "500px",
     },
     chartMargin: {
       type: String,
-      default: "auto"
+      default: "auto",
     },
     categories: {
       type: Array,
@@ -63,28 +65,49 @@ export default {
       if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
         this.drawChart();
       }
-    }
+    },
   },
   mounted() {
     this.drawChart();
   },
   methods: {
     drawChart() {
-      google.charts.load('current', {'packages': ['corechart']});
+      google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
           const data = google.visualization.arrayToDataTable([
-            ['Category', 'Amount'],
-            ...Object.entries(this.categoryTotals)
+            ["Category", "Amount"],
+            ...Object.entries(this.categoryTotals),
           ]);
 
           const options = {
             title: "Spending by Category",
+            backgroundColor: getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--background-color"),
+            titleColor: getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--header-text"),
+            legend: {
+              textStyle: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
+              },
+            },
+            pieSliceBorderColor: getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--background-color"),
           };
 
-          const chart = new google.visualization.PieChart(document.getElementById('piechart'));
-          google.visualization.events.addListener(chart, 'select', selectHandler);
-
+          const chart = new google.visualization.PieChart(
+            document.getElementById("piechart")
+          );
+          google.visualization.events.addListener(
+            chart,
+            "select",
+            selectHandler
+          );
 
           const vm = this;
           function selectHandler(e) {
@@ -92,7 +115,7 @@ export default {
             if (selectedItem) {
               const category = data.getValue(selectedItem.row, 0);
               // Emit the event to the parent
-              vm.$emit('categorySelected', category);
+              vm.$emit("categorySelected", category);
             }
           }
 
@@ -101,8 +124,7 @@ export default {
           console.error("Error drawing the chart:", error);
         }
       });
-    }
-
+    },
   },
 };
 </script>
@@ -116,6 +138,7 @@ div.amount {
 div.chart-container {
   display: flex;
   align-items: center;
+  background-color: var(--background-color);
 }
 
 div.nav-links li {
