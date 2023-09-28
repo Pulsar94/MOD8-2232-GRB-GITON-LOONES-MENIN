@@ -1,25 +1,28 @@
 <template>
   <div class="chart-container">
-    <div id="linechart" :style="{ width: chartWidth, height: chartHeight, margin:chartMargin }"></div>
+    <div
+      id="linechart"
+      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
+    ></div>
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
 export default {
   name: "LineChart",
   props: {
     chartWidth: {
       type: String,
-      default: "900px"
+      default: "900px",
     },
     chartHeight: {
       type: String,
-      default: "500px"
+      default: "500px",
     },
     chartMargin: {
       type: String,
-      default: "auto"
+      default: "auto",
     },
     transactionCount: {
       type: Number,
@@ -56,21 +59,21 @@ export default {
       if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
         this.drawChart();
       }
-    }
+    },
   },
   computed: {
-    ...mapState(['chosenTime']),
+    ...mapState(["chosenTime"]),
 
     dataToDisplay() {
       console.log(this.chosenTime);
       switch (this.chosenTime) {
-        case '7':
+        case "7":
           return this.dailyAmounts;
-        case '31':
+        case "31":
           return this.weeklyAmounts;
-        case '365':
+        case "365":
           return this.monthlyAmounts;
-        case '-1':
+        case "-1":
           return this.monthlyAmounts;
         default:
           return this.weeklyAmounts;
@@ -79,9 +82,11 @@ export default {
     monthlyAmounts() {
       const totalsByMonth = {};
 
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
-        const monthYearKey = `${date.getMonth() + 1}-${date.getFullYear()+22}`; // Format "MM-YYYY"
+        const monthYearKey = `${date.getMonth() + 1}-${
+          date.getFullYear() + 22
+        }`; // Format "MM-YYYY"
 
         if (!totalsByMonth[monthYearKey]) {
           totalsByMonth[monthYearKey] = 0;
@@ -90,19 +95,23 @@ export default {
       });
 
       // Convert the object into an array of [monthYear, amount] pairs
-      return Object.entries(totalsByMonth).sort((a, b) => new Date("01-" + a[0]) - new Date("01-" + b[0])); // Sorting based on MM-YYYY
+      return Object.entries(totalsByMonth).sort(
+        (a, b) => new Date("01-" + a[0]) - new Date("01-" + b[0])
+      ); // Sorting based on MM-YYYY
     },
     weeklyAmounts() {
       const totalsByWeek = {};
 
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
         const startOfWeek = new Date(date);
 
         // Adjust date to the start of the week (Sunday in this case)
         startOfWeek.setDate(date.getDate() - date.getDay());
 
-        const weekString = `${('0' + (startOfWeek.getMonth() + 1)).slice(-2)}-${('0' + startOfWeek.getDate()).slice(-2)}`;
+        const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(
+          -2
+        )}-${("0" + startOfWeek.getDate()).slice(-2)}`;
 
         if (!totalsByWeek[weekString]) {
           totalsByWeek[weekString] = 0;
@@ -111,12 +120,14 @@ export default {
       });
 
       // Convert the object into an array of [startOfWeek, amount] pairs
-      return Object.entries(totalsByWeek).sort((a, b) => new Date(a[0]) - new Date(b[0]));
+      return Object.entries(totalsByWeek).sort(
+        (a, b) => new Date(a[0]) - new Date(b[0])
+      );
     },
     dailyAmounts() {
       const totalsByDate = {};
 
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         if (!totalsByDate[transaction.date]) {
           totalsByDate[transaction.date] = 0;
         }
@@ -124,7 +135,9 @@ export default {
       });
 
       // Convert the object into an array of [date, amount] pairs
-      return Object.entries(totalsByDate).sort((a, b) => new Date(a[0]) - new Date(b[0]));
+      return Object.entries(totalsByDate).sort(
+        (a, b) => new Date(a[0]) - new Date(b[0])
+      );
     },
     categoryTotals() {
       const totals = {
@@ -153,7 +166,7 @@ export default {
   },
   methods: {
     drawChart() {
-      google.charts.load('current', {'packages': ['corechart']});
+      google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
           const data = new google.visualization.DataTable();
@@ -169,20 +182,49 @@ export default {
             curveType: "function",
             legend: { position: "bottom" },
             hAxis: {
-              title: 'Date'
+              title: "Date",
             },
             vAxis: {
-              title: 'Amount Spent'
-            }
+              title: "Amount Spent",
+            },
+            backgroundColor: getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--background-color"),
+            titleColor: getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--header-text"),
+            legend: {
+              textStyle: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
+              },
+            },
+            hAxis: {
+              textStyle: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
+              },
+            },
+            vAxis: {
+              textStyle: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
+              },
+            },
           };
 
-          const chart = new google.visualization.LineChart(document.getElementById('linechart'));
+          const chart = new google.visualization.LineChart(
+            document.getElementById("linechart")
+          );
           chart.draw(data, options);
         } catch (error) {
           console.error("Error drawing the line chart:", error);
         }
       });
-    }
+    },
     //
     //
     // drawChart() {
@@ -215,7 +257,6 @@ export default {
     //     }
     //   });
     // }
-
   },
 };
 </script>

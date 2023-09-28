@@ -134,6 +134,13 @@ export default {
             titleColor: getComputedStyle(
               document.documentElement
             ).getPropertyValue("--header-text"),
+            legend: {
+              textStyle: {
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
+              },
+            },
             annotations: {
               textStyle: {
                 color: getComputedStyle(
