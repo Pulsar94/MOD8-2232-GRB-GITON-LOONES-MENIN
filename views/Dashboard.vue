@@ -10,13 +10,11 @@
     </div>
 
     <RecentTransactions :transactions="myTransactionsArray" />
-
   </div>
-
 </template>
 
 <script>
-import NavBar from '../components/NavBar.vue';
+import NavBar from "../components/NavBar.vue";
 import PieChart from "../components/PieChart.vue";
 import ComboChart from "../components/ComboChart.vue";
 import LineChart from "../components/LineChart.vue";
@@ -40,14 +38,13 @@ export default {
   methods: {
     handleChangeChart(chartType) {
       this.currentChart = chartType;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
-
-
+@import url("../assets/css/variables.css");
 .container {
   position: relative;
 }
@@ -59,43 +56,38 @@ export default {
   float: left;
 }
 
-
 .nav-links li {
   display: inline;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: white;
+  color: var(--white);
 }
 
 .home-container {
   text-align: center;
   margin-top: 50px;
-  background-color: white;
+  background-color: var(--white);
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-  color: #333;
-}
-
 p {
-  color: #666;
+  color: var(--text);
 }
 
 button {
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  background-color: var(--button);
+  color: var(--white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: var(--button-hover);
 }
 </style>

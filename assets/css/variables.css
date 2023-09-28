@@ -1,0 +1,13 @@
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --background: #dbfcfc;
+    --link: #096a2e;
+    --button: #007bff;
+    --button-hover: #0056b3;
+    --text: #666;
+    --header-text: #333;
+    --border: #e1e1e1;
+    --navbar: lightgray;
+    --navbar-hover: #555555;
+}
