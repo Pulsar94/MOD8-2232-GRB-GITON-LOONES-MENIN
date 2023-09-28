@@ -57,12 +57,10 @@ export default {
           rawDate: date // Keep the original Date object for later comparison
         });
       }
-      const todayDate = new Date();
-
-      this.$store.commit('SET_INITIAL_TRANSACTIONS', this.myTransactionsArray.filter(t => t.rawDate < todayDate));
+      const todayDate = new Date()
+      this.$store.commit('SET_INITIAL_TRANSACTIONS', this.myTransactionsArray);
       this.$store.commit('SET_TRANSACTIONS', this.myTransactionsArray.filter(t => t.rawDate < todayDate).filter(t => t.rawDate > todayDate - 31 * 24 * 60 * 60 * 1000));
-      this.$store.commit('SET_DAYS', Math.round((todayDate.getTime() - (new Date(2023, 0)).getTime() ) / (1000 * 60 * 60 * 24)));
-    }
+      this.$store.commit('SET_DAYS', Math.round((todayDate.getTime() - (new Date(2023, 0)).getTime() ) / (1000 * 60 * 60 * 24)));}
   }
 }
 </script>

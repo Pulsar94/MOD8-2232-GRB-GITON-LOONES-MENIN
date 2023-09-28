@@ -49,7 +49,7 @@ export default {
   },
   computed:{
     myTransactionsArray() {
-      return this.$store.state.myTransactionsArray
+      return this.$store.state.myTransactionsArray;
     }
   },
   methods: {

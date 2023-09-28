@@ -4,6 +4,8 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: "LineChart",
   props: {
@@ -57,12 +59,59 @@ export default {
     }
   },
   computed: {
-    accumulatedAmounts() {
-      let total = 0;
-      return this.transactions.map(transaction => {
-        total += transaction.amount;
-        return [transaction.date, total];
+    ...mapState(['chosenTime']),
+
+    dataToDisplay() {
+      console.log(this.chosenTime);
+      switch (this.chosenTime) {
+        case '7':
+          return this.dailyAmounts;
+        case '31':
+          return this.weeklyAmounts;
+        case '365':
+          return this.monthlyAmounts;
+        case '-1':
+          return this.monthlyAmounts;
+        default:
+          return this.weeklyAmounts;
+      }
+    },
+    monthlyAmounts() {
+      const totalsByMonth = {};
+
+      this.transactions.forEach(transaction => {
+        const date = new Date(transaction.date);
+        const monthYearKey = `${date.getMonth() + 1}-${date.getFullYear()+22}`; // Format "MM-YYYY"
+
+        if (!totalsByMonth[monthYearKey]) {
+          totalsByMonth[monthYearKey] = 0;
+        }
+        totalsByMonth[monthYearKey] += transaction.amount;
       });
+
+      // Convert the object into an array of [monthYear, amount] pairs
+      return Object.entries(totalsByMonth).sort((a, b) => new Date("01-" + a[0]) - new Date("01-" + b[0])); // Sorting based on MM-YYYY
+    },
+    weeklyAmounts() {
+      const totalsByWeek = {};
+
+      this.transactions.forEach(transaction => {
+        const date = new Date(transaction.date);
+        const startOfWeek = new Date(date);
+
+        // Adjust date to the start of the week (Sunday in this case)
+        startOfWeek.setDate(date.getDate() - date.getDay());
+
+        const weekString = `${('0' + (startOfWeek.getMonth() + 1)).slice(-2)}-${('0' + startOfWeek.getDate()).slice(-2)}`;
+
+        if (!totalsByWeek[weekString]) {
+          totalsByWeek[weekString] = 0;
+        }
+        totalsByWeek[weekString] += transaction.amount;
+      });
+
+      // Convert the object into an array of [startOfWeek, amount] pairs
+      return Object.entries(totalsByWeek).sort((a, b) => new Date(a[0]) - new Date(b[0]));
     },
     dailyAmounts() {
       const totalsByDate = {};
@@ -108,14 +157,15 @@ export default {
       google.charts.setOnLoadCallback(() => {
         try {
           const data = new google.visualization.DataTable();
-          data.addColumn("string", "Date");
+          data.addColumn("string", "Date"); // Adjust the label based on chosenTime
           data.addColumn("number", "Amount Spent");
 
-          // Use the daily amounts for the line chart
-          data.addRows(this.dailyAmounts);
+          // Use the computed dataToDisplay property for the line chart
+          console.log(this.dataToDisplay);
+          data.addRows(this.dataToDisplay);
 
           const options = {
-            title: "Amount Spent Each Day Over Time",
+            title: "Amount Spent Over Time",
             curveType: "function",
             legend: { position: "bottom" },
             hAxis: {
@@ -133,28 +183,28 @@ export default {
         }
       });
     }
-
-
+    //
+    //
     // drawChart() {
     //   google.charts.load('current', {'packages': ['corechart']});
     //   google.charts.setOnLoadCallback(() => {
     //     try {
     //       const data = new google.visualization.DataTable();
     //       data.addColumn("string", "Date");
-    //       data.addColumn("number", "Total Amount");
+    //       data.addColumn("number", "Amount Spent");
     //
-    //       // Use the accumulated amounts for the line chart
-    //       data.addRows(this.accumulatedAmounts);
+    //       // Use the daily amounts for the line chart
+    //       data.addRows(this.dailyAmounts);
     //
     //       const options = {
-    //         title: "Total Amount Over Time",
+    //         title: "Amount Spent Each Day Over Time",
     //         curveType: "function",
     //         legend: { position: "bottom" },
     //         hAxis: {
     //           title: 'Date'
     //         },
     //         vAxis: {
-    //           title: 'Total Amount'
+    //           title: 'Amount Spent'
     //         }
     //       };
     //
@@ -165,6 +215,7 @@ export default {
     //     }
     //   });
     // }
+
   },
 };
 </script>
