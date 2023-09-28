@@ -20,18 +20,6 @@ export default {
       type: String,
       default: "auto"
     },
-    transactionCount: {
-      type: Number,
-      default: 10,
-    },
-    maxAmount: {
-      type: Number,
-      default: 200,
-    },
-    minAmount: {
-      type: Number,
-      default: 30,
-    },
     categories: {
       type: Array,
       default: () => [
@@ -59,7 +47,6 @@ export default {
         Entertainment: 0,
         Groceries: 0,
       };
-
       this.transactions.forEach((txn) => {
         for (const category in totals) {
           if (txn.description.includes(category)) {
@@ -68,23 +55,21 @@ export default {
           }
         }
       });
-
       return totals;
     },
   },
-
+  watch: {
+    transactions(newVal, oldVal) {
+      if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+        this.drawChart();
+      }
+    }
+  },
   mounted() {
     this.drawChart();
   },
   methods: {
     drawChart() {
-      this.transactions.forEach((transaction) => {
-        const category = transaction.description.split(" ")[2]; // Assuming format "CARD X0000 8/9 Utilities"
-        if (this.categoryTotals.hasOwnProperty(category)) {
-          this.categoryTotals[category] += transaction.amount;
-        }
-      });
-
       google.charts.load('current', {'packages': ['corechart']});
       google.charts.setOnLoadCallback(() => {
         try {
@@ -100,11 +85,14 @@ export default {
           const chart = new google.visualization.PieChart(document.getElementById('piechart'));
           google.visualization.events.addListener(chart, 'select', selectHandler);
 
+
+          const vm = this;
           function selectHandler(e) {
             const selectedItem = chart.getSelection()[0];
             if (selectedItem) {
               const category = data.getValue(selectedItem.row, 0);
-              alert(`You selected ${category}`);
+              // Emit the event to the parent
+              vm.$emit('categorySelected', category);
             }
           }
 
@@ -113,7 +101,8 @@ export default {
           console.error("Error drawing the chart:", error);
         }
       });
-    },
+    }
+
   },
 };
 </script>

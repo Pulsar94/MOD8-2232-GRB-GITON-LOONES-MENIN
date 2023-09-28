@@ -49,6 +49,13 @@ export default {
   data() {
     return {};
   },
+  watch: {
+    transactions(newVal, oldVal) {
+      if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+        this.drawChart();
+      }
+    }
+  },
   computed: {
     categoryTotals() {
       const totals = {

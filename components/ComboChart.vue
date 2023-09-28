@@ -76,7 +76,13 @@ export default {
   mounted() {
     this.drawChart();
   },
-
+  watch: {
+    transactions(newVal, oldVal) {
+      if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+        this.drawChart();
+      }
+    }
+  },
   methods: {
     drawChart() {
       // Load Google Charts

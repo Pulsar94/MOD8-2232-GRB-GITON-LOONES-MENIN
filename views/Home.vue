@@ -10,8 +10,8 @@
     <div class="container">
       <TotalAndAverageExpenses :transactions="myTransactionsArray"/>
       <div class="pie-chart">
-        <PieChart :chartWidth="'900px'" :chartHeight="'500px'" :chartMargin="'none'" :transactions="myTransactionsArray"/>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper sem dolor, id ullamcorper metus condimentum eget. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec eu efficitur neque. Nulla eget tincidunt purus. Nullam a dapibus sapien. Phasellus quis diam bibendum, fringilla erat eu, dictum quam. Donec eu elit libero. Cras condimentum vel quam et pulvinar. Vivamus a commodo odio. Nullam sollicitudin, sem vitae blandit iaculis, massa urna consectetur tortor, imperdiet bibendum urna dui at mauris. In hac habitasse platea dictumst. Duis pulvinar nunc felis, vulputate lobortis eros tincidunt non. Vestibulum finibus nulla scelerisque, viverra arcu at, faucibus enim.</p>
+        <PieChart @categorySelected="updateText" :chartWidth="'900px'" :chartHeight="'500px'" :chartMargin="'none'" :transactions="myTransactionsArray"/>
+        <p>{{ selectedCategoryText }}</p>
       </div>
       <div class="combo-chart">
         <ComboChart :chartWidth="'900px'" :chartHeight="'500px'" :chartMargin="'none'" :transactions="myTransactionsArray"/>
@@ -44,6 +44,7 @@ export default {
   data() {
     return {
       currentChart: 'Pie',  // default to showing the current chart
+      selectedCategoryText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper sem dolor, id ullamcorper metus condimentum eget. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec eu efficitur neque. Nulla eget tincidunt purus. Nullam a dapibus sapien. Phasellus quis diam bibendum, fringilla erat eu, dictum quam. Donec eu elit libero. Cras condimentum vel quam et pulvinar. Vivamus a commodo odio. Nullam sollicitudin, sem vitae blandit iaculis, massa urna consectetur tortor, imperdiet bibendum urna dui at mauris. In hac habitasse platea dictumst. Duis pulvinar nunc felis, vulputate lobortis eros tincidunt non. Vestibulum finibus nulla scelerisque, viverra arcu at, faucibus enim.\n'
     }
   },
   computed:{
@@ -52,6 +53,9 @@ export default {
     }
   },
   methods: {
+    updateText(category) {
+      this.selectedCategoryText = `You selected ${category}`;
+    },
     handleChangeChart(chartType) {
       this.currentChart = chartType;
     },

@@ -49,7 +49,34 @@ export default {
   data() {
     return {};
   },
+  watch: {
+    transactions(newVal, oldVal) {
+      if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+        this.drawChart();
+      }
+    }
+  },
   computed: {
+    accumulatedAmounts() {
+      let total = 0;
+      return this.transactions.map(transaction => {
+        total += transaction.amount;
+        return [transaction.date, total];
+      });
+    },
+    dailyAmounts() {
+      const totalsByDate = {};
+
+      this.transactions.forEach(transaction => {
+        if (!totalsByDate[transaction.date]) {
+          totalsByDate[transaction.date] = 0;
+        }
+        totalsByDate[transaction.date] += transaction.amount;
+      });
+
+      // Convert the object into an array of [date, amount] pairs
+      return Object.entries(totalsByDate).sort((a, b) => new Date(a[0]) - new Date(b[0]));
+    },
     categoryTotals() {
       const totals = {
         Utilities: 0,
@@ -77,26 +104,26 @@ export default {
   },
   methods: {
     drawChart() {
-      this.transactions.forEach((transaction) => {
-        const category = transaction.description.split(" ")[2]; // Assuming format "CARD X0000 8/9 Utilities"
-        if (this.categoryTotals.hasOwnProperty(category)) {
-          this.categoryTotals[category] += transaction.amount;
-        }
-      });
       google.charts.load('current', {'packages': ['corechart']});
       google.charts.setOnLoadCallback(() => {
         try {
           const data = new google.visualization.DataTable();
-          data.addColumn("string", "Category");
-          data.addColumn("number", "Amount");
+          data.addColumn("string", "Date");
+          data.addColumn("number", "Amount Spent");
 
-          // Adjusted this to push data into Google's DataTable
-          data.addRows([...Object.entries(this.categoryTotals)]);
+          // Use the daily amounts for the line chart
+          data.addRows(this.dailyAmounts);
 
           const options = {
-            title: "Spending by Category Over Time",
+            title: "Amount Spent Each Day Over Time",
             curveType: "function",
             legend: { position: "bottom" },
+            hAxis: {
+              title: 'Date'
+            },
+            vAxis: {
+              title: 'Amount Spent'
+            }
           };
 
           const chart = new google.visualization.LineChart(document.getElementById('linechart'));
@@ -105,7 +132,39 @@ export default {
           console.error("Error drawing the line chart:", error);
         }
       });
-    },
+    }
+
+
+    // drawChart() {
+    //   google.charts.load('current', {'packages': ['corechart']});
+    //   google.charts.setOnLoadCallback(() => {
+    //     try {
+    //       const data = new google.visualization.DataTable();
+    //       data.addColumn("string", "Date");
+    //       data.addColumn("number", "Total Amount");
+    //
+    //       // Use the accumulated amounts for the line chart
+    //       data.addRows(this.accumulatedAmounts);
+    //
+    //       const options = {
+    //         title: "Total Amount Over Time",
+    //         curveType: "function",
+    //         legend: { position: "bottom" },
+    //         hAxis: {
+    //           title: 'Date'
+    //         },
+    //         vAxis: {
+    //           title: 'Total Amount'
+    //         }
+    //       };
+    //
+    //       const chart = new google.visualization.LineChart(document.getElementById('linechart'));
+    //       chart.draw(data, options);
+    //     } catch (error) {
+    //       console.error("Error drawing the line chart:", error);
+    //     }
+    //   });
+    // }
   },
 };
 </script>
