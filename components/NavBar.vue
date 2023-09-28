@@ -13,20 +13,21 @@
 
 <script>
 export default {
-  name: 'NavBar',
+  name: "NavBar",
   methods: {
     showChart(chartType) {
-      this.$emit('changeChart', chartType);
-    }
-  }
-}
+      this.$emit("changeChart", chartType);
+    },
+  },
+};
 </script>
 
 <style scoped>
+@import url("../assets/css/variables.css");
 .vertical-nav {
   margin-top: 25px;
   width: 150px; /* or your preferred width */
-  background-color: lightgray; /* Dark shade of blue */
+  background-color: var(--navbar); /* Dark shade of blue */
   height: 80vh; /* Full viewport height */
 }
 
@@ -48,7 +49,6 @@ export default {
 }
 
 .nav-links a:hover {
-  background-color: #555555; /* A slightly lighter shade of blue */
+  background-color: var(--navbar-hover); /* A slightly lighter shade of blue */
 }
 </style>
-

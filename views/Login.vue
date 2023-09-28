@@ -18,11 +18,10 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 
-import { ref } from 'vue';
-
-const username = ref('');
-const password = ref('');
+const username = ref("");
+const password = ref("");
 
 const handleLogin = () => {
   if (username.value === "admin" && password.value === "admin") {
@@ -35,41 +34,34 @@ const handleLogin = () => {
 </script>
 
 <style scoped>
-
+@import url("../assets/css/variables.css");
 .nav-links li {
   display: inline;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: white;
-}
-
-h1 {
-  color: #333;
+  color: var(--white);
 }
 
 p {
-  color: #666;
+  color: var(--text);
 }
 
 button {
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  background-color: var(--button);
+  color: var(--white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: var(--button-hover);
 }
 
 #login-view {
   text-align: center;
 }
 </style>
-
-
-

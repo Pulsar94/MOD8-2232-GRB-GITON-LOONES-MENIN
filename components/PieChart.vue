@@ -4,24 +4,24 @@
     <div>Average Daily Expense: ${{ averageDailyExpense }}</div>
   </div>
   <div class="chart-container">
-    <div id="piechart" style="width: 900px; height: 500px; margin: auto;"></div>
+    <div id="piechart" style="width: 900px; height: 500px; margin: auto"></div>
   </div>
 </template>
 <script>
 export default {
-  name: 'PieChart',
+  name: "PieChart",
   props: {
     transactionCount: {
       type: Number,
-      default: 10
+      default: 10,
     },
     maxAmount: {
       type: Number,
-      default: 200
+      default: 200,
     },
     minAmount: {
       type: Number,
-      default: 30
+      default: 30,
     },
     categories: {
       type: Array,
@@ -31,21 +31,21 @@ export default {
         { name: "Travel", paymentMethod: "CARD X0000" },
         { name: "Entertainment", paymentMethod: "CARD X0000" },
         { name: "Groceries", paymentMethod: "CARD X0000" },
-      ]
+      ],
     },
     transactions: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
-    return {
-
-    };
+    return {};
   },
   computed: {
     totalExpenses() {
-      return Math.round(this.transactions.reduce((sum, txn) => sum + txn.amount, 0));
+      return Math.round(
+        this.transactions.reduce((sum, txn) => sum + txn.amount, 0)
+      );
     },
     averageDailyExpense() {
       return Math.round(this.totalExpenses / 30);
@@ -59,7 +59,7 @@ export default {
         Groceries: 0,
       };
 
-      this.transactions.forEach(txn => {
+      this.transactions.forEach((txn) => {
         for (const category in totals) {
           if (txn.description.includes(category)) {
             totals[category] += txn.amount;
@@ -77,39 +77,43 @@ export default {
   },
   methods: {
     drawChart() {
-
-
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         const category = transaction.description.split(" ")[2]; // Assuming format "CARD X0000 8/9 Utilities"
         if (this.categoryTotals.hasOwnProperty(category)) {
           this.categoryTotals[category] += transaction.amount;
         }
       });
 
-      google.charts.load('current', {'packages': ['corechart']});
+      google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
-        const data = google.visualization.arrayToDataTable([
-          ['Category', 'Amount'],
-          ...Object.entries(this.categoryTotals)
-        ]);
+          const data = google.visualization.arrayToDataTable([
+            ["Category", "Amount"],
+            ...Object.entries(this.categoryTotals),
+          ]);
 
-        const options = {
-          title: 'Spending by Category'
-        };
+          const options = {
+            title: "Spending by Category",
+          };
 
-        const chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        google.visualization.events.addListener(chart, 'select', selectHandler);
+          const chart = new google.visualization.PieChart(
+            document.getElementById("piechart")
+          );
+          google.visualization.events.addListener(
+            chart,
+            "select",
+            selectHandler
+          );
 
-        function selectHandler(e) {
-          const selectedItem = chart.getSelection()[0];
-          if (selectedItem) {
-            const category = data.getValue(selectedItem.row, 0);
-            alert(`You selected ${category}`);
+          function selectHandler(e) {
+            const selectedItem = chart.getSelection()[0];
+            if (selectedItem) {
+              const category = data.getValue(selectedItem.row, 0);
+              alert(`You selected ${category}`);
+            }
           }
-        }
 
-        chart.draw(data, options);
+          chart.draw(data, options);
         } catch (error) {
           console.error("Error drawing the chart:", error);
         }
@@ -119,6 +123,7 @@ export default {
 };
 </script>
 <style scoped>
+@import url("../assets/css/variables.css");
 div.amount {
   align-content: flex-end;
 }
@@ -134,21 +139,21 @@ div.nav-links li {
 
 div.nav-links a {
   text-decoration: none;
-  color: white;
+  color: var(--white);
 }
 
 div.chart-container h1 {
   display: flex;
   justify-content: center;
-  color: #333;
+  color: var(--header-text);
 }
 
 div.chart-container p {
-  color: #666;
+  color: var(--text);
 }
 
 div.chart-container button:hover {
-  background-color: #0056b3;
+  background-color: var(--button-hover);
 }
 
 div.summary {
@@ -156,5 +161,4 @@ div.summary {
   justify-content: space-around;
   margin-bottom: 20px;
 }
-
 </style>

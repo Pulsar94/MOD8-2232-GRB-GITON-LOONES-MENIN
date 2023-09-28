@@ -4,25 +4,28 @@
     <div>Average Daily Expense: ${{ averageDailyExpense }}</div>
   </div>
   <div class="chart-container">
-    <div id="combochart" style="width: 900px; height: 500px; margin: auto;"></div>
+    <div
+      id="combochart"
+      style="width: 900px; height: 500px; margin: auto"
+    ></div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ComboChart',
+  name: "ComboChart",
   props: {
     transactionCount: {
       type: Number,
-      default: 10
+      default: 10,
     },
     maxAmount: {
       type: Number,
-      default: 200
+      default: 200,
     },
     minAmount: {
       type: Number,
-      default: 30
+      default: 30,
     },
     categories: {
       type: Array,
@@ -32,21 +35,21 @@ export default {
         { name: "Travel", paymentMethod: "CARD X0000" },
         { name: "Entertainment", paymentMethod: "CARD X0000" },
         { name: "Groceries", paymentMethod: "CARD X0000" },
-      ]
+      ],
     },
     transactions: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
-    return {
-
-    };
+    return {};
   },
   computed: {
     totalExpenses() {
-      return Math.round(this.transactions.reduce((sum, txn) => sum + txn.amount, 0));
+      return Math.round(
+        this.transactions.reduce((sum, txn) => sum + txn.amount, 0)
+      );
     },
     averageDailyExpense() {
       return Math.round(this.totalExpenses / 30);
@@ -60,7 +63,7 @@ export default {
         Groceries: 0,
       };
 
-      this.transactions.forEach(txn => {
+      this.transactions.forEach((txn) => {
         for (const category in totals) {
           if (txn.description.includes(category)) {
             totals[category] += txn.amount;
@@ -80,38 +83,38 @@ export default {
   methods: {
     drawChart() {
       // Load Google Charts
-      google.charts.load('current', { 'packages': ['corechart'] });
+      google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
           // Data for Combo Chart
           const data = new google.visualization.DataTable();
-          data.addColumn('string', 'Category');
-          data.addColumn('number', 'Amount');
-          data.addRows([
-            ...Object.entries(this.categoryTotals)
-          ]);
+          data.addColumn("string", "Category");
+          data.addColumn("number", "Amount");
+          data.addRows([...Object.entries(this.categoryTotals)]);
 
           const options = {
-            title: 'Spending by Category',
-            vAxis: { title: 'Amount' },
-            hAxis: { title: 'Category' },
-            seriesType: 'bars',
-            series: { 1: { type: 'line' } } // This line makes it a combo chart
+            title: "Spending by Category",
+            vAxis: { title: "Amount" },
+            hAxis: { title: "Category" },
+            seriesType: "bars",
+            series: { 1: { type: "line" } }, // This line makes it a combo chart
           };
 
-          const chart = new google.visualization.ComboChart(document.getElementById('combochart'));
+          const chart = new google.visualization.ComboChart(
+            document.getElementById("combochart")
+          );
           chart.draw(data, options);
         } catch (error) {
           console.error("Error drawing the chart:", error);
         }
       });
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
-
+@import url("../assets/css/variables.css");
 
 .amount {
   align-content: flex-end;
@@ -129,21 +132,15 @@ export default {
 
 .nav-links a {
   text-decoration: none;
-  color: white;
-}
-
-h1 {
-  display: flex;
-  justify-content: center;
-  color: #333;
+  color: var(--white);
 }
 
 p {
-  color: #666;
+  color: var(--text);
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: var(--button-hover);
 }
 
 .summary {
@@ -151,7 +148,4 @@ button:hover {
   justify-content: space-around;
   margin-bottom: 20px;
 }
-
-
 </style>
-
