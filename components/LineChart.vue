@@ -84,9 +84,9 @@ export default {
 
       this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
-        const monthYearKey = `${date.getMonth() + 1}-${
+        const monthYearKey = `${date.getMonth() + 1}/${
           date.getFullYear() + 22
-        }`; // Format "MM-YYYY"
+        }`; // Format "MM/YYYY"
 
         if (!totalsByMonth[monthYearKey]) {
           totalsByMonth[monthYearKey] = 0;
@@ -95,9 +95,14 @@ export default {
       });
 
       // Convert the object into an array of [monthYear, amount] pairs
-      return Object.entries(totalsByMonth).sort(
-        (a, b) => new Date("01-" + a[0]) - new Date("01-" + b[0])
-      ); // Sorting based on MM-YYYY
+      const result = Object.entries(totalsByMonth).sort((a, b) => {
+        console.log(`a[0] ${a[0]}`);
+        new Date("01/" + a[0]) - new Date("01/" + b[0]);
+      }); // Sorting based on MM/YYYY
+
+      console.log(result);
+
+      return result;
     },
     weeklyAmounts() {
       const totalsByWeek = {};
@@ -111,7 +116,7 @@ export default {
 
         const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(
           -2
-        )}-${("0" + startOfWeek.getDate()).slice(-2)}`;
+        )}/${("0" + startOfWeek.getDate()).slice(-2)}`;
 
         if (!totalsByWeek[weekString]) {
           totalsByWeek[weekString] = 0;
@@ -120,9 +125,13 @@ export default {
       });
 
       // Convert the object into an array of [startOfWeek, amount] pairs
-      return Object.entries(totalsByWeek).sort(
+      const result = Object.entries(totalsByWeek).sort(
         (a, b) => new Date(a[0]) - new Date(b[0])
       );
+
+      console.log(result);
+
+      return result;
     },
     dailyAmounts() {
       const totalsByDate = {};
