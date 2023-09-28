@@ -1,16 +1,25 @@
 <template>
-  <div class="summary">
-    <div>Total Expenses this Month: ${{ totalExpenses }}</div>
-    <div>Average Daily Expense: ${{ averageDailyExpense }}</div>
-  </div>
   <div class="chart-container">
-    <div id="piechart" style="width: 900px; height: 500px; margin: auto;"></div>
+    <div :style="{ width: chartWidth, height: chartHeight, margin:chartMargin }" id="piechart"></div>
   </div>
+
 </template>
 <script>
 export default {
   name: 'PieChart',
   props: {
+    chartWidth: {
+      type: String,
+      default: "900px"
+    },
+    chartHeight: {
+      type: String,
+      default: "500px"
+    },
+    chartMargin: {
+      type: String,
+      default: "auto"
+    },
     transactionCount: {
       type: Number,
       default: 10
@@ -44,12 +53,6 @@ export default {
     };
   },
   computed: {
-    totalExpenses() {
-      return Math.round(this.transactions.reduce((sum, txn) => sum + txn.amount, 0));
-    },
-    averageDailyExpense() {
-      return Math.round(this.totalExpenses / 30);
-    },
     categoryTotals() {
       const totals = {
         Utilities: 0,
@@ -89,27 +92,27 @@ export default {
       google.charts.load('current', {'packages': ['corechart']});
       google.charts.setOnLoadCallback(() => {
         try {
-        const data = google.visualization.arrayToDataTable([
-          ['Category', 'Amount'],
-          ...Object.entries(this.categoryTotals)
-        ]);
+          const data = google.visualization.arrayToDataTable([
+            ['Category', 'Amount'],
+            ...Object.entries(this.categoryTotals)
+          ]);
 
-        const options = {
-          title: 'Spending by Category'
-        };
+          const options = {
+            title: 'Spending by Category'
+          };
 
-        const chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        google.visualization.events.addListener(chart, 'select', selectHandler);
+          const chart = new google.visualization.PieChart(document.getElementById('piechart'));
+          google.visualization.events.addListener(chart, 'select', selectHandler);
 
-        function selectHandler(e) {
-          const selectedItem = chart.getSelection()[0];
-          if (selectedItem) {
-            const category = data.getValue(selectedItem.row, 0);
-            alert(`You selected ${category}`);
+          function selectHandler(e) {
+            const selectedItem = chart.getSelection()[0];
+            if (selectedItem) {
+              const category = data.getValue(selectedItem.row, 0);
+              alert(`You selected ${category}`);
+            }
           }
-        }
 
-        chart.draw(data, options);
+          chart.draw(data, options);
         } catch (error) {
           console.error("Error drawing the chart:", error);
         }
@@ -119,6 +122,7 @@ export default {
 };
 </script>
 <style scoped>
+
 div.amount {
   align-content: flex-end;
 }
@@ -149,12 +153,6 @@ div.chart-container p {
 
 div.chart-container button:hover {
   background-color: #0056b3;
-}
-
-div.summary {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
 }
 
 </style>

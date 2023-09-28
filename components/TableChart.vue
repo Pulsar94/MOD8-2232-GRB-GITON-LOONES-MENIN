@@ -1,16 +1,24 @@
 <template>
-  <div class="summary">
-    <div>Total Expenses this Month: ${{ totalExpenses }}</div>
-    <div>Average Daily Expense: ${{ averageDailyExpense }}</div>
-  </div>
   <div class="chart-container">
-    <div id="tablechart" style="width: 900px; height: 500px; margin: auto;"></div>
+    <div id="tablechart" :style="{ width: chartWidth, height: chartHeight, margin:chartMargin }"></div>
   </div>
 </template>
 <script>
 export default {
-  name: 'PieChart',
+  name: 'TableChart',
   props: {
+    chartWidth: {
+      type: String,
+      default: "750px"
+    },
+    chartHeight: {
+      type: String,
+      default: "460px"
+    },
+    chartMargin: {
+      type: String,
+      default: "auto"
+    },
     transactionCount: {
       type: Number,
       default: 10
@@ -44,12 +52,6 @@ export default {
     };
   },
   computed: {
-    totalExpenses() {
-      return Math.round(this.transactions.reduce((sum, txn) => sum + txn.amount, 0));
-    },
-    averageDailyExpense() {
-      return Math.round(this.totalExpenses / 30);
-    },
     categoryTotals() {
       const totals = {
         Utilities: 0,
@@ -109,6 +111,8 @@ export default {
 };
 </script>
 <style scoped>
+
+
 div.amount {
   align-content: flex-end;
 }

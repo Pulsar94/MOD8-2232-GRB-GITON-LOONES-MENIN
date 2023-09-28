@@ -1,5 +1,6 @@
 <template>
   <div class="home-container">
+    <TotalAndAverageExpenses :transactions="myTransactionsArray"/>
     <div class="container">
       <NavBar @changeChart="handleChangeChart" />
       <PieChart v-if="currentChart === 'Pie'" :transactions="myTransactionsArray"/>
@@ -19,48 +20,21 @@ import NavBar from '../components/NavBar.vue';
 import PieChart from "../components/PieChart.vue";
 import ComboChart from "../components/ComboChart.vue";
 import LineChart from "../components/LineChart.vue";
-import Table from "../components/Table.vue";
+import Table from "../components/TableChart.vue";
 import RecentTransactions from "../components/RecentTransactions.vue";
+import TotalAndAverageExpenses from "../components/TotalAndAverageExpenses.vue";
 
 export default {
-  components: {Table, LineChart, PieChart, RecentTransactions, ComboChart, NavBar},
+  components: {TotalAndAverageExpenses, Table, LineChart, PieChart, RecentTransactions, ComboChart, NavBar},
 
   data() {
     return {
-      currentChart: 'Pie',  // default to showing the current chart
-      myTransactionsArray: [
-        {
-          id: 1,
-          description: "Utilities",
-          amount: Math.random()*100 + 20,
-          date: "8/9"
-        },
-        {
-          id: 2,
-          description: "Dining",
-          amount: Math.random()*100 + 20,
-          date: "9/9"
-        },
-        {
-          id: 3,
-          description: "Travel",
-          //make the amount random between 100 and 200
-          amount: Math.random()*100 + 20,
-          date: "10/9"
-        },
-        {
-          id: 4,
-          description: "Entertainment",
-          amount: Math.random()*100 + 20,
-          date: "11/9"
-        },
-        {
-          id: 5,
-          description: "Groceries",
-          amount: Math.random()*100 + 20,
-          date: "12/9"
-        }
-      ]
+      currentChart: 'Pie',
+    }
+  },
+  computed:{
+    myTransactionsArray() {
+      return this.$store.state.myTransactionsArray
     }
   },
   methods: {

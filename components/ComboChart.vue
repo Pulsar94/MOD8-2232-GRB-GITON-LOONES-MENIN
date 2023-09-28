@@ -1,10 +1,6 @@
 <template>
-  <div class="summary">
-    <div>Total Expenses this Month: ${{ totalExpenses }}</div>
-    <div>Average Daily Expense: ${{ averageDailyExpense }}</div>
-  </div>
   <div class="chart-container">
-    <div id="combochart" style="width: 900px; height: 500px; margin: auto;"></div>
+    <div id="combochart" :style="{ width: chartWidth, height: chartHeight, margin:chartMargin }"></div>
   </div>
 </template>
 
@@ -12,6 +8,18 @@
 export default {
   name: 'ComboChart',
   props: {
+    chartWidth: {
+      type: String,
+      default: "900px"
+    },
+    chartHeight: {
+      type: String,
+      default: "500px"
+    },
+    chartMargin: {
+      type: String,
+      default: "auto"
+    },
     transactionCount: {
       type: Number,
       default: 10
@@ -45,12 +53,6 @@ export default {
     };
   },
   computed: {
-    totalExpenses() {
-      return Math.round(this.transactions.reduce((sum, txn) => sum + txn.amount, 0));
-    },
-    averageDailyExpense() {
-      return Math.round(this.totalExpenses / 30);
-    },
     categoryTotals() {
       const totals = {
         Utilities: 0,
