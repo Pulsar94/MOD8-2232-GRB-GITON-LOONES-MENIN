@@ -7,7 +7,7 @@
       <ul class="nav-links">
         <li><router-link to="/about">About Us</router-link></li>
         <li><router-link to="/dashboard">Dashboard</router-link></li>
-        <li><router-link to="/login">Login</router-link></li>
+        <li><router-link to="/settings">Settings</router-link></li>
       </ul>
     </nav>
   </header>

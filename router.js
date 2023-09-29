@@ -4,12 +4,14 @@ import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Dashboard from './views/Dashboard.vue';
 import About from './views/About.vue';
+import Settings from './views/Settings.vue';
 
 const routes = [
     { path: '/', component: Home },
     { path: '/login', component: Login },
     { path: '/dashboard', component: Dashboard },
     { path: '/about', component: About },
+    { path: '/settings', component: Settings },
 ];
 
 const router = createRouter({
