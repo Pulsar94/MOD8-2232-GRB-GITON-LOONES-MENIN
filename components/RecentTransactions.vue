@@ -12,7 +12,7 @@
       <tbody>
         <tr v-for="txn in sortedTransactions" :key="txn.id">
           <td class="category">{{ txn.description }}</td>
-          <td>{{ txn.date }}</td>
+          <td>{{ new Date(txn.date).getFullYear() }}/{{('0'+(new Date(txn.date).getMonth()+1)).slice(-2)}}/{{('0'+(new Date(txn.date).getDate())).slice(-2)}}</td>
           <td class="amount">$ {{ txn.amount.toFixed(2) }}</td>
         </tr>
       </tbody>
@@ -30,9 +30,7 @@ export default {
   },
   computed: {
     sortedTransactions() {
-      return this.transactions
-        .slice()
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
+      return this.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
     },
   },
 };

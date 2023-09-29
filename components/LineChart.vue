@@ -82,44 +82,48 @@ export default {
       const totalsByMonth = {};
 
       this.transactions.forEach((transaction) => {
+        if (transaction.amount >= 0) return; // Skip positive or zero values
+
         const date = new Date(transaction.date);
-        const monthYearKey = `${date.getMonth() + 1}/${date.getFullYear()}`; // Format "MM/YYYY"
+        const monthYearKey = `${date.getMonth() + 1}-${date.getFullYear()}`;
 
         if (!totalsByMonth[monthYearKey]) {
           totalsByMonth[monthYearKey] = 0;
         }
-        totalsByMonth[monthYearKey] += transaction.amount;
+        totalsByMonth[monthYearKey] += Math.abs(transaction.amount);
       });
 
-      // Convert the object into an array of [monthYear, amount] pairs
-      const result = Object.entries(totalsByMonth).sort((a, b) => {
-        new Date("01/" + a[0]) - new Date("01/" + b[0]);
-      }); // Sorting based on MM/YYYY
-
-      return result;
+      return Object.entries(totalsByMonth).sort(
+        (a, b) => new Date("01-" + a[0]) - new Date("01-" + b[0])
+      );
     },
     weeklyAmounts() {
       const totalsByWeek = {};
 
       this.transactions.forEach((transaction) => {
+        if (transaction.amount >= 0) return;
+
         const date = new Date(transaction.date);
         const startOfWeek = new Date(date);
-
-        // Adjust date to the start of the week (Sunday in this case)
-        startOfWeek.setDate(date.getDate() - date.getDay());
+        let dayOfWeek = date.getDay();
+        if (dayOfWeek === 0) {
+          dayOfWeek = 6;
+        } else {
+          dayOfWeek -= 1;
+        }
+        startOfWeek.setDate(date.getDate() - dayOfWeek);
 
         const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(
           -2
-        )}/${("0" + startOfWeek.getDate()).slice(-2)}`;
+        )}-${("0" + startOfWeek.getDate()).slice(-2)}`;
 
         if (!totalsByWeek[weekString]) {
           totalsByWeek[weekString] = 0;
         }
-        totalsByWeek[weekString] += transaction.amount;
+        totalsByWeek[weekString] += Math.abs(transaction.amount);
       });
 
-      // Convert the object into an array of [startOfWeek, amount] pairs
-      const result = Object.entries(totalsByWeek).sort(
+      return Object.entries(totalsByWeek).sort(
         (a, b) => new Date(a[0]) - new Date(b[0])
       );
 
@@ -129,17 +133,19 @@ export default {
       const totalsByDate = {};
 
       this.transactions.forEach((transaction) => {
+        if (transaction.amount >= 0) return;
+
         if (!totalsByDate[transaction.date]) {
           totalsByDate[transaction.date] = 0;
         }
-        totalsByDate[transaction.date] += transaction.amount;
+        totalsByDate[transaction.date] += Math.abs(transaction.amount);
       });
 
-      // Convert the object into an array of [date, amount] pairs
       return Object.entries(totalsByDate).sort(
         (a, b) => new Date(a[0]) - new Date(b[0])
       );
     },
+
     categoryTotals() {
       const totals = {
         Utilities: 0,
@@ -171,20 +177,26 @@ export default {
       google.charts.setOnLoadCallback(() => {
         try {
           const data = new google.visualization.DataTable();
-          data.addColumn("string", "Date"); // Adjust the label based on chosenTime
+          data.addColumn("string", "Date");
           data.addColumn("number", "Amount Spent");
 
-          // Use the computed dataToDisplay property for the line chart
-          data.addRows(this.dataToDisplay);
+          // Format data to have {v, f} format
+          const formattedData = this.dataToDisplay.map((item) => {
+            const date = item[0];
+            const value = item[1];
+            return [date, { v: value, f: `$${Math.round(value)}` }];
+          });
+
+          data.addRows(formattedData);
 
           const options = {
             title: "Amount Spent Over Time",
             curveType: "function",
-            legend: { position: "bottom" },
-            hAxis: {
+            Legend: { position: "bottom" },
+            haxis: {
               title: "Date",
             },
-            vAxis: {
+            vaxis: {
               title: "Amount Spent",
             },
             backgroundColor: getComputedStyle(
@@ -225,8 +237,7 @@ export default {
         }
       });
     },
-    //
-    //
+
     // drawChart() {
     //   google.charts.load('current', {'packages': ['corechart']});
     //   google.charts.setOnLoadCallback(() => {
