@@ -6,7 +6,7 @@ export const store = createStore({
         myInitialTransactionsArray: [],
         myTransactionsArray: [],
         numberOfDays: 0,
-        chosenTime: 0,
+        chosenTime: 31,
     },
     mutations: {
         SET_INITIAL_TRANSACTIONS(state, iTransactions) {

@@ -135,7 +135,7 @@ export default {
   },
   methods: {
     updateText(category) {
-      this.selectedCategoryText = `You selected ${category}`;
+      this.selectedCategoryText = `${category}`;
     },
     handleChangeChart(chartType) {
       this.currentChart = chartType;

@@ -8,9 +8,11 @@
         <option value="31">a month</option>
         <option value="7">a week</option>
       </select>
-      : ${{ totalExpenses }}
+      : ${{ Math.abs(totalExpenses) }}
     </div>
-    <div>Average Daily Expense: ${{ averageDailyExpense }}</div>
+    <div>Total Gain: ${{ Math.abs(totalGain) }}</div>
+    <div>Difference: ${{totalGain+totalExpenses}}</div>
+    <div>Average Daily Expense: ${{ Math.abs(averageDailyExpense) }}</div>
   </div>
 </template>
 <script>
@@ -43,20 +45,24 @@ export default {
   computed: {
     totalExpenses() {
       if (this.chosenTime !== "-1") {
-        return Math.round(this.transactions.reduce((sum, txn) => sum + txn.amount, 0));
+        return Math.round(this.transactions.filter((t) => t.amount < 0).reduce((sum, txn) => sum + txn.amount, 0));
       }else {
-        return Math.round(this.$store.state.myInitialTransactionsArray.reduce((sum, txn) => sum + txn.amount, 0));
+        return Math.round(this.$store.state.myInitialTransactionsArray.filter((t) => t.amount < 0).reduce((sum, txn) => sum + txn.amount, 0));
+      }
+    },
+    totalGain() {
+      if (this.chosenTime !== "-1") {
+        return Math.round(this.transactions.filter((t) => t.amount > 0).reduce((sum, txn) => sum + txn.amount, 0));
+      }else {
+        return Math.round(this.$store.state.myInitialTransactionsArray.filter((t) => t.amount > 0).reduce((sum, txn) => sum + txn.amount, 0));
       }
     },
     averageDailyExpense() {
       if (this.chosenTime !== "-1") {
         return Math.round(this.totalExpenses / (this.numberOfDays() < this.chosenTime ? this.numberOfDays() : this.chosenTime))
       }else {
-        const todayDate = new Date()
         const firstDate = this.$store.state.myInitialTransactionsArray.at(0).rawDate;
-        console.log(firstDate);
         const lastDate = this.$store.state.myInitialTransactionsArray.at(this.$store.state.myInitialTransactionsArray.length-1).rawDate;
-        console.log(lastDate);
         this.$store.commit('SET_DAYS', Math.round((lastDate.getTime() - firstDate.getTime() ) / (1000 * 60 * 60 * 24)));
         return Math.round(this.totalExpenses / this.numberOfDays())
       }

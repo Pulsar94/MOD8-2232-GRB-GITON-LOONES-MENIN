@@ -72,7 +72,7 @@ export default {
       this.transactions.forEach((txn) => {
         for (const category in totals) {
           if (txn.description.includes(category)) {
-            totals[category] += txn.amount;
+            totals[category] += Math.abs(txn.amount);
             break;
           }
         }
@@ -99,8 +99,12 @@ export default {
         try {
           const data = new google.visualization.DataTable();
           data.addColumn("string", "Category");
-          data.addColumn("number", "Amount");
-          data.addRows([...Object.entries(this.categoryTotals)]);
+          data.addColumn("string", "Amount"); //
+          // Format the amounts to include the $ sign
+          const formattedData = Object.entries(this.categoryTotals).map(([category, amount]) => {
+            return [category, `$${amount.toFixed(2)}`];
+          });
+          data.addRows(formattedData);
           const cssClassNames = {
             headerRow: "header-row",
             tableRow: "table-row",
