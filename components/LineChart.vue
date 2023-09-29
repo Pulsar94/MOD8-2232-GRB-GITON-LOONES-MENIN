@@ -83,9 +83,7 @@ export default {
 
       this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
-        const monthYearKey = `${date.getMonth() + 1}/${
-          date.getFullYear() + 22
-        }`; // Format "MM/YYYY"
+        const monthYearKey = `${date.getMonth() + 1}/${date.getFullYear()}`; // Format "MM/YYYY"
 
         if (!totalsByMonth[monthYearKey]) {
           totalsByMonth[monthYearKey] = 0;
