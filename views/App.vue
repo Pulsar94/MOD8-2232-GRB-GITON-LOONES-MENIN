@@ -57,7 +57,8 @@ export default {
       function formatDate(date) {
         const month = date.getMonth() + 1; // 0-indexed month
         const day = date.getDate();
-        return `${month}/${day}`;
+        const year = date.getFullYear().toString().slice(-2); // Last 2 digits of the year
+        return `${month}/${day}/${year}`;
       }
 
       for (let i = 1; i <= 365; i++) {

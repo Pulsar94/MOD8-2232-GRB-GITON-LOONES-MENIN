@@ -65,7 +65,6 @@ export default {
     ...mapState(["chosenTime"]),
 
     dataToDisplay() {
-      console.log(this.chosenTime);
       switch (this.chosenTime) {
         case "7":
           return this.dailyAmounts;
@@ -96,11 +95,8 @@ export default {
 
       // Convert the object into an array of [monthYear, amount] pairs
       const result = Object.entries(totalsByMonth).sort((a, b) => {
-        console.log(`a[0] ${a[0]}`);
         new Date("01/" + a[0]) - new Date("01/" + b[0]);
       }); // Sorting based on MM/YYYY
-
-      console.log(result);
 
       return result;
     },
@@ -128,8 +124,6 @@ export default {
       const result = Object.entries(totalsByWeek).sort(
         (a, b) => new Date(a[0]) - new Date(b[0])
       );
-
-      console.log(result);
 
       return result;
     },
@@ -183,7 +177,6 @@ export default {
           data.addColumn("number", "Amount Spent");
 
           // Use the computed dataToDisplay property for the line chart
-          console.log(this.dataToDisplay);
           data.addRows(this.dataToDisplay);
 
           const options = {
