@@ -1,24 +1,65 @@
 <template>
-  <div class="home-container">
-    <h2>Welcome to Budget Vision!</h2>
-    <p>
-      Struggling to keep track of your spending? Overwhelmed by numerous bills,
-      receipts, and expenses? Say hello to Budget Vision—your trusted partner in
-      financial management.
-    </p>
-    <p>
-      Our platform offers you a comprehensive view of all your expenditures,
-      breaking them down into easy-to-understand categories and visual diagrams.
-      We simplify budgeting so that you can focus on making better financial
-      decisions.
-    </p>
-    <p>
-      Unlock the power of smart spending. With Budget Vision, you gain insight,
-      clarity, and control over your financial world. Don't just view your
-      expenses—understand them.
-    </p>
+  <body>
+    <div class="description">
+      <h1>Welcome to Your Financial Companion</h1>
+      <p>
+        Are you looking for a simple and efficient way to take control of your
+        finances? Look no further than Your Financial Companion, your all-in-one
+        solution for managing expenses, tracking income, and achieving your
+        financial goals.
+      </p>
 
-    <h2>Here's a preview :</h2>
+      <div class="presentation">
+        <div>
+          <h2>Key Features:</h2>
+          <ul>
+            <li>
+              <strong>Expense Tracking:</strong> Easily record your daily
+              expenses, categorize them, and gain insights into your spending
+              habits.
+            </li>
+            <li>
+              <strong>Budget Management:</strong> Set monthly budgets for
+              different spending categories and receive alerts to stay on track.
+            </li>
+            <li>
+              <strong>Financial Goals:</strong> Define your financial
+              objectives, whether it's saving for a dream vacation or paying off
+              debt, and track your progress.
+            </li>
+            <li>
+              <strong>Automated Expense Categorization:</strong> Let our smart
+              categorization engine organize your expenses for you, or customize
+              it to fit your unique needs.
+            </li>
+            <li>
+              <strong>Detailed Reports:</strong> Access detailed monthly
+              spending reports and analyze your financial data with intuitive
+              charts and graphs.
+            </li>
+            <li>
+              <strong>Secure and Personalized:</strong> Your data's security is
+              our top priority. We offer customizable account settings,
+              two-factor authentication, and more.
+            </li>
+            <li>
+              <strong>24/7 Support:</strong> Need assistance or have questions?
+              Our support team is here to help you whenever you need it.
+            </li>
+          </ul>
+        </div>
+        <img src="../assets/img/home_image.svg" alt="Image" />
+      </div>
+
+      <p>
+        Take the first step towards financial freedom and join Your Financial
+        Companion today. Sign up now and start making informed financial
+        decisions, achieving your goals, and securing your financial future.
+        Your financial journey begins here.
+      </p>
+    </div>
+
+    <h2 id="preview-header">Here's a preview :</h2>
 
     <div class="container">
       <TotalAndAverageExpenses :transactions="myTransactionsArray" />
@@ -98,7 +139,7 @@
         </p>
       </div>
     </div>
-  </div>
+  </body>
 </template>
 
 <script>
@@ -146,6 +187,28 @@ export default {
 
 <style scoped>
 @import url("../assets/css/variables.css");
+
+.description {
+  margin: 0 auto;
+  width: 80%;
+  text-align: left;
+}
+
+.presentation {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#preview-header {
+  margin-top: 50px;
+}
+
+img {
+  width: 35vw;
+  margin-left: 12px;
+}
 
 .pie-chart {
   display: flex;
@@ -196,7 +259,7 @@ export default {
   color: var(--white);
 }
 
-.home-container {
+body {
   text-align: center;
   margin: 0;
   margin-top: 50px;
@@ -208,6 +271,11 @@ export default {
 
 p {
   color: var(--text);
+  font-size: large;
+}
+
+li {
+  font-size: large;
 }
 
 button {

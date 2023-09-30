@@ -10,7 +10,7 @@
         <p>
           Password: {{ passwordShown }}
           <button type="button" id="password" @click="togglePasswordVisibility">
-            Show/Hide
+            {{ passwordShown === initialPassword ? "Hide" : "Show" }}
           </button>
         </p>
         <div class="buttons">
@@ -36,10 +36,12 @@
 <script>
 import { useStore } from "vuex";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   setup() {
     const store = useStore();
+    const router = useRouter();
 
     const initialName = ref(store.state.user.name);
     const initialAge = ref(store.state.user.age);
@@ -112,6 +114,8 @@ export default {
 
     const logOut = () => {
       store.commit("LOG_OUT");
+      alert("You have been logged out");
+      router.push("/");
     };
 
     return {
@@ -181,10 +185,14 @@ h1 {
 button {
   margin: 20px 15px 40px 15px;
   padding: 5px 10px;
-  background-color: var(--footer-btn);
+  background-color: var(--form-button);
   color: var(--black);
   border: none;
   border-radius: 5px;
+}
+
+button:hover {
+  background-color: var(--form-button-hover);
 }
 
 .buttons {
@@ -195,9 +203,12 @@ button {
 
 #password {
   margin: 0 12px;
+  background-color: var(--table-row);
+  color: var(--black);
+  font-size: 10px;
 }
 
-button:hover {
-  background-color: var(--footer-hover);
+#password:hover {
+  background-color: var(--table-row-odd);
 }
 </style>

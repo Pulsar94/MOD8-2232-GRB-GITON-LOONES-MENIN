@@ -24,8 +24,8 @@
       <text class="footer-btn">About Us</text>
       <text class="footer-btn">Contact</text>
     </a>
-    <text class="footer-btn">Privacy Policy</text>
-    <text class="footer-btn">Terms of Service</text>
+    <router-link class="footer-btn" to="/policy">Privacy Policy</router-link>
+    <router-link class="footer-btn" to="/terms">Terms of Service</router-link>
   </footer>
 </template>
 
