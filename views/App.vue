@@ -87,24 +87,24 @@ export default {
       for (let i = 1; i <= 365; i++) {
         const date = new Date(2023, 0); // Start from January 1, 2023
         date.setDate(i); // Increase the date for each iteration
-        if (i % 11 === 0 && formatDate(date).split("/")[2] !== "25") {
-          // For every 11th transaction, make it positive
-          this.myTransactionsArray.push({
-            id: i,
-            description: getRandomPositiveDescription(),
-            amount: getRandomAmount(20, 120), // Positive amount
-            date: formatDate(date),
-            rawDate: date,
-          });
-        } else if (formatDate(date).split("/")[2] === "25") {
+         if (formatDate(date).split("/")[2] === "1") {
           this.myTransactionsArray.push({
             id: i,
             description: "Salary",
-            amount: 3000, // Positive amount
+            amount: 4000, // Positive amount
             date: formatDate(date),
             rawDate: date,
           });
-        } else {
+        } else if (i % 11 === 0 && formatDate(date).split("/")[2] !== "25") {
+           // For every 11th transaction, make it positive
+           this.myTransactionsArray.push({
+             id: i,
+             description: getRandomPositiveDescription(),
+             amount: getRandomAmount(100, 250), // Positive amount
+             date: formatDate(date),
+             rawDate: date,
+           });
+         } else {
           this.myTransactionsArray.push({
             id: i,
             description: getRandomDescription(), // Negative description
@@ -114,22 +114,18 @@ export default {
           });
         }
       }
+      // this.myTransactionsArray.push({
+      //   id: new Date().getTime(),
+      //   description: "AAAAAAAAA",
+      //   amount: 4000, // Positive amount
+      //   date: formatDate(new Date(2020, 0, 1)),
+      //   rawDate: new Date(2022, 6, 30),
+      // });
 
       const todayDate = new Date();
       this.$store.commit("SET_INITIAL_TRANSACTIONS", this.myTransactionsArray);
-      this.$store.commit(
-        "SET_TRANSACTIONS",
-        this.myTransactionsArray
-          .filter((t) => t.rawDate < todayDate)
-          .filter((t) => t.rawDate > todayDate - 31 * 24 * 60 * 60 * 1000)
-      );
-      this.$store.commit(
-        "SET_DAYS",
-        Math.round(
-          (todayDate.getTime() - new Date(2023, 0).getTime()) /
-            (1000 * 60 * 60 * 24)
-        )
-      );
+      this.$store.commit("SET_TRANSACTIONS", this.myTransactionsArray.filter((t) => t.rawDate < todayDate).filter((t) => t.rawDate > todayDate - 31 * 24 * 60 * 60 * 1000));
+      this.$store.commit("SET_DAYS", Math.round((todayDate.getTime() - new Date(2023, 0).getTime()) / (1000 * 60 * 60 * 24)));
     },
   },
 };

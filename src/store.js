@@ -1,5 +1,6 @@
 // store.js
 import { createStore } from 'vuex';
+import {toRaw} from "vue";
 
 export const store = createStore({
     state: {
@@ -17,8 +18,8 @@ export const store = createStore({
         }
     },
     mutations: {
-        SET_INITIAL_TRANSACTIONS(state, iTransactions) {
-            state.myInitialTransactionsArray = iTransactions;
+        SET_INITIAL_TRANSACTIONS(state, transactions) {
+            state.myInitialTransactionsArray = transactions;
         },
         SET_TRANSACTIONS(state, transactions) {
             state.myTransactionsArray = transactions;
@@ -35,13 +36,12 @@ export const store = createStore({
             state.user.email = updatedUser.email;
             state.user.phone = updatedUser.phone;
             state.user.password = updatedUser.password;
-          }
+        },
+        addTransaction(state, transaction) {
+            state.myTransactionsArray.push(toRaw(transaction));
+            // state.myInitialTransactionsArray.push(toRaw(transaction));
+        }
     },
-    // mutations: {
-    //     addTransaction(state, transaction) {
-    //         state.transactions.push(transaction);
-    //     }
-    // },
     getters: {
         transactions: (state) => state.myTransactionsArray
     }

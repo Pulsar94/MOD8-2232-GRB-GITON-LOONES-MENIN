@@ -55,15 +55,20 @@ export default {
     return {};
   },
   watch: {
-    transactions(newVal, oldVal) {
-      if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
-        this.drawChart();
-      }
-    },
+    transactions: {
+      handler(newVal, oldVal) {
+        this.drawChart()
+      },
+      deep: true
+    }
   },
 
   computed: {
     ...mapState(["chosenTime"]),
+
+    transactions() {
+      return this.$store.state.transactions;
+    },
 
     dataToDisplay() {
       console.log(this.chosenTime);
@@ -93,7 +98,7 @@ export default {
       this.transactions.forEach((txn) => {
         for (const category in totals) {
           if (txn.description.includes(category)) {
-            totals[category] += Math.abs(txn.amount);
+            totals[category] += txn.amount;
             break;
           }
         }
@@ -128,7 +133,7 @@ export default {
         // Check if the category exists in the transaction's description
         for (const category of this.categories) {
           if (transaction.description.includes(category.name)) {
-            totalsByDate[date][category.name] += Math.abs(transaction.amount);
+            totalsByDate[date][category.name] += -(transaction.amount);
             break;  // Stop looping once we found a matching category
           }
         }
@@ -183,7 +188,7 @@ export default {
         // Check if the category exists in the transaction's description
         for (const category of this.categories) {
           if (transaction.description.includes(category.name)) {
-            totalsByWeek[weekString][category.name] += Math.abs(transaction.amount);
+            totalsByWeek[weekString][category.name] += -(transaction.amount);
             break;  // Stop looping once we found a matching category
           }
         }
@@ -229,7 +234,7 @@ export default {
         // Check if the category exists in the transaction's description
         for (const category of this.categories) {
           if (transaction.description.includes(category.name)) {
-            totalsByMonth[monthYearKey][category.name] += Math.abs(transaction.amount);
+            totalsByMonth[monthYearKey][category.name] += -(transaction.amount);
             break;  // Stop looping once we found a matching category
           }
         }
@@ -265,7 +270,7 @@ export default {
           const data = google.visualization.arrayToDataTable(dataArray());
 
           const options = {
-            title: 'Monthly Coffee Production by Country',
+            title: 'Amount spent by category over time',
             vaxis: {title: 'Cups'},
             haxis: {title: 'Month'},
             tooltip: { isHtml: true },

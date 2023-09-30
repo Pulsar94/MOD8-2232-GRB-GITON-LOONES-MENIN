@@ -53,13 +53,18 @@ export default {
     return {};
   },
   watch: {
-    transactions(newVal, oldVal) {
-      if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
-        this.drawChart();
-      }
-    },
+    transactions: {
+      handler(newVal, oldVal) {
+        this.drawChart()
+      },
+      deep: true
+    }
   },
   computed: {
+    transactions() {
+      return this.$store.state.transactions;
+    },
+
     categoryTotals() {
       const totals = {
         Utilities: 0,

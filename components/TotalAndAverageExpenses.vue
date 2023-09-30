@@ -16,6 +16,9 @@
   </div>
 </template>
 <script>
+import lineChart from "./LineChart.vue";
+import pieChart from "./PieChart.vue";
+
 export default {
   data() {
     return {
@@ -28,11 +31,10 @@ export default {
       this.$store.commit('SET_CHOSEN_TIME', newValue);
       if (newValue !== "-1"){
         this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray.filter(t => t.rawDate < todayDate).filter(t => t.rawDate > new Date()-this.chosenTime* 24 * 60 * 60 * 1000));
-        this.$forceUpdate();
       }else {
         this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray);
-        this.$forceUpdate();
       }
+      this.$forceUpdate();
     },
   },
   name: 'TotalAndAverageExpenses',

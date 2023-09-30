@@ -7,7 +7,7 @@
       />
       <ComboChart v-if="currentChart === 'Combo'" :transactions="myTransactionsArray"
       />
-      <LineChart v-if="currentChart === 'Line'" :transactions="myTransactionsArray"
+      <LineChart v-if="currentChart === 'Line'" :transactions="myInitialTransactionsArray"
       />
       <Table v-if="currentChart === 'Table'" :transactions="myTransactionsArray"
       />
@@ -45,6 +45,9 @@ export default {
   computed: {
     myTransactionsArray() {
       return this.$store.state.myTransactionsArray;
+    },
+    myInitialTransactionsArray() {
+      return this.$store.state.myInitialTransactionsArray;
     },
   },
   methods: {
