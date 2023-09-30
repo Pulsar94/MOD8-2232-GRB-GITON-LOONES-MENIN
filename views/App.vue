@@ -6,8 +6,13 @@
     <nav>
       <ul class="nav-links">
         <li><router-link to="/about">About Us</router-link></li>
-        <li><router-link to="/dashboard">Dashboard</router-link></li>
-        <li><router-link to="/settings">Settings</router-link></li>
+        <li v-if="authenticated">
+          <router-link to="/dashboard">Dashboard</router-link>
+        </li>
+        <li v-if="authenticated">
+          <router-link to="/settings">Settings</router-link>
+        </li>
+        <li v-else><router-link to="/login">Login</router-link></li>
       </ul>
     </nav>
   </header>
@@ -33,6 +38,9 @@ export default {
   computed: {
     myTransactionsArray() {
       return this.$store.state.myTransactionsArray;
+    },
+    authenticated() {
+      return this.$store.state.authenticated;
     },
   },
   methods: {

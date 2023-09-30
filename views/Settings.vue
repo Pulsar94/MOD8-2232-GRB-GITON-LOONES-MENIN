@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <body>
     <h1>Settings</h1>
     <form @submit.prevent="saveChanges">
       <div class="informations" v-if="!editing">
@@ -13,7 +13,10 @@
             Show/Hide
           </button>
         </p>
-        <button @click="editing = true">Edit</button>
+        <div class="buttons">
+          <button type="button" @click="logOut">Log Out</button>
+          <button @click="editing = true">Edit</button>
+        </div>
       </div>
       <div class="informations" v-else>
         <p>Name: <input type="text" v-model="editedName" /></p>
@@ -27,7 +30,7 @@
         </div>
       </div>
     </form>
-  </div>
+  </body>
 </template>
 
 <script>
@@ -107,6 +110,10 @@ export default {
       editing.value = false;
     };
 
+    const logOut = () => {
+      store.commit("LOG_OUT");
+    };
+
     return {
       initialName,
       initialAge,
@@ -122,6 +129,7 @@ export default {
       passwordShown,
       saveChanges,
       cancelEditing,
+      logOut,
     };
   },
   data: () => ({
@@ -143,11 +151,16 @@ export default {
 </script>
 
 <style scoped>
+@import url("../assets/css/variables.css");
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 30px;
+}
+
+h1 {
+  color: var(--header-text);
 }
 
 .informations {
@@ -166,7 +179,12 @@ body {
 }
 
 button {
-  margin: 20px;
+  margin: 20px 15px 40px 15px;
+  padding: 5px 10px;
+  background-color: var(--footer-btn);
+  color: var(--black);
+  border: none;
+  border-radius: 5px;
 }
 
 .buttons {
@@ -177,5 +195,9 @@ button {
 
 #password {
   margin: 0 12px;
+}
+
+button:hover {
+  background-color: var(--footer-hover);
 }
 </style>
