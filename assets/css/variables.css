@@ -1,0 +1,45 @@
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --background-color: #f8f9fa;
+    --background: #dbfcfc;
+    --link: #096a2e;
+    --button: #007bff;
+    --button-hover: #0056b3;
+    --text: #666;
+    --header-text: #333;
+    --border: #e1e1e1;
+    --navbar: lightgray;
+    --navbar-hover: #555555;
+    --footer-btn: #FFCD29;
+    --footer-hover: #FFB800;
+    --table-header: #f8f9fa;
+    --table-row: #ffffff;
+    --table-row-odd: #f2f2f2;
+    --table-row-hover: #f8f9fa;
+    
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --black: #ffffff;
+        --white: #000000;
+        --background-color: #333138;
+        --background: #273c40;
+        --link: #34d058;
+        --button: #1f6feb; /* Adjusted button color */
+        --button-hover: #0056b3; /* Keep the same button hover color */
+        --text: #cccccc; /* Lighter text color for better contrast */
+        --header-text: #ffffff; /* White text for headers */
+        --border: #333333; /* Slightly lighter border color */
+        --navbar: #222222; /* Darker navbar background */
+        --navbar-hover: #444444; /* Adjusted navbar hover color */
+        --footer-btn: #FFCD29;
+        --footer-hover: #FFB800;
+        --table-header: #333138;
+        --table-row: #222222;
+        --table-row-odd: #2b2b2b;
+        --table-row-hover: #444444;
+    }
+    
+}
