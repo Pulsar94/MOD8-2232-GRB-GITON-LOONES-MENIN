@@ -7,7 +7,12 @@
         <p>Age: {{ initialAge }}</p>
         <p>Email: {{ initialEmail }}</p>
         <p>Phone: {{ initialPhone }}</p>
-        <p>Password: {{ passwordShown }}</p>
+        <p>
+          Password: {{ passwordShown }}
+          <button type="button" id="password" @click="togglePasswordVisibility">
+            Show/Hide
+          </button>
+        </p>
         <button @click="editing = true">Edit</button>
       </div>
       <div class="informations" v-else>
@@ -26,14 +31,11 @@
 </template>
 
 <script>
-import { useVuelidate } from "@vuelidate/core";
-import { required, email } from "@vuelidate/validators";
 import { useStore } from "vuex";
 import { ref } from "vue";
 
 export default {
   setup() {
-    const v$ = useVuelidate();
     const store = useStore();
 
     const initialName = ref(store.state.user.name);
@@ -49,19 +51,30 @@ export default {
     const editedPassword = ref(store.state.user.password);
 
     const editing = ref(false);
-    const passwordShown = ref("·".repeat(editedPassword.value.length));
-
-    const validations = {
-      editedName: { required },
-      editedAge: { required },
-      editedEmail: { required, email },
-      editedPhone: { required },
-      editedPassword: { required },
-    };
+    const passwordShown = ref("•".repeat(editedPassword.value.length));
 
     const saveChanges = () => {
-      if (v$.$invalid) {
-        // Handle validation errors
+      if (
+        !editedName.value ||
+        !editedAge.value ||
+        !editedEmail.value ||
+        !editedPhone.value ||
+        !editedPassword.value
+      ) {
+        alert("Please fill in all fields");
+        return;
+      }
+
+      if (editedAge.value < 5 || editedAge.value > 150) {
+        alert("Incorrect age");
+        return;
+      }
+
+      if (
+        editedPhone.value.toString().length < 8 ||
+        editedPhone.value.toString().length > 16
+      ) {
+        alert("Phone number must be between 8 and 16 digits");
         return;
       }
 
@@ -95,7 +108,6 @@ export default {
     };
 
     return {
-      v$,
       initialName,
       initialAge,
       initialEmail,
@@ -108,10 +120,24 @@ export default {
       editedPassword,
       editing,
       passwordShown,
-      validations,
       saveChanges,
       cancelEditing,
     };
+  },
+  data: () => ({
+    editedName: "",
+    editedAge: "",
+    editedEmail: "",
+    editedPhone: "",
+    editedPassword: "",
+  }),
+  methods: {
+    togglePasswordVisibility() {
+      this.passwordShown =
+        this.passwordShown === this.initialPassword
+          ? "•".repeat(this.initialPassword.length)
+          : this.initialPassword;
+    },
   },
 };
 </script>
@@ -147,5 +173,9 @@ button {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+#password {
+  margin: 0 12px;
 }
 </style>
