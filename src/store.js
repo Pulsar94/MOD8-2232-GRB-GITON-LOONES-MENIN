@@ -14,6 +14,7 @@ export const store = createStore({
             password: '123456',
             phone: '1234567890',
             age: 24,
+            notifications: 'sms'
         },
         authenticated: true,
     },
@@ -36,6 +37,7 @@ export const store = createStore({
             state.user.email = updatedUser.email;
             state.user.phone = updatedUser.phone;
             state.user.password = updatedUser.password;
+            state.user.notifications = updatedUser.notifications;
         },
         LOG_IN(state) {
             state.authenticated = true;

@@ -24,6 +24,39 @@
         <p>Email: <input type="email" v-model="editedEmail" /></p>
         <p>Phone: <input type="number" v-model="editedPhone" /></p>
         <p>Password: <input type="password" v-model="editedPassword" /></p>
+        <p>
+          Notification preferences:
+          <select name="notifications">
+            <option
+              ref="email"
+              value="email"
+              :selected="initialNotifications == 'email' ? '' : false"
+            >
+              Email
+            </option>
+            <option
+              ref="sms"
+              value="sms"
+              :selected="initialNotifications == 'sms' ? '' : false"
+            >
+              SMS
+            </option>
+            <option
+              ref="both"
+              value="both"
+              :selected="initialNotifications == 'both' ? '' : false"
+            >
+              Both
+            </option>
+            <option
+              ref="none"
+              value="none"
+              :selected="initialNotifications == 'none' ? '' : false"
+            >
+              None
+            </option>
+          </select>
+        </p>
         <div class="buttons">
           <button type="submit">Save</button>
           <button type="button" @click="cancelEditing">Cancel</button>
@@ -48,12 +81,14 @@ export default {
     const initialEmail = ref(store.state.user.email);
     const initialPhone = ref(store.state.user.phone);
     const initialPassword = ref(store.state.user.password);
+    const initialNotifications = ref(store.state.user.notifications);
 
     const editedName = ref(store.state.user.name);
     const editedAge = ref(store.state.user.age);
     const editedEmail = ref(store.state.user.email);
     const editedPhone = ref(store.state.user.phone);
     const editedPassword = ref(store.state.user.password);
+    const editedNotifications = ref(store.state.user.notifications);
 
     const editing = ref(false);
     const passwordShown = ref("•".repeat(editedPassword.value.length));
@@ -83,11 +118,16 @@ export default {
         return;
       }
 
+      editedNotifications.value = document.querySelector(
+        "select[name=notifications]"
+      ).value;
+
       initialName.value = editedName.value;
       initialAge.value = editedAge.value;
       initialEmail.value = editedEmail.value;
       initialPhone.value = editedPhone.value;
       initialPassword.value = editedPassword.value;
+      initialNotifications.value = editedNotifications.value;
 
       const updatedUser = {
         name: editedName.value,
@@ -95,7 +135,10 @@ export default {
         email: editedEmail.value,
         phone: editedPhone.value,
         password: editedPassword.value,
+        notifications: editedNotifications.value,
       };
+
+      console.log(updatedUser);
 
       store.commit("UPDATE_USER", updatedUser);
 
@@ -124,11 +167,13 @@ export default {
       initialEmail,
       initialPhone,
       initialPassword,
+      initialNotifications,
       editedName,
       editedAge,
       editedEmail,
       editedPhone,
       editedPassword,
+      editedNotifications,
       editing,
       passwordShown,
       saveChanges,
