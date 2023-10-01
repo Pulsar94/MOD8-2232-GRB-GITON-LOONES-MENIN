@@ -97,7 +97,7 @@ export default {
 
       this.transactions.forEach((txn) => {
         for (const category in totals) {
-          if (txn.description.includes(category)) {
+          if (txn.category.includes(category)) {
             totals[category] += txn.amount;
             break;
           }
@@ -130,9 +130,9 @@ export default {
           });
         }
 
-        // Check if the category exists in the transaction's description
+        // Check if the category exists in the transaction's category
         for (const category of this.categories) {
-          if (transaction.description.includes(category.name)) {
+          if (transaction.category.includes(category.name)) {
             totalsByDate[date][category.name] += -(transaction.amount);
             break;  // Stop looping once we found a matching category
           }
@@ -185,9 +185,9 @@ export default {
           });
         }
 
-        // Check if the category exists in the transaction's description
+        // Check if the category exists in the transaction's category
         for (const category of this.categories) {
-          if (transaction.description.includes(category.name)) {
+          if (transaction.category.includes(category.name)) {
             totalsByWeek[weekString][category.name] += -(transaction.amount);
             break;  // Stop looping once we found a matching category
           }
@@ -231,9 +231,9 @@ export default {
           });
         }
 
-        // Check if the category exists in the transaction's description
+        // Check if the category exists in the transaction's category
         for (const category of this.categories) {
-          if (transaction.description.includes(category.name)) {
+          if (transaction.category.includes(category.name)) {
             totalsByMonth[monthYearKey][category.name] += -(transaction.amount);
             break;  // Stop looping once we found a matching category
           }
@@ -259,14 +259,21 @@ export default {
       return dataTable;
     },
 
-
+    handleContainerClick(chart, data) {
+      const selection = chart.getSelection();
+      // console.log("Selection length: ", selection.length);
+      if (selection.length) {
+        this.$emit("filteredTransactions", this.transactions);
+        // console.log("All transactions emitted");
+      }
+    },
     drawChart() {
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(() => {
         try {
           // Some raw data (not necessarily accurate)
           const dataArray = this.dataToDisplay;
-          console.log(typeof dataArray, dataArray);
+          //console.log(typeof dataArray, dataArray);
           const data = google.visualization.arrayToDataTable(dataArray());
 
           const options = {
@@ -299,6 +306,86 @@ export default {
 
           const chart = new google.visualization.ComboChart(document.getElementById('combochart'));
           chart.draw(data, options);
+
+
+          //google.visualization.events.addListener(chart, 'onmouseover', mouseoverHandler);
+          //google.visualization.events.addListener(chart, 'onmouseout', mouseoutHandler);
+          google.visualization.events.addListener(chart, 'select', onclickHandler);
+
+          document.getElementById('combochart').addEventListener('click', () => {
+            // console.log("Container clicked");
+            this.handleContainerClick(chart, data);
+          });
+
+
+
+          const vm = this;
+
+          function onclickHandler() {
+            setTimeout(() => {
+              console.log("Select event triggered");
+
+              const selection = chart.getSelection();
+              console.log("Current selection:", selection);
+
+              // If no selection, emit all transactions
+              if (selection.length === 0) {
+                vm.$emit("filteredTransactions", vm.transactions);
+                console.log("All transactions emitted");
+                return;
+              }
+
+              // If the row is null, then it might be a click on the legend or axes
+              if (selection[0].row === null) {
+
+                const clickedTargetID = selection[0].targetID;
+                console.log("clickedTargetID:", clickedTargetID);
+
+                if (selection[0].row === null && typeof selection[0].column !== 'undefined') {
+                  // This might indicate a category (legend) click
+                  const clickedCategory = data.getColumnLabel(selection[0].column);
+                  console.log("Clicked Category from legend:", clickedCategory);
+
+                  const filteredTransactionsByCategory = vm.transactions.filter((txn) => txn.category === clickedCategory);
+                  console.log("Filtered transactions by category:", filteredTransactionsByCategory);
+                  vm.$emit("filteredTransactions", filteredTransactionsByCategory);
+                } else if (selection.length > 0 && typeof selection[0].row !== 'undefined') {
+                  // Handle the case where the chart background or other non-legend, non-data areas are clicked
+                  vm.$emit("filteredTransactions", vm.transactions);
+                  console.log("All transactions emitted");
+                }
+
+                return;
+              }
+
+              // Handle when a bar/line is clicked
+              const datePeriod = data.getValue(selection[0].row, 0);
+              const clickedCategory = data.getColumnLabel(selection[0].column);
+
+              const currentDateYear = new Date().getFullYear();
+              const convertedDatePeriod = `${currentDateYear}/${datePeriod.replace('-', '/')}`;
+
+              const mondayDate = new Date(convertedDatePeriod);
+              const sundayDate = new Date(mondayDate);
+              sundayDate.setDate(mondayDate.getDate() + 6); // Move to Sunday of that week
+
+              const filteredTransactions = vm.transactions.filter((txn) => {
+                const txnDate = new Date(txn.date);
+                return txnDate >= mondayDate && txnDate <= sundayDate && txn.category.toLowerCase() === clickedCategory.toLowerCase();
+              });
+
+              console.log("Retrieved category:", clickedCategory);
+              console.log("Date range:", mondayDate, "to", sundayDate);
+              console.log(JSON.parse(JSON.stringify(vm.transactions.slice(0, 10))));
+              console.log("Sample transactions:", vm.transactions.slice(0, 10));
+              console.log("Filtered transactions for the week and category:", filteredTransactions);
+
+              vm.$emit("filteredTransactions", filteredTransactions);
+            }, 10);
+          }
+
+
+
         }catch (error) {
           console.error("Error drawing the combo chart:", error);
         }
@@ -467,7 +554,7 @@ div.summary {
 
 <!--      this.transactions.forEach((txn) => {-->
 <!--        for (const category in totals) {-->
-<!--          if (txn.description.includes(category)) {-->
+<!--          if (txn.category.includes(category)) {-->
 <!--            totals[category] += Math.abs(txn.amount);-->
 <!--            break;-->
 <!--          }-->
@@ -500,9 +587,9 @@ div.summary {
 <!--          });-->
 <!--        }-->
 
-<!--        // Check if the category exists in the transaction's description-->
+<!--        // Check if the category exists in the transaction's category-->
 <!--        for (const category of this.categories) {-->
-<!--          if (transaction.description.includes(category.name)) {-->
+<!--          if (transaction.category.includes(category.name)) {-->
 <!--            totalsByDate[date][category.name] += Math.abs(transaction.amount);-->
 <!--            break;  // Stop looping once we found a matching category-->
 <!--          }-->
@@ -551,9 +638,9 @@ div.summary {
 <!--          });-->
 <!--        }-->
 
-<!--        // Check if the category exists in the transaction's description-->
+<!--        // Check if the category exists in the transaction's category-->
 <!--        for (const category of this.categories) {-->
-<!--          if (transaction.description.includes(category.name)) {-->
+<!--          if (transaction.category.includes(category.name)) {-->
 <!--            totalsByWeek[weekString][category.name] += Math.abs(transaction.amount);-->
 <!--            break;  // Stop looping once we found a matching category-->
 <!--          }-->
@@ -594,9 +681,9 @@ div.summary {
 <!--          });-->
 <!--        }-->
 
-<!--        // Check if the category exists in the transaction's description-->
+<!--        // Check if the category exists in the transaction's category-->
 <!--        for (const category of this.categories) {-->
-<!--          if (transaction.description.includes(category.name)) {-->
+<!--          if (transaction.category.includes(category.name)) {-->
 <!--            totalsByMonth[monthYearKey][category.name] += Math.abs(transaction.amount);-->
 <!--            break;  // Stop looping once we found a matching category-->
 <!--          }-->

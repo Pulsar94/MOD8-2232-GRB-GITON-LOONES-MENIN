@@ -474,7 +474,7 @@ div.summary {
 
 <!--      this.transactions.forEach((txn) => {-->
 <!--        for (const category in totals) {-->
-<!--          if (txn.description.includes(category)) {-->
+<!--          if (txn.category.includes(category)) {-->
 <!--            totals[category] += txn.amount;-->
 <!--            break;-->
 <!--          }-->

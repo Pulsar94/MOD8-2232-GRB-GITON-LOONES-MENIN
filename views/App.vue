@@ -37,29 +37,53 @@ export default {
   },
   methods: {
     populateTransactions() {
-      const descriptions = [
+      const categories = [
         "Utilities",
         "Dining",
         "Travel",
         "Entertainment",
         "Groceries",
       ];
-      const positiveDescriptions = [
+      const positiveCategories = [
         "Received bonus",
         "Refund",
         "Gift received",
         "Sold item",
       ];
 
-      function getRandomDescription() {
-        const randomIndex = Math.floor(Math.random() * descriptions.length);
-        return descriptions[randomIndex];
+      const libelles = [
+        "Electricity",
+        "Water",
+        "Gas",
+        "Internet",
+        "Phone",
+        "Restaurant",
+        "Fast food",
+        "Coffee shop",
+        "Airplane",
+        "Train",
+        "Bus",
+        "Taxi",
+        "Movie",
+        "Concert",
+        "Clothes",
+        "Shoes",
+      ];
+
+      function getRandomCategories() {
+        const randomIndex = Math.floor(Math.random() * categories.length);
+        return categories[randomIndex];
       }
-      function getRandomPositiveDescription() {
+      function getRandomPositiveCategories() {
         const randomIndex = Math.floor(
-          Math.random() * positiveDescriptions.length
+          Math.random() * positiveCategories.length
         );
-        return positiveDescriptions[randomIndex];
+        return positiveCategories[randomIndex];
+      }
+
+      function getRandomLibelle() {
+        const randomIndex = Math.floor(Math.random() * libelles.length);
+        return libelles[randomIndex];
       }
 
       function getRandomAmount(min, max) {
@@ -77,7 +101,8 @@ export default {
         date.setDate(i); // Increase the date for each iteration
         this.myTransactionsArray.push({
           id: i + 365,
-          description: getRandomDescription(), // Negative description
+          category: getRandomCategories(), // Negative category
+          libelle: getRandomLibelle(),
           amount: -getRandomAmount(20, 120), // Negative amount
           date: formatDate(date),
           rawDate: date,
@@ -90,7 +115,8 @@ export default {
          if (formatDate(date).split("/")[2] === "1") {
           this.myTransactionsArray.push({
             id: i,
-            description: "Salary",
+            category: "Salary",
+            libelle: "Salary",
             amount: 4000, // Positive amount
             date: formatDate(date),
             rawDate: date,
@@ -99,7 +125,8 @@ export default {
            // For every 11th transaction, make it positive
            this.myTransactionsArray.push({
              id: i,
-             description: getRandomPositiveDescription(),
+             category: getRandomPositiveCategories(),
+             libelle: getRandomLibelle(),
              amount: getRandomAmount(100, 250), // Positive amount
              date: formatDate(date),
              rawDate: date,
@@ -107,7 +134,8 @@ export default {
          } else {
           this.myTransactionsArray.push({
             id: i,
-            description: getRandomDescription(), // Negative description
+            category: getRandomCategories(), // Negative category
+            libelle: getRandomLibelle(),
             amount: -getRandomAmount(20, 120), // Negative amount
             date: formatDate(date),
             rawDate: date,
@@ -116,7 +144,8 @@ export default {
       }
       // this.myTransactionsArray.push({
       //   id: new Date().getTime(),
-      //   description: "AAAAAAAAA",
+      //   category: "AAAAAAAAA",
+      //   libelle: "AAAAAAAAA",
       //   amount: 4000, // Positive amount
       //   date: formatDate(new Date(2020, 0, 1)),
       //   rawDate: new Date(2022, 6, 30),

@@ -3,17 +3,17 @@
     <TotalAndAverageExpenses :transactions="myTransactionsArray" />
     <div class="container">
       <NavBar @changeChart="handleChangeChart" />
-      <PieChart v-if="currentChart === 'Pie'" :transactions="myTransactionsArray"
+      <PieChart @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Pie'" :transactions="myTransactionsArray"
       />
-      <ComboChart v-if="currentChart === 'Combo'" :transactions="myTransactionsArray"
+      <ComboChart @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Combo'" :transactions="myTransactionsArray"
       />
       <LineChart v-if="currentChart === 'Line'" :transactions="myInitialTransactionsArray"
       />
-      <Table v-if="currentChart === 'Table'" :transactions="myTransactionsArray"
+      <Table @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Table'" :transactions="myTransactionsArray"
       />
     </div>
 
-    <RecentTransactions :transactions="myTransactionsArray" />
+    <RecentTransactions :transactions="filteredTransactions" />
   </div>
 </template>
 
@@ -40,6 +40,7 @@ export default {
   data() {
     return {
       currentChart: "Pie",
+      filteredTransactions: this.$store.state.myTransactionsArray,
     };
   },
   computed: {
@@ -53,6 +54,9 @@ export default {
   methods: {
     handleChangeChart(chartType) {
       this.currentChart = chartType;
+    },
+    updateRecentTransactions(filteredTransactions) {
+      this.filteredTransactions = filteredTransactions;
     },
   },
 };

@@ -3,7 +3,7 @@
     <h2>Recent Transactions</h2>
     <button @click="transactionForm">Add a transaction</button>
     <form>
-      <select v-if="clicked" v-model="newTransaction.description">
+      <select v-if="clicked" v-model="newTransaction.category">
         <option value="Utilities">Utilities</option>
         <option value="Dining">Dining</option>
         <option value="Travel">Travel</option>
@@ -15,6 +15,7 @@
         <option value="Sold item">Sold item</option>
         <option value="Salary">Salary</option>
       </select>
+      <input v-if="clicked" v-model="newTransaction.libelle" placeholder="Libelle" type="text"/>
       <input v-if="clicked" v-model="newTransaction.amount" placeholder="Amount" type="number"/>
       <input v-if="clicked" v-model="newTransaction.date" placeholder="Date" type="date"/>
       <button v-if="clicked" @click.prevent="addTransaction">Add</button>
@@ -24,13 +25,15 @@
       <thead>
         <tr>
           <th class="category">Category</th>
-          <th>Date</th>
+          <th class="libelle">Libelle</th>
+          <th class="date">Date</th>
           <th class="amount">Amount</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="txn in pagedTransactions" :key="txn.id">
-          <td class="category">{{ txn.description }}</td>
+          <td class="category">{{ txn.category }}</td>
+          <td class="libelle">{{ txn.libelle }}</td>
           <td>{{new Date(txn.date).getFullYear() }}/{{('0'+(new Date(txn.date).getMonth()+1)).slice(-2)}}/{{('0'+(new Date(txn.date).getDate())).slice(-2) }}</td>
           <td class="amount">$ {{ txn.amount.toFixed(2) }}</td>
         </tr>
@@ -56,7 +59,8 @@ export default {
       itemsPerPage: 40,
       newTransaction: {
         id: 0,
-        description: "Utilities",
+        category: "Utilities",
+        libelle: "Libelle",
         amount: 1000,
         date: "",
       },
@@ -96,7 +100,7 @@ export default {
       // Generating unique ID using Date.now()
       this.newTransaction.id = Date.now();
       this.newTransaction.date = this.formatDate(new Date(this.newTransaction.date));
-      if(this.newTransaction.description === "Received bonus" || this.newTransaction.description === "Refund" || this.newTransaction.description === "Gift received" || this.newTransaction.description === "Sold item" || this.newTransaction.description === "Salary")
+      if(this.newTransaction.category === "Received bonus" || this.newTransaction.category === "Refund" || this.newTransaction.category === "Gift received" || this.newTransaction.category === "Sold item" || this.newTransaction.category === "Salary")
         this.newTransaction.amount = Math.abs(this.newTransaction.amount);
       else{
         this.newTransaction.amount = -Math.abs(this.newTransaction.amount);
@@ -113,7 +117,7 @@ export default {
       this.clicked = false;
       this.newTransaction = {
         id: 0,
-        description: "Utilities",
+        category: "Utilities",
         amount: 1000,
         date: "",
       };
@@ -156,10 +160,18 @@ export default {
 }
 
 .recent-transactions .category {
-  width: 50%; /* or you can give a fixed width like 300px */
+  width: 31%;
+}
+
+.recent-transactions .libelle {
+  width: 31%;
+}
+
+.recent-transactions .date {
+  width: 31%;
 }
 
 .recent-transactions .amount {
-  width: 10%; /* or another fixed width */
+  width: 31%;
 }
 </style>

@@ -1,7 +1,7 @@
 {
   "name": "project",
   "version": "1.0.0",
-  "description": "none",
+  "category": "none",
   "main": "../main.js",
   "scripts": {
     "serve": "vue-cli-service serve",
