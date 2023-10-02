@@ -30,28 +30,28 @@
             <option
               ref="email"
               value="email"
-              :selected="initialNotifications == 'email' ? '' : false"
+              :selected="initialNotifications == 'email'"
             >
               Email
             </option>
             <option
               ref="sms"
               value="sms"
-              :selected="initialNotifications == 'sms' ? '' : false"
+              :selected="initialNotifications == 'sms'"
             >
               SMS
             </option>
             <option
               ref="both"
               value="both"
-              :selected="initialNotifications == 'both' ? '' : false"
+              :selected="initialNotifications == 'both'"
             >
               Both
             </option>
             <option
               ref="none"
               value="none"
-              :selected="initialNotifications == 'none' ? '' : false"
+              :selected="initialNotifications == 'none'"
             >
               None
             </option>

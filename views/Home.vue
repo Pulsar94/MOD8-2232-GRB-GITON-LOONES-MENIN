@@ -66,18 +66,18 @@
       <div class="pie-chart">
         <PieChart
           @categorySelected="updateText"
-          :chartWidth="'900px'"
+          :chartWidth="'600px'"
           :chartHeight="'500px'"
-          :chartMargin="'none'"
+          :chartMargin="'10px'"
           :transactions="myTransactionsArray"
         />
         <p>{{ selectedCategoryText }}</p>
       </div>
       <div class="combo-chart">
         <ComboChart
-          :chartWidth="'900px'"
+          :chartWidth="'800px'"
           :chartHeight="'500px'"
-          :chartMargin="'none'"
+          :chartMargin="'10px'"
           :transactions="myTransactionsArray"
         />
         <p>
@@ -118,7 +118,7 @@
         <TableChart
           :chartWidth="'750px'"
           :chartHeight="'500px'"
-          :chartMargin="'none'"
+          :chartMargin="'0'"
           :transactions="myTransactionsArray"
         />
         <p>
@@ -213,6 +213,8 @@ img {
 .pie-chart {
   display: flex;
   flex-direction: row;
+  margin: 0 auto;
+  padding: 0;
 }
 .pie-chart > p {
   margin-top: 160px;
@@ -246,18 +248,6 @@ img {
 .container > * {
   vertical-align: top; /* ensures that inline-block children align properly */
 }
-.vertical-nav {
-  float: left;
-}
-
-.nav-links li {
-  display: inline;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: var(--white);
-}
 
 body {
   text-align: center;
@@ -289,5 +279,64 @@ button {
 
 button:hover {
   background-color: var(--button-hover);
+}
+
+@media (max-width: 640px) {
+  .description {
+    width: 100%;
+  }
+
+  img {
+    width: 100%;
+    margin: 0;
+  }
+
+  .presentation {
+    flex-direction: column;
+  }
+
+  .presentation > div {
+    margin-bottom: 20px;
+  }
+
+  .pie-chart {
+    flex-direction: column;
+  }
+
+  .combo-chart {
+    flex-direction: column;
+  }
+
+  .line-chart {
+    flex-direction: column;
+  }
+
+  .table-chart {
+    flex-direction: column;
+  }
+
+  .pie-chart > p {
+    margin-top: 0;
+  }
+
+  .combo-chart > p {
+    margin-top: 0;
+  }
+
+  .line-chart > p {
+    margin-top: 0;
+  }
+
+  .table-chart > p {
+    margin-top: 0;
+  }
+
+  .container {
+    position: relative;
+  }
+
+  .container > * {
+    vertical-align: top; /* ensures that inline-block children align properly */
+  }
 }
 </style>

@@ -6,6 +6,7 @@
     ></div>
   </div>
 </template>
+
 <script>
 import { mapState } from "vuex";
 
@@ -22,7 +23,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "auto",
+      default: "50px auto",
     },
     transactionCount: {
       type: Number,
@@ -199,6 +200,10 @@ export default {
             vaxis: {
               title: "Amount Spent",
             },
+            chartArea: {
+              width: "80%",
+              height: "80%",
+            },
             backgroundColor: getComputedStyle(
               document.documentElement
             ).getPropertyValue("--background-color"),
@@ -211,6 +216,7 @@ export default {
                   document.documentElement
                 ).getPropertyValue("--text"),
               },
+              position: "in",
             },
             hAxis: {
               textStyle: {
@@ -271,6 +277,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 @import url("../assets/css/variables.css");
 div.amount {

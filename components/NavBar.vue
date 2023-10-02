@@ -26,9 +26,10 @@ export default {
 @import url("../assets/css/variables.css");
 .vertical-nav {
   margin-top: 25px;
-  width: 150px; /* or your preferred width */
+  width: 200px;
   background-color: var(--navbar); /* Dark shade of blue */
   height: 80vh; /* Full viewport height */
+  border-radius: 8px;
 }
 
 .nav-links {
@@ -50,5 +51,17 @@ export default {
 
 .nav-links a:hover {
   background-color: var(--navbar-hover); /* A slightly lighter shade of blue */
+}
+
+@media (max-width: 768px) {
+  .vertical-nav {
+    height: auto;
+    width: 100%;
+  }
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
 }
 </style>

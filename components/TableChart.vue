@@ -20,7 +20,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "auto",
+      default: "50px auto",
     },
     transactionCount: {
       type: Number,
@@ -101,9 +101,11 @@ export default {
           data.addColumn("string", "Category");
           data.addColumn("string", "Amount"); //
           // Format the amounts to include the $ sign
-          const formattedData = Object.entries(this.categoryTotals).map(([category, amount]) => {
-            return [category, `$${amount.toFixed(2)}`];
-          });
+          const formattedData = Object.entries(this.categoryTotals).map(
+            ([category, amount]) => {
+              return [category, `$${amount.toFixed(2)}`];
+            }
+          );
           data.addRows(formattedData);
           const cssClassNames = {
             headerRow: "header-row",

@@ -1,6 +1,6 @@
 <template>
   <div class="recent-transactions">
-    <h2>Recent Transactions</h2>
+    <h1>Recent Transactions</h1>
     <table>
       <thead>
         <tr>
@@ -12,7 +12,11 @@
       <tbody>
         <tr v-for="txn in sortedTransactions" :key="txn.id">
           <td class="category">{{ txn.description }}</td>
-          <td>{{ new Date(txn.date).getFullYear() }}/{{('0'+(new Date(txn.date).getMonth()+1)).slice(-2)}}/{{('0'+(new Date(txn.date).getDate())).slice(-2)}}</td>
+          <td>
+            {{ new Date(txn.date).getFullYear() }}/{{
+              ("0" + (new Date(txn.date).getMonth() + 1)).slice(-2)
+            }}/{{ ("0" + new Date(txn.date).getDate()).slice(-2) }}
+          </td>
           <td class="amount">$ {{ txn.amount.toFixed(2) }}</td>
         </tr>
       </tbody>
@@ -30,7 +34,9 @@ export default {
   },
   computed: {
     sortedTransactions() {
-      return this.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+      return this.transactions.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
     },
   },
 };
@@ -74,5 +80,13 @@ export default {
 
 .recent-transactions .amount {
   width: 10%; /* or another fixed width */
+}
+
+h1 {
+  margin-top: 70px;
+}
+
+table {
+  margin-top: 40px;
 }
 </style>

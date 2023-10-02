@@ -1,8 +1,8 @@
 <template>
   <div class="chart-container">
     <div
-        id="combochart"
-        :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
+      id="combochart"
+      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
     ></div>
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "auto",
+      default: "50px auto",
     },
     transactionCount: {
       type: Number,
@@ -109,19 +109,19 @@ export default {
 
   methods: {
     generateDailyDataTable() {
-      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];
+      const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
 
       const totalsByDate = {};
 
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         const date = transaction.date;
 
         // Initialize the date if not yet created
         if (!totalsByDate[date]) {
           totalsByDate[date] = {};
-          this.categories.forEach(c => {
-            totalsByDate[date][c.name] = 0;  // Initialize every category for the date
+          this.categories.forEach((c) => {
+            totalsByDate[date][c.name] = 0; // Initialize every category for the date
           });
         }
 
@@ -129,7 +129,7 @@ export default {
         for (const category of this.categories) {
           if (transaction.description.includes(category.name)) {
             totalsByDate[date][category.name] += Math.abs(transaction.amount);
-            break;  // Stop looping once we found a matching category
+            break; // Stop looping once we found a matching category
           }
         }
       });
@@ -139,28 +139,27 @@ export default {
         const row = [date];
         let sum = 0;
 
-        this.categories.forEach(c => {
+        this.categories.forEach((c) => {
           const value = categories[c.name] || 0;
-          row.push({v: value, f: `$${Math.round(value)}`});
+          row.push({ v: value, f: `$${Math.round(value)}` });
           sum += value;
         });
         const mean = sum / this.categories.length;
-        row.push({v: mean, f: `$${mean.toFixed(2)}`});
+        row.push({ v: mean, f: `$${mean.toFixed(2)}` });
 
         dataTable.push(row);
       }
 
       dataTable = [headers, ...dataTable.slice(1).reverse()];
       return dataTable;
-
     },
     generateWeeklyDataTable() {
-      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];
+      const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
 
       const totalsByWeek = {};
 
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
         const startOfWeek = date;
         let dayOfWeek = date.getDay();
@@ -170,21 +169,25 @@ export default {
           dayOfWeek -= 1;
         }
         startOfWeek.setDate(date.getDate() - dayOfWeek);
-        const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(-2)}-${("0" + startOfWeek.getDate()).slice(-2)}`;
+        const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(
+          -2
+        )}-${("0" + startOfWeek.getDate()).slice(-2)}`;
 
         // Initialize the week if not yet created
         if (!totalsByWeek[weekString]) {
           totalsByWeek[weekString] = {};
-          this.categories.forEach(c => {
-            totalsByWeek[weekString][c.name] = 0;  // Initialize every category for the date
+          this.categories.forEach((c) => {
+            totalsByWeek[weekString][c.name] = 0; // Initialize every category for the date
           });
         }
 
         // Check if the category exists in the transaction's description
         for (const category of this.categories) {
           if (transaction.description.includes(category.name)) {
-            totalsByWeek[weekString][category.name] += Math.abs(transaction.amount);
-            break;  // Stop looping once we found a matching category
+            totalsByWeek[weekString][category.name] += Math.abs(
+              transaction.amount
+            );
+            break; // Stop looping once we found a matching category
           }
         }
       });
@@ -193,44 +196,47 @@ export default {
       for (const [weekString, categories] of Object.entries(totalsByWeek)) {
         const row = [weekString];
         let sum = 0;
-        this.categories.forEach(c => {
+        this.categories.forEach((c) => {
           const value = categories[c.name] || 0;
-          row.push({v: value, f: `$${Math.round(value)}`});
+          row.push({ v: value, f: `$${Math.round(value)}` });
           sum += value;
         });
         const mean = sum / this.categories.length;
-        row.push({v: mean, f: `$${mean.toFixed(2)}`});
+        row.push({ v: mean, f: `$${mean.toFixed(2)}` });
 
         dataTable.push(row);
       }
 
       dataTable = [headers, ...dataTable.slice(1).reverse()];
       return dataTable;
-
     },
     generateMonthlyDataTable() {
-      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];
+      const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
 
       const totalsByMonth = {};
 
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
-        const monthYearKey = `${("0" + (date.getMonth() + 1)).slice(-2)}-${date.getFullYear()}`;
+        const monthYearKey = `${("0" + (date.getMonth() + 1)).slice(
+          -2
+        )}-${date.getFullYear()}`;
 
         // Initialize the date if not yet created
         if (!totalsByMonth[monthYearKey]) {
           totalsByMonth[monthYearKey] = {};
-          this.categories.forEach(c => {
-            totalsByMonth[monthYearKey][c.name] = 0;  // Initialize every category for the date
+          this.categories.forEach((c) => {
+            totalsByMonth[monthYearKey][c.name] = 0; // Initialize every category for the date
           });
         }
 
         // Check if the category exists in the transaction's description
         for (const category of this.categories) {
           if (transaction.description.includes(category.name)) {
-            totalsByMonth[monthYearKey][category.name] += Math.abs(transaction.amount);
-            break;  // Stop looping once we found a matching category
+            totalsByMonth[monthYearKey][category.name] += Math.abs(
+              transaction.amount
+            );
+            break; // Stop looping once we found a matching category
           }
         }
       });
@@ -239,24 +245,22 @@ export default {
       for (const [monthString, categories] of Object.entries(totalsByMonth)) {
         const row = [monthString];
         let sum = 0;
-        this.categories.forEach(c => {
+        this.categories.forEach((c) => {
           const value = categories[c.name] || 0;
-          row.push({v: value, f: `$${Math.round(value)}`});
+          row.push({ v: value, f: `$${Math.round(value)}` });
           sum += value;
         });
         const mean = sum / this.categories.length;
-        row.push({v: mean, f: `$${mean.toFixed(2)}`});
+        row.push({ v: mean, f: `$${mean.toFixed(2)}` });
         dataTable.push(row);
       }
-
 
       dataTable = [headers, ...dataTable.slice(1).reverse()];
       return dataTable;
     },
 
-
     drawChart() {
-      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
           // Some raw data (not necessarily accurate)
@@ -265,40 +269,57 @@ export default {
           const data = google.visualization.arrayToDataTable(dataArray());
 
           const options = {
-            title: 'Monthly Coffee Production by Country',
-            vaxis: {title: 'Cups'},
-            haxis: {title: 'Month'},
+            title: "Monthly Coffee Production by Country",
+            vaxis: { title: "Cups" },
+            haxis: { title: "Month" },
             tooltip: { isHtml: true },
-            seriesType: 'bars',
-            series: {5: {type: 'line'}},
+            seriesType: "bars",
+            series: { 5: { type: "line" } },
+            chartArea: {
+              width: "80%",
+              height: "80%",
+            },
 
-
-            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
-            titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
+            backgroundColor: getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--background-color"),
+            titleColor: getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--header-text"),
             legend: {
               textStyle: {
-                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
               },
+              position: "bottom",
+              margin: "-20px 0",
             },
             hAxis: {
               textStyle: {
-                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
               },
             },
             vAxis: {
               textStyle: {
-                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
+                color: getComputedStyle(
+                  document.documentElement
+                ).getPropertyValue("--text"),
               },
-            }
+            },
           };
 
-          const chart = new google.visualization.ComboChart(document.getElementById('combochart'));
+          const chart = new google.visualization.ComboChart(
+            document.getElementById("combochart")
+          );
           chart.draw(data, options);
-        }catch (error) {
+        } catch (error) {
           console.error("Error drawing the combo chart:", error);
         }
       });
-    }
+    },
   },
 };
 </script>
@@ -342,31 +363,6 @@ div.summary {
   margin-bottom: 20px;
 }
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!--<template>-->
 <!--  <div class="chart-container">-->
@@ -612,10 +608,8 @@ div.summary {
 <!--        dataTable.push(row);-->
 <!--      }-->
 
-
 <!--      return dataTable;-->
 <!--    },-->
-
 
 <!--    drawChart() {-->
 <!--      google.charts.load('current', {'packages':['corechart']});-->

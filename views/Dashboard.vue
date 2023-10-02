@@ -3,17 +3,28 @@
     <TotalAndAverageExpenses :transactions="myTransactionsArray" />
     <div class="container">
       <NavBar @changeChart="handleChangeChart" />
-      <PieChart v-if="currentChart === 'Pie'" :transactions="myTransactionsArray"
+      <PieChart
+        v-if="currentChart === 'Pie'"
+        :transactions="myTransactionsArray"
       />
-      <ComboChart v-if="currentChart === 'Combo'" :transactions="myTransactionsArray"
+      <ComboChart
+        v-if="currentChart === 'Combo'"
+        :transactions="myTransactionsArray"
       />
-      <LineChart v-if="currentChart === 'Line'" :transactions="myTransactionsArray"
+      <LineChart
+        v-if="currentChart === 'Line'"
+        :transactions="myTransactionsArray"
       />
-      <Table v-if="currentChart === 'Table'" :transactions="myTransactionsArray"
+      <Table
+        v-if="currentChart === 'Table'"
+        :transactions="myTransactionsArray"
       />
     </div>
 
-    <RecentTransactions :transactions="myTransactionsArray" />
+    <RecentTransactions
+      class="transactions"
+      :transactions="myTransactionsArray"
+    />
   </div>
 </template>
 
@@ -101,5 +112,23 @@ button {
 
 button:hover {
   background-color: var(--button-hover);
+}
+
+@media (max-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .vertical-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .vertical-nav li {
+    display: block;
+  }
+  .vertical-nav a {
+    margin: 10px 0;
+  }
 }
 </style>
