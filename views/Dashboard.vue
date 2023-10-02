@@ -1,16 +1,15 @@
 <template>
   <div class="home-container">
-    <TotalAndAverageExpenses :transactions="myTransactionsArray" />
+    <TotalAndAverageExpenses @filteredTransactions="updateRecentTransactions" :transactions="myTransactionsArray" />
     <div class="container">
       <NavBar @changeChart="handleChangeChart" />
-      <PieChart @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Pie'" :transactions="myTransactionsArray"
-      />
-      <ComboChart @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Combo'" :transactions="myTransactionsArray"
-      />
-      <LineChart v-if="currentChart === 'Line'" :transactions="myInitialTransactionsArray"
-      />
-      <Table @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Table'" :transactions="myTransactionsArray"
-      />
+      <PieChart @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Pie'" :transactions="myTransactionsArray"/>
+      <ComboChart @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Combo' && chosenTime !== '-3'" :transactions="myTransactionsArray"/>
+
+      <p v-if="currentChart === 'Combo' && chosenTime === '-3'"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>Please select a date range<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+
+      <LineChart v-if="currentChart === 'Line'" :transactions="myInitialTransactionsArray"/>
+      <Table @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Table'" :transactions="myTransactionsArray"/>
     </div>
 
     <RecentTransactions :transactions="filteredTransactions" />
@@ -25,6 +24,7 @@ import LineChart from "../components/LineChart.vue";
 import Table from "../components/TableChart.vue";
 import RecentTransactions from "../components/RecentTransactions.vue";
 import TotalAndAverageExpenses from "../components/TotalAndAverageExpenses.vue";
+import {mapState} from "vuex";
 
 export default {
   components: {
@@ -44,6 +44,8 @@ export default {
     };
   },
   computed: {
+    ...mapState(["chosenTime"]),
+
     myTransactionsArray() {
       return this.$store.state.myTransactionsArray;
     },

@@ -81,7 +81,27 @@ export default {
           return this.generateMonthlyDataTable;
         case "-1":
           return this.generateMonthlyDataTable;
+        case "-2":
+          console.log(this.$store.state.dateRange[1], this.$store.state.dateRange[0]);
+          console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0]);
+          console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000);
+          console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000);
+
+          if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000){
+            return this.generateDailyDataTable;
+          }else if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000){
+            return this.generateWeeklyDataTable;
+          }else {
+            return this.generateMonthlyDataTable;
+          }
+        case "-3":
+          console.log("BBBBBBBBB")
+          this.chosenTime = "365";
+          return this.generateMonthlyDataTable;
+
         default:
+          console.log("default");
+          console.log(this.chosenTime);
           return this.generateWeeklyDataTable;
       }
     },

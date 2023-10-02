@@ -8,6 +8,9 @@ export const store = createStore({
         myTransactionsArray: [],
         numberOfDays: 0,
         chosenTime: 31,
+        month: null,
+        year: null,
+        dateRange: null,
         user: {
             id: 1,
             name: 'Patrick',
@@ -29,6 +32,15 @@ export const store = createStore({
         },
         SET_CHOSEN_TIME(state, chosenTime) {
             state.chosenTime = chosenTime;
+        },
+        SET_MONTH(state, month) {
+            state.month = month;
+        },
+        SET_YEAR(state, year) {
+            state.year = year;
+        },
+        SET_DATE_RANGE(state, dateRange) {
+            state.dateRange = dateRange;
         },
         UPDATE_USER(state, updatedUser) {
             state.user.name = updatedUser.name;
