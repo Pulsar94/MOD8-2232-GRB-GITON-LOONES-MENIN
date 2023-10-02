@@ -1,83 +1,42 @@
 <template>
-  <body>
-    <div class="description">
-      <h1>Welcome to Your Financial Companion</h1>
-      <p>
-        Are you looking for a simple and efficient way to take control of your
-        finances? Look no further than Your Financial Companion, your all-in-one
-        solution for managing expenses, tracking income, and achieving your
-        financial goals.
-      </p>
+  <div class="home-container">
+    <h2>Welcome to Budget Vision!</h2>
+    <p>
+      Struggling to keep track of your spending? Overwhelmed by numerous bills,
+      receipts, and expenses? Say hello to Budget Vision—your trusted partner in
+      financial management.
+    </p>
+    <p>
+      Our platform offers you a comprehensive view of all your expenditures,
+      breaking them down into easy-to-understand categories and visual diagrams.
+      We simplify budgeting so that you can focus on making better financial
+      decisions.
+    </p>
+    <p>
+      Unlock the power of smart spending. With Budget Vision, you gain insight,
+      clarity, and control over your financial world. Don't just view your
+      expenses—understand them.
+    </p>
 
-      <div class="presentation">
-        <div>
-          <h2>Key Features:</h2>
-          <ul>
-            <li>
-              <strong>Expense Tracking:</strong> Easily record your daily
-              expenses, categorize them, and gain insights into your spending
-              habits.
-            </li>
-            <li>
-              <strong>Budget Management:</strong> Set monthly budgets for
-              different spending categories and receive alerts to stay on track.
-            </li>
-            <li>
-              <strong>Financial Goals:</strong> Define your financial
-              objectives, whether it's saving for a dream vacation or paying off
-              debt, and track your progress.
-            </li>
-            <li>
-              <strong>Automated Expense Categorization:</strong> Let our smart
-              categorization engine organize your expenses for you, or customize
-              it to fit your unique needs.
-            </li>
-            <li>
-              <strong>Detailed Reports:</strong> Access detailed monthly
-              spending reports and analyze your financial data with intuitive
-              charts and graphs.
-            </li>
-            <li>
-              <strong>Secure and Personalized:</strong> Your data's security is
-              our top priority. We offer customizable account settings,
-              two-factor authentication, and more.
-            </li>
-            <li>
-              <strong>24/7 Support:</strong> Need assistance or have questions?
-              Our support team is here to help you whenever you need it.
-            </li>
-          </ul>
-        </div>
-        <img src="../assets/img/home_image.svg" alt="Image" />
-      </div>
-
-      <p>
-        Take the first step towards financial freedom and join Your Financial
-        Companion today. Sign up now and start making informed financial
-        decisions, achieving your goals, and securing your financial future.
-        Your financial journey begins here.
-      </p>
-    </div>
-
-    <h2 id="preview-header">Here's a preview :</h2>
+    <h2>Here's a preview :</h2>
 
     <div class="container">
       <TotalAndAverageExpenses :transactions="myTransactionsArray" />
       <div class="pie-chart">
         <PieChart
           @categorySelected="updateText"
-          :chartWidth="'600px'"
+          :chartWidth="'900px'"
           :chartHeight="'500px'"
-          :chartMargin="'10px'"
+          :chartMargin="'none'"
           :transactions="myTransactionsArray"
         />
         <p>{{ selectedCategoryText }}</p>
       </div>
       <div class="combo-chart">
         <ComboChart
-          :chartWidth="'800px'"
+          :chartWidth="'900px'"
           :chartHeight="'500px'"
-          :chartMargin="'10px'"
+          :chartMargin="'none'"
           :transactions="myTransactionsArray"
         />
         <p>
@@ -118,7 +77,7 @@
         <TableChart
           :chartWidth="'750px'"
           :chartHeight="'500px'"
-          :chartMargin="'0'"
+          :chartMargin="'none'"
           :transactions="myTransactionsArray"
         />
         <p>
@@ -139,7 +98,7 @@
         </p>
       </div>
     </div>
-  </body>
+  </div>
 </template>
 
 <script>
@@ -188,33 +147,9 @@ export default {
 <style scoped>
 @import url("../assets/css/variables.css");
 
-.description {
-  margin: 0 auto;
-  width: 80%;
-  text-align: left;
-}
-
-.presentation {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#preview-header {
-  margin-top: 50px;
-}
-
-img {
-  width: 35vw;
-  margin-left: 12px;
-}
-
 .pie-chart {
   display: flex;
   flex-direction: row;
-  margin: 0 auto;
-  padding: 0;
 }
 .pie-chart > p {
   margin-top: 160px;
@@ -248,8 +183,20 @@ img {
 .container > * {
   vertical-align: top; /* ensures that inline-block children align properly */
 }
+.vertical-nav {
+  float: left;
+}
 
-body {
+.nav-links li {
+  display: inline;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--white);
+}
+
+.home-container {
   text-align: center;
   margin: 0;
   margin-top: 50px;
@@ -261,11 +208,6 @@ body {
 
 p {
   color: var(--text);
-  font-size: large;
-}
-
-li {
-  font-size: large;
 }
 
 button {
@@ -279,64 +221,5 @@ button {
 
 button:hover {
   background-color: var(--button-hover);
-}
-
-@media (max-width: 640px) {
-  .description {
-    width: 100%;
-  }
-
-  img {
-    width: 100%;
-    margin: 0;
-  }
-
-  .presentation {
-    flex-direction: column;
-  }
-
-  .presentation > div {
-    margin-bottom: 20px;
-  }
-
-  .pie-chart {
-    flex-direction: column;
-  }
-
-  .combo-chart {
-    flex-direction: column;
-  }
-
-  .line-chart {
-    flex-direction: column;
-  }
-
-  .table-chart {
-    flex-direction: column;
-  }
-
-  .pie-chart > p {
-    margin-top: 0;
-  }
-
-  .combo-chart > p {
-    margin-top: 0;
-  }
-
-  .line-chart > p {
-    margin-top: 0;
-  }
-
-  .table-chart > p {
-    margin-top: 0;
-  }
-
-  .container {
-    position: relative;
-  }
-
-  .container > * {
-    vertical-align: top; /* ensures that inline-block children align properly */
-  }
 }
 </style>

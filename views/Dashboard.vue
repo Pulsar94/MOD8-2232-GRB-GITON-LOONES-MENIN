@@ -1,19 +1,19 @@
 <template>
   <div class="home-container">
-    <TotalAndAverageExpenses :transactions="myTransactionsArray" />
+    <TotalAndAverageExpenses @filteredTransactions="updateRecentTransactions" :transactions="myTransactionsArray" />
     <div class="container">
       <NavBar @changeChart="handleChangeChart" />
-      <PieChart @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Pie'" :transactions="myTransactionsArray"
+      <PieChart v-if="currentChart === 'Pie'" :transactions="myTransactionsArray"
       />
-      <ComboChart @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Combo'" :transactions="myTransactionsArray"
+      <ComboChart v-if="currentChart === 'Combo'" :transactions="myTransactionsArray"
       />
-      <LineChart v-if="currentChart === 'Line'" :transactions="myInitialTransactionsArray"
+      <LineChart v-if="currentChart === 'Line'" :transactions="myTransactionsArray"
       />
-      <Table @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Table'" :transactions="myTransactionsArray"
+      <Table v-if="currentChart === 'Table'" :transactions="myTransactionsArray"
       />
     </div>
 
-    <RecentTransactions :transactions="filteredTransactions" />
+    <RecentTransactions :transactions="myTransactionsArray" />
   </div>
 </template>
 
@@ -36,27 +36,25 @@ export default {
     ComboChart,
     NavBar,
   },
+  watch: {
+    chosenTime(newValue){
+      console.log(newValue)
+    }
+  },
 
   data() {
     return {
       currentChart: "Pie",
-      filteredTransactions: this.$store.state.myTransactionsArray,
     };
   },
   computed: {
     myTransactionsArray() {
       return this.$store.state.myTransactionsArray;
     },
-    myInitialTransactionsArray() {
-      return this.$store.state.myInitialTransactionsArray;
-    },
   },
   methods: {
     handleChangeChart(chartType) {
       this.currentChart = chartType;
-    },
-    updateRecentTransactions(filteredTransactions) {
-      this.filteredTransactions = filteredTransactions;
     },
   },
 };
@@ -108,23 +106,5 @@ button {
 
 button:hover {
   background-color: var(--button-hover);
-}
-
-@media (max-width: 768px) {
-  .container {
-    display: flex;
-    flex-direction: column;
-  }
-  .vertical-nav {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .vertical-nav li {
-    display: block;
-  }
-  .vertical-nav a {
-    margin: 10px 0;
-  }
 }
 </style>

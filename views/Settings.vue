@@ -1,5 +1,5 @@
 <template>
-  <body>
+  <div>
     <h1>Settings</h1>
     <form @submit.prevent="saveChanges">
       <div class="informations" v-if="!editing">
@@ -10,13 +10,10 @@
         <p>
           Password: {{ passwordShown }}
           <button type="button" id="password" @click="togglePasswordVisibility">
-            {{ passwordShown === initialPassword ? "Hide" : "Show" }}
+            Show/Hide
           </button>
         </p>
-        <div class="buttons">
-          <button type="button" @click="logOut">Log Out</button>
-          <button @click="editing = true">Edit</button>
-        </div>
+        <button @click="editing = true">Edit</button>
       </div>
       <div class="informations" v-else>
         <p>Name: <input type="text" v-model="editedName" /></p>
@@ -24,71 +21,34 @@
         <p>Email: <input type="email" v-model="editedEmail" /></p>
         <p>Phone: <input type="number" v-model="editedPhone" /></p>
         <p>Password: <input type="password" v-model="editedPassword" /></p>
-        <p>
-          Notification preferences:
-          <select name="notifications">
-            <option
-              ref="email"
-              value="email"
-              :selected="initialNotifications == 'email'"
-            >
-              Email
-            </option>
-            <option
-              ref="sms"
-              value="sms"
-              :selected="initialNotifications == 'sms'"
-            >
-              SMS
-            </option>
-            <option
-              ref="both"
-              value="both"
-              :selected="initialNotifications == 'both'"
-            >
-              Both
-            </option>
-            <option
-              ref="none"
-              value="none"
-              :selected="initialNotifications == 'none'"
-            >
-              None
-            </option>
-          </select>
-        </p>
         <div class="buttons">
           <button type="submit">Save</button>
           <button type="button" @click="cancelEditing">Cancel</button>
         </div>
       </div>
     </form>
-  </body>
+  </div>
 </template>
 
 <script>
 import { useStore } from "vuex";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 export default {
   setup() {
     const store = useStore();
-    const router = useRouter();
 
     const initialName = ref(store.state.user.name);
     const initialAge = ref(store.state.user.age);
     const initialEmail = ref(store.state.user.email);
     const initialPhone = ref(store.state.user.phone);
     const initialPassword = ref(store.state.user.password);
-    const initialNotifications = ref(store.state.user.notifications);
 
     const editedName = ref(store.state.user.name);
     const editedAge = ref(store.state.user.age);
     const editedEmail = ref(store.state.user.email);
     const editedPhone = ref(store.state.user.phone);
     const editedPassword = ref(store.state.user.password);
-    const editedNotifications = ref(store.state.user.notifications);
 
     const editing = ref(false);
     const passwordShown = ref("•".repeat(editedPassword.value.length));
@@ -118,16 +78,11 @@ export default {
         return;
       }
 
-      editedNotifications.value = document.querySelector(
-        "select[name=notifications]"
-      ).value;
-
       initialName.value = editedName.value;
       initialAge.value = editedAge.value;
       initialEmail.value = editedEmail.value;
       initialPhone.value = editedPhone.value;
       initialPassword.value = editedPassword.value;
-      initialNotifications.value = editedNotifications.value;
 
       const updatedUser = {
         name: editedName.value,
@@ -135,10 +90,7 @@ export default {
         email: editedEmail.value,
         phone: editedPhone.value,
         password: editedPassword.value,
-        notifications: editedNotifications.value,
       };
-
-      console.log(updatedUser);
 
       store.commit("UPDATE_USER", updatedUser);
 
@@ -155,30 +107,21 @@ export default {
       editing.value = false;
     };
 
-    const logOut = () => {
-      store.commit("LOG_OUT");
-      alert("You have been logged out");
-      router.push("/");
-    };
-
     return {
       initialName,
       initialAge,
       initialEmail,
       initialPhone,
       initialPassword,
-      initialNotifications,
       editedName,
       editedAge,
       editedEmail,
       editedPhone,
       editedPassword,
-      editedNotifications,
       editing,
       passwordShown,
       saveChanges,
       cancelEditing,
-      logOut,
     };
   },
   data: () => ({
@@ -200,16 +143,11 @@ export default {
 </script>
 
 <style scoped>
-@import url("../assets/css/variables.css");
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 30px;
-}
-
-h1 {
-  color: var(--header-text);
 }
 
 .informations {
@@ -228,16 +166,7 @@ h1 {
 }
 
 button {
-  margin: 20px 15px 40px 15px;
-  padding: 5px 10px;
-  background-color: var(--form-button);
-  color: var(--black);
-  border: none;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: var(--form-button-hover);
+  margin: 20px;
 }
 
 .buttons {
@@ -248,12 +177,5 @@ button:hover {
 
 #password {
   margin: 0 12px;
-  background-color: var(--table-row);
-  color: var(--black);
-  font-size: 10px;
-}
-
-#password:hover {
-  background-color: var(--table-row-odd);
 }
 </style>

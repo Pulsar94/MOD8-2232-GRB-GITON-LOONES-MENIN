@@ -22,7 +22,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "50px auto",
+      default: "auto",
     },
     transactionCount: {
       type: Number,
@@ -116,11 +116,9 @@ export default {
           data.addColumn("string", "Category");
           data.addColumn("string", "Amount"); //
           // Format the amounts to include the $ sign
-          const formattedData = Object.entries(this.categoryTotals).map(
-            ([category, amount]) => {
-              return [category, `$${amount.toFixed(2)}`];
-            }
-          );
+          const formattedData = Object.entries(this.categoryTotals).map(([category, amount]) => {
+            return [category, `$${amount.toFixed(2)}`];
+          });
           data.addRows(formattedData);
           const cssClassNames = {
             headerRow: "header-row",
@@ -181,7 +179,7 @@ export default {
                 const category = data.getValue(selection[0].row, 0);
                 const filteredTransactions = vm.transactions.filter((txn) => {
                   return txn.category.includes(category);
-                });
+                }).sort((a, b) => new Date(b.date) - new Date(a.date));
                 vm.$emit("filteredTransactions", filteredTransactions);
                 console.log("Filtered transactions emitted:", filteredTransactions);
               } else {

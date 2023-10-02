@@ -30,8 +30,10 @@ export default {
       const todayDate = new Date()
       this.$store.commit('SET_CHOSEN_TIME', newValue);
       if (newValue !== "-1"){
-        this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray.filter(t => t.rawDate < todayDate).filter(t => t.rawDate > new Date()-this.chosenTime* 24 * 60 * 60 * 1000));
+        this.$emit('filteredTransactions', this.$store.state.myInitialTransactionsArray.filter(t => t.rawDate < todayDate).filter(t => t.rawDate > todayDate - newValue * 24 * 60 * 60 * 1000).sort((a, b) => new Date(b.date) - new Date(a.date)));
+        this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray.filter(t => t.rawDate < todayDate).filter(t => t.rawDate >todayDate - newValue * 24 * 60 * 60 * 1000).sort((a, b) => new Date(b.date) - new Date(a.date)));
       }else {
+        this.$emit('filteredTransactions', this.$store.state.myInitialTransactionsArray);
         this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray);
       }
       this.$forceUpdate();
@@ -47,16 +49,16 @@ export default {
   computed: {
     totalExpenses() {
       if (this.chosenTime !== "-1") {
-        return Math.round(this.transactions.filter((t) => t.amount < 0).reduce((sum, txn) => sum + txn.amount, 0));
+        return Math.round(this.transactions.filter((t) => t.amount < 0).sort((a, b) => new Date(b.date) - new Date(a.date)).reduce((sum, txn) => sum + txn.amount, 0));
       }else {
-        return Math.round(this.$store.state.myInitialTransactionsArray.filter((t) => t.amount < 0).reduce((sum, txn) => sum + txn.amount, 0));
+        return Math.round(this.$store.state.myInitialTransactionsArray.filter((t) => t.amount < 0).sort((a, b) => new Date(b.date) - new Date(a.date)).reduce((sum, txn) => sum + txn.amount, 0));
       }
     },
     totalGain() {
       if (this.chosenTime !== "-1") {
-        return Math.round(this.transactions.filter((t) => t.amount > 0).reduce((sum, txn) => sum + txn.amount, 0));
+        return Math.round(this.transactions.filter((t) => t.amount > 0).sort((a, b) => new Date(b.date) - new Date(a.date)).reduce((sum, txn) => sum + txn.amount, 0));
       }else {
-        return Math.round(this.$store.state.myInitialTransactionsArray.filter((t) => t.amount > 0).reduce((sum, txn) => sum + txn.amount, 0));
+        return Math.round(this.$store.state.myInitialTransactionsArray.filter((t) => t.amount > 0).sort((a, b) => new Date(b.date) - new Date(a.date)).reduce((sum, txn) => sum + txn.amount, 0));
       }
     },
     averageDailyExpense() {
