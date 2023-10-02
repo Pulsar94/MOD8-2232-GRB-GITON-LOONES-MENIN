@@ -109,4 +109,22 @@ button {
 button:hover {
   background-color: var(--button-hover);
 }
+
+@media (max-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .vertical-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .vertical-nav li {
+    display: block;
+  }
+  .vertical-nav a {
+    margin: 10px 0;
+  }
+}
 </style>

@@ -6,8 +6,13 @@
     <nav>
       <ul class="nav-links">
         <li><router-link to="/about">About Us</router-link></li>
-        <li><router-link to="/dashboard">Dashboard</router-link></li>
-        <li><router-link to="/settings">Settings</router-link></li>
+        <li v-if="authenticated">
+          <router-link to="/dashboard">Dashboard</router-link>
+        </li>
+        <li v-if="authenticated">
+          <router-link to="/settings">Settings</router-link>
+        </li>
+        <li v-else><router-link to="/login">Login</router-link></li>
       </ul>
     </nav>
   </header>
@@ -17,10 +22,12 @@
   <footer>
     <a href="/about/">
       <text class="footer-btn">About Us</text>
+    </a>
+    <a href="/about/">
       <text class="footer-btn">Contact</text>
     </a>
-    <text class="footer-btn">Privacy Policy</text>
-    <text class="footer-btn">Terms of Service</text>
+    <router-link class="footer-btn" to="/policy">Privacy Policy</router-link>
+    <router-link class="footer-btn" to="/terms">Terms of Service</router-link>
   </footer>
 </template>
 
@@ -33,6 +40,9 @@ export default {
   computed: {
     myTransactionsArray() {
       return this.$store.state.myTransactionsArray;
+    },
+    authenticated() {
+      return this.$store.state.authenticated;
     },
   },
   methods: {
@@ -167,7 +177,7 @@ export default {
   color: var(--black);
   padding: 10px 15px;
   border-radius: 0 0 8px 8px;
-  height: 80px;
+  /* height: 80px; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -202,7 +212,7 @@ footer {
   padding: 10px 15px;
   margin-top: -13px;
   border-radius: 8px 8px 0 0;
-  height: 80px;
+  /* height: 80px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -211,7 +221,7 @@ footer {
 .footer-btn {
   background-color: var(--footer-btn);
   border: none;
-  margin: 0 30px;
+  margin: 20px 30px;
   font-size: 15px;
   padding: 10px 20px;
   border-radius: 8px;
@@ -228,5 +238,26 @@ footer {
 footer a {
   text-decoration: none;
   color: var(--black);
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-links li {
+    margin: 10px 0;
+  }
+
+  footer {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>

@@ -19,7 +19,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "auto",
+      default: "50px auto",
     },
     transactionCount: {
       type: Number,
@@ -205,14 +205,14 @@ export default {
             vaxis: {
               title: "Balance",
             },
+            chartArea: {width: "80%", height: "80%",},
             backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
-            titleTextStyle: {
-              color: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
-            },
+            titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
             legend: {
               textStyle: {
                 color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
+              position: "in",
             },
             hAxis: {
               textStyle: {

@@ -15,7 +15,9 @@ export const store = createStore({
             password: '123456',
             phone: '1234567890',
             age: 24,
-        }
+            notifications: 'sms'
+        },
+        authenticated: true,
     },
     mutations: {
         SET_INITIAL_TRANSACTIONS(state, transactions) {
@@ -36,10 +38,17 @@ export const store = createStore({
             state.user.email = updatedUser.email;
             state.user.phone = updatedUser.phone;
             state.user.password = updatedUser.password;
+            state.user.notifications = updatedUser.notifications;
         },
         addTransaction(state, transaction) {
             state.myTransactionsArray.push(toRaw(transaction));
             // state.myInitialTransactionsArray.push(toRaw(transaction));
+        },
+        LOG_IN(state) {
+            state.authenticated = true;
+        },
+        LOG_OUT(state) {
+            state.authenticated = false;
         }
     },
     getters: {

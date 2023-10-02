@@ -22,7 +22,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "auto",
+      default: "50px auto",
     },
     categories: {
       type: Array,
@@ -103,6 +103,8 @@ export default {
             backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
             titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
             legend: {
+              position: "right",
+              alignment: "center",
               textStyle: {
                 color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },

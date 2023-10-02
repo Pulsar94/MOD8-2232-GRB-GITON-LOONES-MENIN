@@ -1,6 +1,6 @@
 <template>
   <div class="recent-transactions">
-    <h2>Recent Transactions</h2>
+    <h1>Recent Transactions</h1>
     <button @click="transactionForm">Add a transaction</button>
     <form>
       <select v-if="clicked" v-model="newTransaction.category">
@@ -173,5 +173,13 @@ export default {
 
 .recent-transactions .amount {
   width: 31%;
+}
+
+h1 {
+  margin-top: 70px;
+}
+
+table {
+  margin-top: 40px;
 }
 </style>
