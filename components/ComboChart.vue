@@ -14,7 +14,7 @@ export default {
   props: {
     chartWidth: {
       type: String,
-      default: "900px",
+      default: window.innerWidth.valueOf() / 1.2 + "px",
     },
     chartHeight: {
       type: String,

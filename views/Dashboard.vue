@@ -4,6 +4,7 @@
     <div class="container">
       <NavBar @changeChart="handleChangeChart" />
       <PieChart
+        class="chart"
         v-if="currentChart === 'Pie'"
         :transactions="myTransactionsArray"
       />
@@ -70,6 +71,10 @@ export default {
 @import url("../assets/css/variables.css");
 .container {
   position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .container > * {
