@@ -11,7 +11,7 @@
       : ${{ Math.abs(totalExpenses) }}
     </div>
     <div>Total Gain: ${{ Math.abs(totalGain) }}</div>
-    <div>Difference: ${{totalGain+totalExpenses}}</div>
+    <div>Difference: ${{ totalGain + totalExpenses }}</div>
     <div>Average Daily Expense: ${{ Math.abs(averageDailyExpense) }}</div>
   </div>
 </template>
@@ -22,8 +22,8 @@ import pieChart from "./PieChart.vue";
 export default {
   data() {
     return {
-      chosenTime: '31'
-    }
+      chosenTime: "31",
+    };
   },
   watch: {
     chosenTime(newValue) {
@@ -39,12 +39,12 @@ export default {
       this.$forceUpdate();
     },
   },
-  name: 'TotalAndAverageExpenses',
+  name: "TotalAndAverageExpenses",
   props: {
     transactions: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     totalExpenses() {
@@ -63,23 +63,21 @@ export default {
     },
     averageDailyExpense() {
       if (this.chosenTime !== "-1") {
-        return Math.round(this.totalExpenses / (this.numberOfDays() < this.chosenTime ? this.numberOfDays() : this.chosenTime))
-      }else {
+        return Math.round(this.totalExpenses / (this.numberOfDays() < this.chosenTime ? this.numberOfDays() : this.chosenTime));
+      } else {
         const firstDate = this.$store.state.myInitialTransactionsArray.at(0).rawDate;
-        const lastDate = this.$store.state.myInitialTransactionsArray.at(this.$store.state.myInitialTransactionsArray.length-1).rawDate;
-        this.$store.commit('SET_DAYS', Math.round((lastDate.getTime() - firstDate.getTime() ) / (1000 * 60 * 60 * 24)));
-        return Math.round(this.totalExpenses / this.numberOfDays())
+        const lastDate = this.$store.state.myInitialTransactionsArray.at(this.$store.state.myInitialTransactionsArray.length - 1).rawDate;
+        this.$store.commit("SET_DAYS", Math.round((lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24)));
+        return Math.round(this.totalExpenses / this.numberOfDays());
       }
     },
-
   },
   methods: {
     numberOfDays() {
-      return this.$store.state.numberOfDays
+      return this.$store.state.numberOfDays;
     },
-
-  }
-}
+  },
+};
 </script>
 <style scoped>
 div.summary {

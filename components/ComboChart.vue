@@ -1,9 +1,6 @@
 <template>
   <div class="chart-container">
-    <div
-        id="combochart"
-        :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
-    ></div>
+    <div id="combochart" :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"></div>
   </div>
 </template>
 <script>
@@ -23,7 +20,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "auto",
+      default: "50px auto",
     },
     transactionCount: {
       type: Number,
@@ -120,14 +117,14 @@ export default {
 
       const totalsByDate = {};
 
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         const date = transaction.date;
 
         // Initialize the date if not yet created
         if (!totalsByDate[date]) {
           totalsByDate[date] = {};
-          this.categories.forEach(c => {
-            totalsByDate[date][c.name] = 0;  // Initialize every category for the date
+          this.categories.forEach((c) => {
+            totalsByDate[date][c.name] = 0; // Initialize every category for the date
           });
         }
 
@@ -145,13 +142,13 @@ export default {
         const row = [date];
         let sum = 0;
 
-        this.categories.forEach(c => {
+        this.categories.forEach((c) => {
           const value = categories[c.name] || 0;
-          row.push({v: value, f: `$${Math.round(value)}`});
+          row.push({ v: value, f: `$${Math.round(value)}` });
           sum += value;
         });
         const mean = sum / this.categories.length;
-        row.push({v: mean, f: `$${mean.toFixed(2)}`});
+        row.push({ v: mean, f: `$${mean.toFixed(2)}` });
 
         dataTable.push(row);
       }
@@ -160,10 +157,11 @@ export default {
       return dataTable;
     },
     generateWeeklyDataTable() {
-      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];
+      const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
       const totalsByWeek = {};
-      this.transactions.forEach(transaction => {
+
+      this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
         const startOfWeek = date;
         let dayOfWeek = date.getDay();
@@ -195,7 +193,7 @@ export default {
       for (const [weekString, categories] of Object.entries(totalsByWeek)) {
         const row = [weekString];
         let sum = 0;
-        this.categories.forEach(c => {
+        this.categories.forEach((c) => {
           const value = categories[c.name] || 0;
           row.push({v: value, f: `$${Math.round(value)}`});
           sum += value;
@@ -208,18 +206,19 @@ export default {
       return dataTable;
     },
     generateMonthlyDataTable() {
-      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];
+      const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
       const totalsByMonth = {};
-      this.transactions.forEach(transaction => {
+
+      this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
         const monthYearKey = `${date.getFullYear()}/${("0" + (date.getMonth() + 1)).slice(-2)}`;
 
         // Initialize the date if not yet created
         if (!totalsByMonth[monthYearKey]) {
           totalsByMonth[monthYearKey] = {};
-          this.categories.forEach(c => {
-            totalsByMonth[monthYearKey][c.name] = 0;  // Initialize every category for the date
+          this.categories.forEach((c) => {
+            totalsByMonth[monthYearKey][c.name] = 0; // Initialize every category for the date
           });
         }
         // Check if the category exists in the transaction's category
@@ -234,13 +233,13 @@ export default {
       for (const [monthString, categories] of Object.entries(totalsByMonth)) {
         const row = [monthString];
         let sum = 0;
-        this.categories.forEach(c => {
+        this.categories.forEach((c) => {
           const value = categories[c.name] || 0;
-          row.push({v: value, f: `$${Math.round(value)}`});
+          row.push({ v: value, f: `$${Math.round(value)}` });
           sum += value;
         });
         const mean = sum / this.categories.length;
-        row.push({v: mean, f: `$${mean.toFixed(2)}`});
+        row.push({ v: mean, f: `$${mean.toFixed(2)}` });
         dataTable.push(row);
       }
       dataTable = [headers, ...dataTable.slice(1).reverse()];
@@ -256,7 +255,7 @@ export default {
       }
     },
     drawChart() {
-      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
           // Some raw data (not necessarily accurate)
@@ -269,8 +268,12 @@ export default {
             vaxis: {title: 'Cups'},
             haxis: {title: 'Month'},
             tooltip: { isHtml: true },
-            seriesType: 'bars',
-            series: {5: {type: 'line'}},
+            seriesType: "bars",
+            series: { 5: { type: "line" } },
+            chartArea: {
+              width: "80%",
+              height: "80%",
+            },
 
 
             backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
@@ -279,6 +282,8 @@ export default {
               textStyle: {
                 color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
+              position: "bottom",
+              margin: "-20px 0",
             },
             hAxis: {
               textStyle: {
@@ -291,7 +296,7 @@ export default {
               textStyle: {
                 color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
-            }
+            },
           };
 
           const chart = new google.visualization.ComboChart(document.getElementById('combochart'));
@@ -446,17 +451,21 @@ div.nav-links a {
   text-decoration: none;
   color: var(--white);
 }
+
 div.chart-container h1 {
   display: flex;
   justify-content: center;
   color: var(--header-text);
 }
+
 div.chart-container p {
   color: var(--text);
 }
+
 div.chart-container button:hover {
   background-color: var(--button-hover);
 }
+
 div.summary {
   display: flex;
   justify-content: space-around;
@@ -475,352 +484,324 @@ div.summary {
 
 
 
+<!--export default {-->
+<!--  name: "combochart",-->
+<!--  props: {-->
+<!--    chartWidth: {-->
+<!--      type: String,-->
+<!--      default: "900px",-->
+<!--    },-->
+<!--    chartHeight: {-->
+<!--      type: String,-->
+<!--      default: "500px",-->
+<!--    },-->
+<!--    chartMargin: {-->
+<!--      type: String,-->
+<!--      default: "auto",-->
+<!--    },-->
+<!--    transactionCount: {-->
+<!--      type: Number,-->
+<!--      default: 10,-->
+<!--    },-->
+<!--    maxAmount: {-->
+<!--      type: Number,-->
+<!--      default: 200,-->
+<!--    },-->
+<!--    minAmount: {-->
+<!--      type: Number,-->
+<!--      default: 30,-->
+<!--    },-->
+<!--    categories: {-->
+<!--      type: Array,-->
+<!--      default: () => [-->
+<!--        { name: "Utilities", paymentMethod: "AUTO-PAYMENT" },-->
+<!--        { name: "Dining", paymentMethod: "CARD X0000" },-->
+<!--        { name: "Travel", paymentMethod: "CARD X0000" },-->
+<!--        { name: "Entertainment", paymentMethod: "CARD X0000" },-->
+<!--        { name: "Groceries", paymentMethod: "CARD X0000" },-->
+<!--      ],-->
+<!--    },-->
+<!--    transactions: {-->
+<!--      type: Array,-->
+<!--      required: true,-->
+<!--    },-->
+<!--  },-->
+<!--  data() {-->
+<!--    return {};-->
+<!--  },-->
+<!--  watch: {-->
+<!--    transactions(newVal, oldVal) {-->
+<!--      if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {-->
+<!--        this.drawChart();-->
+<!--      }-->
+<!--    },-->
+<!--  },-->
 
+<!--  computed: {-->
+<!--    ...mapState(["chosenTime"]),-->
 
+<!--    dataToDisplay() {-->
+<!--      console.log(this.chosenTime);-->
+<!--      switch (this.chosenTime) {-->
+<!--        case "7":-->
+<!--          return this.generateDailyDataTable;-->
+<!--        case "31":-->
+<!--          return this.generateWeeklyDataTable;-->
+<!--        case "365":-->
+<!--          return this.generateMonthlyDataTable;-->
+<!--        case "-1":-->
+<!--          return this.generateMonthlyDataTable;-->
+<!--        default:-->
+<!--          return this.generateWeeklyDataTable;-->
+<!--      }-->
+<!--    },-->
 
+<!--    categoryTotals() {-->
+<!--      const totals = {-->
+<!--        Utilities: 0,-->
+<!--        Dining: 0,-->
+<!--        Travel: 0,-->
+<!--        Entertainment: 0,-->
+<!--        Groceries: 0,-->
+<!--      };-->
 
+<!--      this.transactions.forEach((txn) => {-->
+<!--        for (const category in totals) {-->
+<!--          if (txn.description.includes(category)) {-->
+<!--            totals[category] += Math.abs(txn.amount);-->
+<!--            break;-->
+<!--          }-->
+<!--        }-->
+<!--      });-->
 
+<!--      return totals;-->
+<!--    },-->
+<!--  },-->
 
+<!--  mounted() {-->
+<!--    this.drawChart();-->
+<!--  },-->
 
+<!--  methods: {-->
+<!--    generateDailyDataTable() {-->
+<!--      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];-->
+<!--      const dataTable = [headers];-->
 
+<!--      const totalsByDate = {};-->
 
+<!--      this.transactions.forEach(transaction => {-->
+<!--        const date = transaction.date;-->
 
+<!--        // Initialize the date if not yet created-->
+<!--        if (!totalsByDate[date]) {-->
+<!--          totalsByDate[date] = {};-->
+<!--          this.categories.forEach(c => {-->
+<!--            totalsByDate[date][c.name] = 0;  // Initialize every category for the date-->
+<!--          });-->
+<!--        }-->
 
+<!--        // Check if the category exists in the transaction's description-->
+<!--        for (const category of this.categories) {-->
+<!--          if (transaction.description.includes(category.name)) {-->
+<!--            totalsByDate[date][category.name] += Math.abs(transaction.amount);-->
+<!--            break;  // Stop looping once we found a matching category-->
+<!--          }-->
+<!--        }-->
+<!--      });-->
 
+<!--      // Convert the object into an array format for Google Charts-->
+<!--      for (const [date, categories] of Object.entries(totalsByDate)) {-->
+<!--        const row = [date];-->
+<!--        let sum = 0;-->
+<!--        this.categories.forEach(c => {-->
+<!--          const value = categories[c.name] || 0;-->
+<!--          row.push(value);-->
+<!--          sum += value;-->
+<!--        });-->
+<!--        const mean = sum / this.categories.length;-->
+<!--        row.push(mean);-->
+<!--        dataTable.push(row);-->
+<!--      }-->
 
+<!--      return dataTable;-->
+<!--    },-->
+<!--    generateWeeklyDataTable() {-->
+<!--      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];-->
+<!--      const dataTable = [headers];-->
 
-<!--
-&lt;!&ndash;<template>&ndash;&gt;
-&lt;!&ndash;  <div class="chart-container">&ndash;&gt;
-&lt;!&ndash;    <div&ndash;&gt;
-&lt;!&ndash;        id="combochart"&ndash;&gt;
-&lt;!&ndash;        :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"&ndash;&gt;
-&lt;!&ndash;    ></div>&ndash;&gt;
-&lt;!&ndash;  </div>&ndash;&gt;
-&lt;!&ndash;</template>&ndash;&gt;
-&lt;!&ndash;<script>&ndash;&gt;
-&lt;!&ndash;import { mapState } from "vuex";&ndash;&gt;
+<!--      const totalsByWeek = {};-->
 
-&lt;!&ndash;export default {&ndash;&gt;
-&lt;!&ndash;  name: "combochart",&ndash;&gt;
-&lt;!&ndash;  props: {&ndash;&gt;
-&lt;!&ndash;    chartWidth: {&ndash;&gt;
-&lt;!&ndash;      type: String,&ndash;&gt;
-&lt;!&ndash;      default: "900px",&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;    chartHeight: {&ndash;&gt;
-&lt;!&ndash;      type: String,&ndash;&gt;
-&lt;!&ndash;      default: "500px",&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;    chartMargin: {&ndash;&gt;
-&lt;!&ndash;      type: String,&ndash;&gt;
-&lt;!&ndash;      default: "auto",&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;    transactionCount: {&ndash;&gt;
-&lt;!&ndash;      type: Number,&ndash;&gt;
-&lt;!&ndash;      default: 10,&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;    maxAmount: {&ndash;&gt;
-&lt;!&ndash;      type: Number,&ndash;&gt;
-&lt;!&ndash;      default: 200,&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;    minAmount: {&ndash;&gt;
-&lt;!&ndash;      type: Number,&ndash;&gt;
-&lt;!&ndash;      default: 30,&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;    categories: {&ndash;&gt;
-&lt;!&ndash;      type: Array,&ndash;&gt;
-&lt;!&ndash;      default: () => [&ndash;&gt;
-&lt;!&ndash;        { name: "Utilities", paymentMethod: "AUTO-PAYMENT" },&ndash;&gt;
-&lt;!&ndash;        { name: "Dining", paymentMethod: "CARD X0000" },&ndash;&gt;
-&lt;!&ndash;        { name: "Travel", paymentMethod: "CARD X0000" },&ndash;&gt;
-&lt;!&ndash;        { name: "Entertainment", paymentMethod: "CARD X0000" },&ndash;&gt;
-&lt;!&ndash;        { name: "Groceries", paymentMethod: "CARD X0000" },&ndash;&gt;
-&lt;!&ndash;      ],&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;    transactions: {&ndash;&gt;
-&lt;!&ndash;      type: Array,&ndash;&gt;
-&lt;!&ndash;      required: true,&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;  },&ndash;&gt;
-&lt;!&ndash;  data() {&ndash;&gt;
-&lt;!&ndash;    return {};&ndash;&gt;
-&lt;!&ndash;  },&ndash;&gt;
-&lt;!&ndash;  watch: {&ndash;&gt;
-&lt;!&ndash;    transactions(newVal, oldVal) {&ndash;&gt;
-&lt;!&ndash;      if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {&ndash;&gt;
-&lt;!&ndash;        this.drawChart();&ndash;&gt;
-&lt;!&ndash;      }&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;  },&ndash;&gt;
+<!--      this.transactions.forEach(transaction => {-->
+<!--        const date = new Date(transaction.date);-->
+<!--        const startOfWeek = date;-->
+<!--        let dayOfWeek = date.getDay();-->
+<!--        if (dayOfWeek === 0) {-->
+<!--          dayOfWeek = 6;-->
+<!--        } else {-->
+<!--          dayOfWeek -= 1;-->
+<!--        }-->
+<!--        startOfWeek.setDate(date.getDate() - dayOfWeek);-->
+<!--        const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(-2)}-${("0" + startOfWeek.getDate()).slice(-2)}`;-->
 
-&lt;!&ndash;  computed: {&ndash;&gt;
-&lt;!&ndash;    ...mapState(["chosenTime"]),&ndash;&gt;
+<!--        // Initialize the week if not yet created-->
+<!--        if (!totalsByWeek[weekString]) {-->
+<!--          totalsByWeek[weekString] = {};-->
+<!--          this.categories.forEach(c => {-->
+<!--            totalsByWeek[weekString][c.name] = 0;  // Initialize every category for the date-->
+<!--          });-->
+<!--        }-->
 
-&lt;!&ndash;    dataToDisplay() {&ndash;&gt;
-&lt;!&ndash;      console.log(this.chosenTime);&ndash;&gt;
-&lt;!&ndash;      switch (this.chosenTime) {&ndash;&gt;
-&lt;!&ndash;        case "7":&ndash;&gt;
-&lt;!&ndash;          return this.generateDailyDataTable;&ndash;&gt;
-&lt;!&ndash;        case "31":&ndash;&gt;
-&lt;!&ndash;          return this.generateWeeklyDataTable;&ndash;&gt;
-&lt;!&ndash;        case "365":&ndash;&gt;
-&lt;!&ndash;          return this.generateMonthlyDataTable;&ndash;&gt;
-&lt;!&ndash;        case "-1":&ndash;&gt;
-&lt;!&ndash;          return this.generateMonthlyDataTable;&ndash;&gt;
-&lt;!&ndash;        default:&ndash;&gt;
-&lt;!&ndash;          return this.generateWeeklyDataTable;&ndash;&gt;
-&lt;!&ndash;      }&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
+<!--        // Check if the category exists in the transaction's description-->
+<!--        for (const category of this.categories) {-->
+<!--          if (transaction.description.includes(category.name)) {-->
+<!--            totalsByWeek[weekString][category.name] += Math.abs(transaction.amount);-->
+<!--            break;  // Stop looping once we found a matching category-->
+<!--          }-->
+<!--        }-->
+<!--      });-->
 
-&lt;!&ndash;    categoryTotals() {&ndash;&gt;
-&lt;!&ndash;      const totals = {&ndash;&gt;
-&lt;!&ndash;        Utilities: 0,&ndash;&gt;
-&lt;!&ndash;        Dining: 0,&ndash;&gt;
-&lt;!&ndash;        Travel: 0,&ndash;&gt;
-&lt;!&ndash;        Entertainment: 0,&ndash;&gt;
-&lt;!&ndash;        Groceries: 0,&ndash;&gt;
-&lt;!&ndash;      };&ndash;&gt;
+<!--      // Convert the object into an array format for Google Charts-->
+<!--      for (const [weekString, categories] of Object.entries(totalsByWeek)) {-->
+<!--        const row = [weekString];-->
+<!--        let sum = 0;-->
+<!--        this.categories.forEach(c => {-->
+<!--          const value = categories[c.name] || 0;-->
+<!--          row.push(value);-->
+<!--          sum += value;-->
+<!--        });-->
+<!--        const mean = sum / this.categories.length;-->
+<!--        row.push(mean);-->
+<!--        dataTable.push(row);-->
+<!--      }-->
 
-&lt;!&ndash;      this.transactions.forEach((txn) => {&ndash;&gt;
-&lt;!&ndash;        for (const category in totals) {&ndash;&gt;
-&lt;!&ndash;          if (txn.category.includes(category)) {&ndash;&gt;
-&lt;!&ndash;            totals[category] += Math.abs(txn.amount);&ndash;&gt;
-&lt;!&ndash;            break;&ndash;&gt;
-&lt;!&ndash;          }&ndash;&gt;
-&lt;!&ndash;        }&ndash;&gt;
-&lt;!&ndash;      });&ndash;&gt;
+<!--      return dataTable;-->
+<!--    },-->
+<!--    generateMonthlyDataTable() {-->
+<!--      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];-->
+<!--      const dataTable = [headers];-->
 
-&lt;!&ndash;      return totals;&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;  },&ndash;&gt;
+<!--      const totalsByMonth = {};-->
 
-&lt;!&ndash;  mounted() {&ndash;&gt;
-&lt;!&ndash;    this.drawChart();&ndash;&gt;
-&lt;!&ndash;  },&ndash;&gt;
+<!--      this.transactions.forEach(transaction => {-->
+<!--        const date = new Date(transaction.date);-->
+<!--        const monthYearKey = `${("0" + (date.getMonth() + 1)).slice(-2)}-${date.getFullYear()}`;-->
 
-&lt;!&ndash;  methods: {&ndash;&gt;
-&lt;!&ndash;    generateDailyDataTable() {&ndash;&gt;
-&lt;!&ndash;      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];&ndash;&gt;
-&lt;!&ndash;      const dataTable = [headers];&ndash;&gt;
+<!--        // Initialize the date if not yet created-->
+<!--        if (!totalsByMonth[monthYearKey]) {-->
+<!--          totalsByMonth[monthYearKey] = {};-->
+<!--          this.categories.forEach(c => {-->
+<!--            totalsByMonth[monthYearKey][c.name] = 0;  // Initialize every category for the date-->
+<!--          });-->
+<!--        }-->
 
-&lt;!&ndash;      const totalsByDate = {};&ndash;&gt;
+<!--        // Check if the category exists in the transaction's description-->
+<!--        for (const category of this.categories) {-->
+<!--          if (transaction.description.includes(category.name)) {-->
+<!--            totalsByMonth[monthYearKey][category.name] += Math.abs(transaction.amount);-->
+<!--            break;  // Stop looping once we found a matching category-->
+<!--          }-->
+<!--        }-->
+<!--      });-->
 
-&lt;!&ndash;      this.transactions.forEach(transaction => {&ndash;&gt;
-&lt;!&ndash;        const date = transaction.date;&ndash;&gt;
+<!--      // Convert the object into an array format for Google Charts-->
+<!--      for (const [monthString, categories] of Object.entries(totalsByMonth)) {-->
+<!--        const row = [monthString];-->
+<!--        let sum = 0;-->
+<!--        this.categories.forEach(c => {-->
+<!--          const value = categories[c.name] || 0;-->
+<!--          row.push(value);-->
+<!--          sum += value;-->
+<!--        });-->
+<!--        const mean = sum / this.categories.length;-->
+<!--        row.push(mean);-->
+<!--        dataTable.push(row);-->
+<!--      }-->
 
-&lt;!&ndash;        // Initialize the date if not yet created&ndash;&gt;
-&lt;!&ndash;        if (!totalsByDate[date]) {&ndash;&gt;
-&lt;!&ndash;          totalsByDate[date] = {};&ndash;&gt;
-&lt;!&ndash;          this.categories.forEach(c => {&ndash;&gt;
-&lt;!&ndash;            totalsByDate[date][c.name] = 0;  // Initialize every category for the date&ndash;&gt;
-&lt;!&ndash;          });&ndash;&gt;
-&lt;!&ndash;        }&ndash;&gt;
+<!--      return dataTable;-->
+<!--    },-->
 
-&lt;!&ndash;        // Check if the category exists in the transaction's category&ndash;&gt;
-&lt;!&ndash;        for (const category of this.categories) {&ndash;&gt;
-&lt;!&ndash;          if (transaction.category.includes(category.name)) {&ndash;&gt;
-&lt;!&ndash;            totalsByDate[date][category.name] += Math.abs(transaction.amount);&ndash;&gt;
-&lt;!&ndash;            break;  // Stop looping once we found a matching category&ndash;&gt;
-&lt;!&ndash;          }&ndash;&gt;
-&lt;!&ndash;        }&ndash;&gt;
-&lt;!&ndash;      });&ndash;&gt;
+<!--    drawChart() {-->
+<!--      google.charts.load('current', {'packages':['corechart']});-->
+<!--      google.charts.setOnLoadCallback(() => {-->
+<!--        try {-->
+<!--          // Some raw data (not necessarily accurate)-->
+<!--          const dataArray = this.dataToDisplay;-->
+<!--          console.log(typeof dataArray, dataArray);-->
+<!--          const data = google.visualization.arrayToDataTable(dataArray());-->
 
-&lt;!&ndash;      // Convert the object into an array format for Google Charts&ndash;&gt;
-&lt;!&ndash;      for (const [date, categories] of Object.entries(totalsByDate)) {&ndash;&gt;
-&lt;!&ndash;        const row = [date];&ndash;&gt;
-&lt;!&ndash;        let sum = 0;&ndash;&gt;
-&lt;!&ndash;        this.categories.forEach(c => {&ndash;&gt;
-&lt;!&ndash;          const value = categories[c.name] || 0;&ndash;&gt;
-&lt;!&ndash;          row.push(value);&ndash;&gt;
-&lt;!&ndash;          sum += value;&ndash;&gt;
-&lt;!&ndash;        });&ndash;&gt;
-&lt;!&ndash;        const mean = sum / this.categories.length;&ndash;&gt;
-&lt;!&ndash;        row.push(mean);&ndash;&gt;
-&lt;!&ndash;        dataTable.push(row);&ndash;&gt;
-&lt;!&ndash;      }&ndash;&gt;
+<!--          const options = {-->
+<!--            title: 'Monthly Coffee Production by Country',-->
+<!--            vaxis: {title: 'Cups'},-->
+<!--            haxis: {title: 'Month'},-->
+<!--            seriesType: 'bars',-->
+<!--            series: {5: {type: 'line'}},-->
 
-&lt;!&ndash;      return dataTable;&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;    generateWeeklyDataTable() {&ndash;&gt;
-&lt;!&ndash;      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];&ndash;&gt;
-&lt;!&ndash;      const dataTable = [headers];&ndash;&gt;
+<!--            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("&#45;&#45;background-color"),-->
+<!--            titleColor: getComputedStyle(document.documentElement).getPropertyValue("&#45;&#45;header-text"),-->
+<!--            legend: {-->
+<!--              textStyle: {-->
+<!--                color: getComputedStyle(document.documentElement).getPropertyValue("&#45;&#45;text"),-->
+<!--              },-->
+<!--            },-->
+<!--            hAxis: {-->
+<!--              textStyle: {-->
+<!--                color: getComputedStyle(document.documentElement).getPropertyValue("&#45;&#45;text"),-->
+<!--              },-->
+<!--            },-->
+<!--            vAxis: {-->
+<!--              textStyle: {-->
+<!--                color: getComputedStyle(document.documentElement).getPropertyValue("&#45;&#45;text"),-->
+<!--              },-->
+<!--            }-->
+<!--          };-->
 
-&lt;!&ndash;      const totalsByWeek = {};&ndash;&gt;
+<!--          const chart = new google.visualization.ComboChart(document.getElementById('combochart'));-->
+<!--          chart.draw(data, options);-->
+<!--        }catch (error) {-->
+<!--          console.error("Error drawing the combo chart:", error);-->
+<!--        }-->
+<!--      });-->
+<!--    }-->
+<!--  },-->
+<!--};-->
+<!--</script>-->
+<!--<style scoped>-->
+<!--@import url("../assets/css/variables.css");-->
+<!--div.amount {-->
+<!--  align-content: flex-end;-->
+<!--}-->
 
-&lt;!&ndash;      this.transactions.forEach(transaction => {&ndash;&gt;
-&lt;!&ndash;        const date = new Date(transaction.date);&ndash;&gt;
-&lt;!&ndash;        const startOfWeek = date;&ndash;&gt;
-&lt;!&ndash;        let dayOfWeek = date.getDay();&ndash;&gt;
-&lt;!&ndash;        if (dayOfWeek === 0) {&ndash;&gt;
-&lt;!&ndash;          dayOfWeek = 6;&ndash;&gt;
-&lt;!&ndash;        } else {&ndash;&gt;
-&lt;!&ndash;          dayOfWeek -= 1;&ndash;&gt;
-&lt;!&ndash;        }&ndash;&gt;
-&lt;!&ndash;        startOfWeek.setDate(date.getDate() - dayOfWeek);&ndash;&gt;
-&lt;!&ndash;        const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(-2)}-${("0" + startOfWeek.getDate()).slice(-2)}`;&ndash;&gt;
+<!--div.chart-container {-->
+<!--  display: flex;-->
+<!--  align-items: center;-->
+<!--}-->
 
-&lt;!&ndash;        // Initialize the week if not yet created&ndash;&gt;
-&lt;!&ndash;        if (!totalsByWeek[weekString]) {&ndash;&gt;
-&lt;!&ndash;          totalsByWeek[weekString] = {};&ndash;&gt;
-&lt;!&ndash;          this.categories.forEach(c => {&ndash;&gt;
-&lt;!&ndash;            totalsByWeek[weekString][c.name] = 0;  // Initialize every category for the date&ndash;&gt;
-&lt;!&ndash;          });&ndash;&gt;
-&lt;!&ndash;        }&ndash;&gt;
+<!--div.nav-links li {-->
+<!--  display: inline;-->
+<!--}-->
 
-&lt;!&ndash;        // Check if the category exists in the transaction's category&ndash;&gt;
-&lt;!&ndash;        for (const category of this.categories) {&ndash;&gt;
-&lt;!&ndash;          if (transaction.category.includes(category.name)) {&ndash;&gt;
-&lt;!&ndash;            totalsByWeek[weekString][category.name] += Math.abs(transaction.amount);&ndash;&gt;
-&lt;!&ndash;            break;  // Stop looping once we found a matching category&ndash;&gt;
-&lt;!&ndash;          }&ndash;&gt;
-&lt;!&ndash;        }&ndash;&gt;
-&lt;!&ndash;      });&ndash;&gt;
+<!--div.nav-links a {-->
+<!--  text-decoration: none;-->
+<!--  color: var(&#45;&#45;white);-->
+<!--}-->
 
-&lt;!&ndash;      // Convert the object into an array format for Google Charts&ndash;&gt;
-&lt;!&ndash;      for (const [weekString, categories] of Object.entries(totalsByWeek)) {&ndash;&gt;
-&lt;!&ndash;        const row = [weekString];&ndash;&gt;
-&lt;!&ndash;        let sum = 0;&ndash;&gt;
-&lt;!&ndash;        this.categories.forEach(c => {&ndash;&gt;
-&lt;!&ndash;          const value = categories[c.name] || 0;&ndash;&gt;
-&lt;!&ndash;          row.push(value);&ndash;&gt;
-&lt;!&ndash;          sum += value;&ndash;&gt;
-&lt;!&ndash;        });&ndash;&gt;
-&lt;!&ndash;        const mean = sum / this.categories.length;&ndash;&gt;
-&lt;!&ndash;        row.push(mean);&ndash;&gt;
-&lt;!&ndash;        dataTable.push(row);&ndash;&gt;
-&lt;!&ndash;      }&ndash;&gt;
+<!--div.chart-container h1 {-->
+<!--  display: flex;-->
+<!--  justify-content: center;-->
+<!--  color: var(&#45;&#45;header-text);-->
+<!--}-->
 
-&lt;!&ndash;      return dataTable;&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-&lt;!&ndash;    generateMonthlyDataTable() {&ndash;&gt;
-&lt;!&ndash;      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];&ndash;&gt;
-&lt;!&ndash;      const dataTable = [headers];&ndash;&gt;
+<!--div.chart-container p {-->
+<!--  color: var(&#45;&#45;text);-->
+<!--}-->
 
-&lt;!&ndash;      const totalsByMonth = {};&ndash;&gt;
+<!--div.chart-container button:hover {-->
+<!--  background-color: var(&#45;&#45;button-hover);-->
+<!--}-->
 
-&lt;!&ndash;      this.transactions.forEach(transaction => {&ndash;&gt;
-&lt;!&ndash;        const date = new Date(transaction.date);&ndash;&gt;
-&lt;!&ndash;        const monthYearKey = `${("0" + (date.getMonth() + 1)).slice(-2)}-${date.getFullYear()}`;&ndash;&gt;
-
-&lt;!&ndash;        // Initialize the date if not yet created&ndash;&gt;
-&lt;!&ndash;        if (!totalsByMonth[monthYearKey]) {&ndash;&gt;
-&lt;!&ndash;          totalsByMonth[monthYearKey] = {};&ndash;&gt;
-&lt;!&ndash;          this.categories.forEach(c => {&ndash;&gt;
-&lt;!&ndash;            totalsByMonth[monthYearKey][c.name] = 0;  // Initialize every category for the date&ndash;&gt;
-&lt;!&ndash;          });&ndash;&gt;
-&lt;!&ndash;        }&ndash;&gt;
-
-&lt;!&ndash;        // Check if the category exists in the transaction's category&ndash;&gt;
-&lt;!&ndash;        for (const category of this.categories) {&ndash;&gt;
-&lt;!&ndash;          if (transaction.category.includes(category.name)) {&ndash;&gt;
-&lt;!&ndash;            totalsByMonth[monthYearKey][category.name] += Math.abs(transaction.amount);&ndash;&gt;
-&lt;!&ndash;            break;  // Stop looping once we found a matching category&ndash;&gt;
-&lt;!&ndash;          }&ndash;&gt;
-&lt;!&ndash;        }&ndash;&gt;
-&lt;!&ndash;      });&ndash;&gt;
-
-&lt;!&ndash;      // Convert the object into an array format for Google Charts&ndash;&gt;
-&lt;!&ndash;      for (const [monthString, categories] of Object.entries(totalsByMonth)) {&ndash;&gt;
-&lt;!&ndash;        const row = [monthString];&ndash;&gt;
-&lt;!&ndash;        let sum = 0;&ndash;&gt;
-&lt;!&ndash;        this.categories.forEach(c => {&ndash;&gt;
-&lt;!&ndash;          const value = categories[c.name] || 0;&ndash;&gt;
-&lt;!&ndash;          row.push(value);&ndash;&gt;
-&lt;!&ndash;          sum += value;&ndash;&gt;
-&lt;!&ndash;        });&ndash;&gt;
-&lt;!&ndash;        const mean = sum / this.categories.length;&ndash;&gt;
-&lt;!&ndash;        row.push(mean);&ndash;&gt;
-&lt;!&ndash;        dataTable.push(row);&ndash;&gt;
-&lt;!&ndash;      }&ndash;&gt;
-
-
-&lt;!&ndash;      return dataTable;&ndash;&gt;
-&lt;!&ndash;    },&ndash;&gt;
-
-
-&lt;!&ndash;    drawChart() {&ndash;&gt;
-&lt;!&ndash;      google.charts.load('current', {'packages':['corechart']});&ndash;&gt;
-&lt;!&ndash;      google.charts.setOnLoadCallback(() => {&ndash;&gt;
-&lt;!&ndash;        try {&ndash;&gt;
-&lt;!&ndash;          // Some raw data (not necessarily accurate)&ndash;&gt;
-&lt;!&ndash;          const dataArray = this.dataToDisplay;&ndash;&gt;
-&lt;!&ndash;          console.log(typeof dataArray, dataArray);&ndash;&gt;
-&lt;!&ndash;          const data = google.visualization.arrayToDataTable(dataArray());&ndash;&gt;
-
-&lt;!&ndash;          const options = {&ndash;&gt;
-&lt;!&ndash;            title: 'Monthly Coffee Production by Country',&ndash;&gt;
-&lt;!&ndash;            vaxis: {title: 'Cups'},&ndash;&gt;
-&lt;!&ndash;            haxis: {title: 'Month'},&ndash;&gt;
-&lt;!&ndash;            seriesType: 'bars',&ndash;&gt;
-&lt;!&ndash;            series: {5: {type: 'line'}},&ndash;&gt;
-
-&lt;!&ndash;            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("&#45;&#45;background-color"),&ndash;&gt;
-&lt;!&ndash;            titleColor: getComputedStyle(document.documentElement).getPropertyValue("&#45;&#45;header-text"),&ndash;&gt;
-&lt;!&ndash;            legend: {&ndash;&gt;
-&lt;!&ndash;              textStyle: {&ndash;&gt;
-&lt;!&ndash;                color: getComputedStyle(document.documentElement).getPropertyValue("&#45;&#45;text"),&ndash;&gt;
-&lt;!&ndash;              },&ndash;&gt;
-&lt;!&ndash;            },&ndash;&gt;
-&lt;!&ndash;            hAxis: {&ndash;&gt;
-&lt;!&ndash;              textStyle: {&ndash;&gt;
-&lt;!&ndash;                color: getComputedStyle(document.documentElement).getPropertyValue("&#45;&#45;text"),&ndash;&gt;
-&lt;!&ndash;              },&ndash;&gt;
-&lt;!&ndash;            },&ndash;&gt;
-&lt;!&ndash;            vAxis: {&ndash;&gt;
-&lt;!&ndash;              textStyle: {&ndash;&gt;
-&lt;!&ndash;                color: getComputedStyle(document.documentElement).getPropertyValue("&#45;&#45;text"),&ndash;&gt;
-&lt;!&ndash;              },&ndash;&gt;
-&lt;!&ndash;            }&ndash;&gt;
-&lt;!&ndash;          };&ndash;&gt;
-
-&lt;!&ndash;          const chart = new google.visualization.ComboChart(document.getElementById('combochart'));&ndash;&gt;
-&lt;!&ndash;          chart.draw(data, options);&ndash;&gt;
-&lt;!&ndash;        }catch (error) {&ndash;&gt;
-&lt;!&ndash;          console.error("Error drawing the combo chart:", error);&ndash;&gt;
-&lt;!&ndash;        }&ndash;&gt;
-&lt;!&ndash;      });&ndash;&gt;
-&lt;!&ndash;    }&ndash;&gt;
-&lt;!&ndash;  },&ndash;&gt;
-&lt;!&ndash;};&ndash;&gt;
-&lt;!&ndash;</script>&ndash;&gt;
-&lt;!&ndash;<style scoped>&ndash;&gt;
-&lt;!&ndash;@import url("../assets/css/variables.css");&ndash;&gt;
-&lt;!&ndash;div.amount {&ndash;&gt;
-&lt;!&ndash;  align-content: flex-end;&ndash;&gt;
-&lt;!&ndash;}&ndash;&gt;
-
-&lt;!&ndash;div.chart-container {&ndash;&gt;
-&lt;!&ndash;  display: flex;&ndash;&gt;
-&lt;!&ndash;  align-items: center;&ndash;&gt;
-&lt;!&ndash;}&ndash;&gt;
-
-&lt;!&ndash;div.nav-links li {&ndash;&gt;
-&lt;!&ndash;  display: inline;&ndash;&gt;
-&lt;!&ndash;}&ndash;&gt;
-
-&lt;!&ndash;div.nav-links a {&ndash;&gt;
-&lt;!&ndash;  text-decoration: none;&ndash;&gt;
-&lt;!&ndash;  color: var(&#45;&#45;white);&ndash;&gt;
-&lt;!&ndash;}&ndash;&gt;
-
-&lt;!&ndash;div.chart-container h1 {&ndash;&gt;
-&lt;!&ndash;  display: flex;&ndash;&gt;
-&lt;!&ndash;  justify-content: center;&ndash;&gt;
-&lt;!&ndash;  color: var(&#45;&#45;header-text);&ndash;&gt;
-&lt;!&ndash;}&ndash;&gt;
-
-&lt;!&ndash;div.chart-container p {&ndash;&gt;
-&lt;!&ndash;  color: var(&#45;&#45;text);&ndash;&gt;
-&lt;!&ndash;}&ndash;&gt;
-
-&lt;!&ndash;div.chart-container button:hover {&ndash;&gt;
-&lt;!&ndash;  background-color: var(&#45;&#45;button-hover);&ndash;&gt;
-&lt;!&ndash;}&ndash;&gt;
-
-&lt;!&ndash;div.summary {&ndash;&gt;
-&lt;!&ndash;  display: flex;&ndash;&gt;
-&lt;!&ndash;  justify-content: space-around;&ndash;&gt;
-&lt;!&ndash;  margin-bottom: 20px;&ndash;&gt;
-&lt;!&ndash;}&ndash;&gt;
-&lt;!&ndash;</style>&ndash;&gt;-->
+<!--div.summary {-->
+<!--  display: flex;-->
+<!--  justify-content: space-around;-->
+<!--  margin-bottom: 20px;-->
+<!--}-->
+<!--</style>-->

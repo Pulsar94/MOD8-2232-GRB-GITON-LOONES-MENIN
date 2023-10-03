@@ -3,9 +3,10 @@
     <div id="linechart" :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"></div>
   </div>
 </template>
-<script>
 
+<script>
 import { mapState } from "vuex";
+
 export default {
   name: "LineChart",
   props: {
@@ -19,7 +20,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "auto",
+      default: "50px auto",
     },
     transactionCount: {
       type: Number,
@@ -189,7 +190,6 @@ export default {
   mounted() {
     this.drawChart();
   },
-
   methods: {
     totalBeforeDate(date) { //date is of Date type
       const transactionsBeforeDate = this.$store.state.myInitialTransactionsArray.filter((t) => t.rawDate < date).sort((a, b) => new Date(b.date) - new Date(a.date));

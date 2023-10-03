@@ -8,9 +8,7 @@
 </template>
 <script>
 export default {
-
   name: "PieChart",
-
   props: {
     chartWidth: {
       type: String,
@@ -22,7 +20,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "auto",
+      default: "50px auto",
     },
     categories: {
       type: Array,
@@ -42,7 +40,6 @@ export default {
   data() {
     return {};
   },
-
   computed: {
     transactions() {
       return this.$store.state.transactions;
@@ -77,8 +74,6 @@ export default {
   mounted() {
     this.drawChart();
   },
-
-
   methods: {
     handleContainerClick(chart, data) {
       const selection = chart.getSelection();
@@ -88,7 +83,6 @@ export default {
       }
     },
     drawChart() {
-
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
@@ -103,7 +97,13 @@ export default {
             title: "Spending by Category",
             backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
             titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
+            chartArea: {
+              width: "100%",
+              height: "100%",
+            },
             legend: {
+              position: "right",
+              alignment: "center",
               textStyle: {
                 color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },

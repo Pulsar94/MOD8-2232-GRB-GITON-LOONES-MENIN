@@ -1,9 +1,6 @@
 <template>
   <div class="chart-container">
-    <div
-      id="tablechart"
-      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
-    ></div>
+    <div id="tablechart" :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"></div>
   </div>
 </template>
 
@@ -138,9 +135,7 @@ export default {
             cssClassNames: cssClassNames,
           };
 
-          const table = new google.visualization.Table(
-            document.getElementById("tablechart")
-          );
+          const table = new google.visualization.Table(document.getElementById("tablechart"));
 
           table.draw(data, options);
 

@@ -13,7 +13,7 @@
       />
     </div>
 
-    <RecentTransactions :transactions="filteredTransactions" />
+    <RecentTransactions class="transactions" :transactions="filteredTransactions" />
   </div>
 </template>
 
@@ -25,6 +25,7 @@ import LineChart from "../components/LineChart.vue";
 import Table from "../components/TableChart.vue";
 import RecentTransactions from "../components/RecentTransactions.vue";
 import TotalAndAverageExpenses from "../components/TotalAndAverageExpenses.vue";
+
 export default {
   components: {
     TotalAndAverageExpenses,
@@ -35,6 +36,7 @@ export default {
     ComboChart,
     NavBar,
   },
+
   data() {
     return {
       currentChart: "Pie",

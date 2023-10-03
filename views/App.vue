@@ -1,13 +1,27 @@
 <template>
   <header class="header">
-    <a href="/">
-      <img src="../assets/img/logo.svg" alt="Logo" />
-    </a>
+    <div class="header-nav">
+      <a href="/">
+        <img class="logo" src="../assets/img/logo.svg" alt="Logo" />
+      </a>
+      <a href="javascript:void(0);" class="icon" @click="toggleMenu()">
+        <i class="fa fa-bars fa-xl"></i>
+      </a>
+    </div>
     <nav>
-      <ul class="nav-links">
-        <li><router-link to="/about">About Us</router-link></li>
-        <li><router-link to="/dashboard">Dashboard</router-link></li>
-        <li><router-link to="/settings">Settings</router-link></li>
+      <ul class="nav-links" v-if="!navInactive">
+        <li v-if="!navInactive">
+          <router-link to="/about" @click="toggleMenu()">About Us</router-link>
+        </li>
+        <li v-if="authenticated && !navInactive">
+          <router-link to="/dashboard" @click="toggleMenu()">Dashboard</router-link>
+        </li>
+        <li v-if="authenticated && !navInactive">
+          <router-link to="/settings" @click="toggleMenu()">Settings</router-link>
+        </li>
+        <li v-if="!authenticated && !navInactive">
+          <router-link to="/login" @click="toggleMenu()">Login</router-link>
+        </li>
       </ul>
     </nav>
   </header>
@@ -17,22 +31,37 @@
   <footer>
     <a href="/about/">
       <text class="footer-btn">About Us</text>
+    </a>
+    <a href="/about/">
       <text class="footer-btn">Contact</text>
     </a>
-    <text class="footer-btn">Privacy Policy</text>
-    <text class="footer-btn">Terms of Service</text>
+    <router-link class="footer-btn" to="/policy">Privacy Policy</router-link>
+    <router-link class="footer-btn" to="/terms">Terms of Service</router-link>
   </footer>
 </template>
 
 <script>
+import { ref } from "vue";
+
 export default {
   name: "App",
+  setup() {
+    if (window.innerWidth < 640) {
+      const navInactive = ref(true);
+      return { navInactive };
+    }
+    const navInactive = ref(false);
+    return { navInactive };
+  },
   created() {
     this.populateTransactions(); // Call the function when the component is created
   },
   computed: {
     myTransactionsArray() {
       return this.$store.state.myTransactionsArray;
+    },
+    authenticated() {
+      return this.$store.state.authenticated;
     },
   },
   methods: {
@@ -231,6 +260,18 @@ footer a {
   color: var(--black);
 }
 
+.icon {
+  display: none;
+  color: var(--white);
+  cursor: pointer;
+  margin-right: 20px;
+  font-size: 20px;
+}
+
+.logo {
+  left: 0;
+}
+
 @media (max-width: 640px) {
   .header {
     flex-direction: column;
@@ -249,6 +290,19 @@ footer a {
   footer {
     flex-direction: column;
     align-items: center;
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .icon {
+    display: block;
+    cursor: pointer;
+    justify-self: right;
   }
 }
 </style>

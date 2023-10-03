@@ -19,6 +19,8 @@
   --table-row-hover: #f8f9fa;
   --form-button: #27ae60;
   --form-button-hover: #219651;
+  --text-input: #aedcff;
+  --select-hover: #d6e4ff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -43,5 +45,7 @@
     --table-row-hover: #444444;
     --form-button: #8e8e8e;
     --form-button-hover: #787878;
+    --text-input: #444;
+    --select-hover: #555;
   }
 }
