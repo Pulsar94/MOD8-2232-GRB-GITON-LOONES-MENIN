@@ -281,7 +281,7 @@ button:hover {
   background-color: var(--button-hover);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1000px) {
   .description {
     width: 100%;
   }
