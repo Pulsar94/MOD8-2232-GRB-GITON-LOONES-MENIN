@@ -1,18 +1,27 @@
 <template>
   <header class="header">
-    <a href="/">
-      <img src="../assets/img/logo.svg" alt="Logo" />
-    </a>
+    <div class="header-nav">
+      <a href="/">
+        <img class="logo" src="../assets/img/logo.svg" alt="Logo" />
+      </a>
+      <a href="javascript:void(0);" class="icon" @click="toggleMenu()">
+        <i class="fa fa-bars fa-xl"></i>
+      </a>
+    </div>
     <nav>
-      <ul class="nav-links">
-        <li><router-link to="/about">About Us</router-link></li>
-        <li v-if="authenticated">
-          <router-link to="/dashboard">Dashboard</router-link>
+      <ul class="nav-links" v-if="!navInactive">
+        <li v-if="!navInactive">
+          <router-link to="/about" @click="toggleMenu()">About Us</router-link>
         </li>
-        <li v-if="authenticated">
-          <router-link to="/settings">Settings</router-link>
+        <li v-if="authenticated && !navInactive">
+          <router-link to="/dashboard" @click="toggleMenu()">Dashboard</router-link>
         </li>
-        <li v-else><router-link to="/login">Login</router-link></li>
+        <li v-if="authenticated && !navInactive">
+          <router-link to="/settings" @click="toggleMenu()">Settings</router-link>
+        </li>
+        <li v-if="!authenticated && !navInactive">
+          <router-link to="/login" @click="toggleMenu()">Login</router-link>
+        </li>
       </ul>
     </nav>
   </header>
@@ -32,8 +41,18 @@
 </template>
 
 <script>
+import { ref } from "vue";
+
 export default {
   name: "App",
+  setup() {
+    if (window.innerWidth < 640) {
+      const navInactive = ref(true);
+      return { navInactive };
+    }
+    const navInactive = ref(false);
+    return { navInactive };
+  },
   created() {
     this.populateTransactions(); // Call the function when the component is created
   },
@@ -47,28 +66,15 @@ export default {
   },
   methods: {
     populateTransactions() {
-      const descriptions = [
-        "Utilities",
-        "Dining",
-        "Travel",
-        "Entertainment",
-        "Groceries",
-      ];
-      const positiveDescriptions = [
-        "Received bonus",
-        "Refund",
-        "Gift received",
-        "Sold item",
-      ];
+      const descriptions = ["Utilities", "Dining", "Travel", "Entertainment", "Groceries"];
+      const positiveDescriptions = ["Received bonus", "Refund", "Gift received", "Sold item"];
 
       function getRandomDescription() {
         const randomIndex = Math.floor(Math.random() * descriptions.length);
         return descriptions[randomIndex];
       }
       function getRandomPositiveDescription() {
-        const randomIndex = Math.floor(
-          Math.random() * positiveDescriptions.length
-        );
+        const randomIndex = Math.floor(Math.random() * positiveDescriptions.length);
         return positiveDescriptions[randomIndex];
       }
 
@@ -129,17 +135,12 @@ export default {
       this.$store.commit("SET_INITIAL_TRANSACTIONS", this.myTransactionsArray);
       this.$store.commit(
         "SET_TRANSACTIONS",
-        this.myTransactionsArray
-          .filter((t) => t.rawDate < todayDate)
-          .filter((t) => t.rawDate > todayDate - 31 * 24 * 60 * 60 * 1000)
+        this.myTransactionsArray.filter((t) => t.rawDate < todayDate).filter((t) => t.rawDate > todayDate - 31 * 24 * 60 * 60 * 1000)
       );
-      this.$store.commit(
-        "SET_DAYS",
-        Math.round(
-          (todayDate.getTime() - new Date(2023, 0).getTime()) /
-            (1000 * 60 * 60 * 24)
-        )
-      );
+      this.$store.commit("SET_DAYS", Math.round((todayDate.getTime() - new Date(2023, 0).getTime()) / (1000 * 60 * 60 * 24)));
+    },
+    toggleMenu() {
+      this.navInactive = !this.navInactive;
     },
   },
 };
@@ -215,6 +216,18 @@ footer a {
   color: var(--black);
 }
 
+.icon {
+  display: none;
+  color: var(--white);
+  cursor: pointer;
+  margin-right: 20px;
+  font-size: 20px;
+}
+
+.logo {
+  left: 0;
+}
+
 @media (max-width: 640px) {
   .header {
     flex-direction: column;
@@ -233,6 +246,19 @@ footer a {
   footer {
     flex-direction: column;
     align-items: center;
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .icon {
+    display: block;
+    cursor: pointer;
+    justify-self: right;
   }
 }
 </style>

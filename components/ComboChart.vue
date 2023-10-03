@@ -1,9 +1,6 @@
 <template>
   <div class="chart-container">
-    <div
-      id="combochart"
-      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
-    ></div>
+    <div id="combochart" :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"></div>
   </div>
 </template>
 <script>
@@ -169,9 +166,7 @@ export default {
           dayOfWeek -= 1;
         }
         startOfWeek.setDate(date.getDate() - dayOfWeek);
-        const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(
-          -2
-        )}-${("0" + startOfWeek.getDate()).slice(-2)}`;
+        const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(-2)}-${("0" + startOfWeek.getDate()).slice(-2)}`;
 
         // Initialize the week if not yet created
         if (!totalsByWeek[weekString]) {
@@ -184,9 +179,7 @@ export default {
         // Check if the category exists in the transaction's description
         for (const category of this.categories) {
           if (transaction.description.includes(category.name)) {
-            totalsByWeek[weekString][category.name] += Math.abs(
-              transaction.amount
-            );
+            totalsByWeek[weekString][category.name] += Math.abs(transaction.amount);
             break; // Stop looping once we found a matching category
           }
         }
@@ -218,9 +211,7 @@ export default {
 
       this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
-        const monthYearKey = `${("0" + (date.getMonth() + 1)).slice(
-          -2
-        )}-${date.getFullYear()}`;
+        const monthYearKey = `${("0" + (date.getMonth() + 1)).slice(-2)}-${date.getFullYear()}`;
 
         // Initialize the date if not yet created
         if (!totalsByMonth[monthYearKey]) {
@@ -233,9 +224,7 @@ export default {
         // Check if the category exists in the transaction's description
         for (const category of this.categories) {
           if (transaction.description.includes(category.name)) {
-            totalsByMonth[monthYearKey][category.name] += Math.abs(
-              transaction.amount
-            );
+            totalsByMonth[monthYearKey][category.name] += Math.abs(transaction.amount);
             break; // Stop looping once we found a matching category
           }
         }
@@ -280,40 +269,28 @@ export default {
               height: "80%",
             },
 
-            backgroundColor: getComputedStyle(
-              document.documentElement
-            ).getPropertyValue("--background-color"),
-            titleColor: getComputedStyle(
-              document.documentElement
-            ).getPropertyValue("--header-text"),
+            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
+            titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
             legend: {
               textStyle: {
-                color: getComputedStyle(
-                  document.documentElement
-                ).getPropertyValue("--text"),
+                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
               position: "bottom",
               margin: "-20px 0",
             },
             hAxis: {
               textStyle: {
-                color: getComputedStyle(
-                  document.documentElement
-                ).getPropertyValue("--text"),
+                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
             },
             vAxis: {
               textStyle: {
-                color: getComputedStyle(
-                  document.documentElement
-                ).getPropertyValue("--text"),
+                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
             },
           };
 
-          const chart = new google.visualization.ComboChart(
-            document.getElementById("combochart")
-          );
+          const chart = new google.visualization.ComboChart(document.getElementById("combochart"));
           chart.draw(data, options);
         } catch (error) {
           console.error("Error drawing the combo chart:", error);

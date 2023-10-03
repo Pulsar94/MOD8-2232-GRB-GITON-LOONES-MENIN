@@ -1,9 +1,6 @@
 <template>
   <div class="chart-container">
-    <div
-      id="linechart"
-      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
-    ></div>
+    <div id="linechart" :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"></div>
   </div>
 </template>
 
@@ -94,9 +91,7 @@ export default {
         totalsByMonth[monthYearKey] += Math.abs(transaction.amount);
       });
 
-      return Object.entries(totalsByMonth).sort(
-        (a, b) => new Date("01-" + a[0]) - new Date("01-" + b[0])
-      );
+      return Object.entries(totalsByMonth).sort((a, b) => new Date("01-" + a[0]) - new Date("01-" + b[0]));
     },
     weeklyAmounts() {
       const totalsByWeek = {};
@@ -114,9 +109,7 @@ export default {
         }
         startOfWeek.setDate(date.getDate() - dayOfWeek);
 
-        const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(
-          -2
-        )}-${("0" + startOfWeek.getDate()).slice(-2)}`;
+        const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(-2)}-${("0" + startOfWeek.getDate()).slice(-2)}`;
 
         if (!totalsByWeek[weekString]) {
           totalsByWeek[weekString] = 0;
@@ -124,9 +117,7 @@ export default {
         totalsByWeek[weekString] += Math.abs(transaction.amount);
       });
 
-      return Object.entries(totalsByWeek).sort(
-        (a, b) => new Date(a[0]) - new Date(b[0])
-      );
+      return Object.entries(totalsByWeek).sort((a, b) => new Date(a[0]) - new Date(b[0]));
 
       return result;
     },
@@ -142,9 +133,7 @@ export default {
         totalsByDate[transaction.date] += Math.abs(transaction.amount);
       });
 
-      return Object.entries(totalsByDate).sort(
-        (a, b) => new Date(a[0]) - new Date(b[0])
-      );
+      return Object.entries(totalsByDate).sort((a, b) => new Date(a[0]) - new Date(b[0]));
     },
 
     categoryTotals() {
@@ -204,39 +193,27 @@ export default {
               width: "80%",
               height: "80%",
             },
-            backgroundColor: getComputedStyle(
-              document.documentElement
-            ).getPropertyValue("--background-color"),
-            titleColor: getComputedStyle(
-              document.documentElement
-            ).getPropertyValue("--header-text"),
+            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
+            titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
             legend: {
               textStyle: {
-                color: getComputedStyle(
-                  document.documentElement
-                ).getPropertyValue("--text"),
+                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
               position: "in",
             },
             hAxis: {
               textStyle: {
-                color: getComputedStyle(
-                  document.documentElement
-                ).getPropertyValue("--text"),
+                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
             },
             vAxis: {
               textStyle: {
-                color: getComputedStyle(
-                  document.documentElement
-                ).getPropertyValue("--text"),
+                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
             },
           };
 
-          const chart = new google.visualization.LineChart(
-            document.getElementById("linechart")
-          );
+          const chart = new google.visualization.LineChart(document.getElementById("linechart"));
           chart.draw(data, options);
         } catch (error) {
           console.error("Error drawing the line chart:", error);

@@ -1,9 +1,6 @@
 <template>
   <div class="chart-container">
-    <div
-      id="tablechart"
-      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
-    ></div>
+    <div id="tablechart" :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"></div>
   </div>
 </template>
 <script>
@@ -101,11 +98,9 @@ export default {
           data.addColumn("string", "Category");
           data.addColumn("string", "Amount"); //
           // Format the amounts to include the $ sign
-          const formattedData = Object.entries(this.categoryTotals).map(
-            ([category, amount]) => {
-              return [category, `$${amount.toFixed(2)}`];
-            }
-          );
+          const formattedData = Object.entries(this.categoryTotals).map(([category, amount]) => {
+            return [category, `$${amount.toFixed(2)}`];
+          });
           data.addRows(formattedData);
           const cssClassNames = {
             headerRow: "header-row",
@@ -125,9 +120,7 @@ export default {
             cssClassNames: cssClassNames,
           };
 
-          const table = new google.visualization.Table(
-            document.getElementById("tablechart")
-          );
+          const table = new google.visualization.Table(document.getElementById("tablechart"));
 
           table.draw(data, options);
         } catch (error) {

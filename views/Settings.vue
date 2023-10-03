@@ -27,34 +27,10 @@
         <p>
           Notification preferences:
           <select name="notifications">
-            <option
-              ref="email"
-              value="email"
-              :selected="initialNotifications == 'email'"
-            >
-              Email
-            </option>
-            <option
-              ref="sms"
-              value="sms"
-              :selected="initialNotifications == 'sms'"
-            >
-              SMS
-            </option>
-            <option
-              ref="both"
-              value="both"
-              :selected="initialNotifications == 'both'"
-            >
-              Both
-            </option>
-            <option
-              ref="none"
-              value="none"
-              :selected="initialNotifications == 'none'"
-            >
-              None
-            </option>
+            <option ref="email" value="email" :selected="initialNotifications == 'email'">Email</option>
+            <option ref="sms" value="sms" :selected="initialNotifications == 'sms'">SMS</option>
+            <option ref="both" value="both" :selected="initialNotifications == 'both'">Both</option>
+            <option ref="none" value="none" :selected="initialNotifications == 'none'">None</option>
           </select>
         </p>
         <div class="buttons">
@@ -94,13 +70,7 @@ export default {
     const passwordShown = ref("•".repeat(editedPassword.value.length));
 
     const saveChanges = () => {
-      if (
-        !editedName.value ||
-        !editedAge.value ||
-        !editedEmail.value ||
-        !editedPhone.value ||
-        !editedPassword.value
-      ) {
+      if (!editedName.value || !editedAge.value || !editedEmail.value || !editedPhone.value || !editedPassword.value) {
         alert("Please fill in all fields");
         return;
       }
@@ -110,17 +80,12 @@ export default {
         return;
       }
 
-      if (
-        editedPhone.value.toString().length < 8 ||
-        editedPhone.value.toString().length > 16
-      ) {
+      if (editedPhone.value.toString().length < 8 || editedPhone.value.toString().length > 16) {
         alert("Phone number must be between 8 and 16 digits");
         return;
       }
 
-      editedNotifications.value = document.querySelector(
-        "select[name=notifications]"
-      ).value;
+      editedNotifications.value = document.querySelector("select[name=notifications]").value;
 
       initialName.value = editedName.value;
       initialAge.value = editedAge.value;
@@ -190,10 +155,7 @@ export default {
   }),
   methods: {
     togglePasswordVisibility() {
-      this.passwordShown =
-        this.passwordShown === this.initialPassword
-          ? "•".repeat(this.initialPassword.length)
-          : this.initialPassword;
+      this.passwordShown = this.passwordShown === this.initialPassword ? "•".repeat(this.initialPassword.length) : this.initialPassword;
     },
   },
 };
@@ -255,5 +217,26 @@ button:hover {
 
 #password:hover {
   background-color: var(--table-row-odd);
+}
+
+input {
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background-color: var(--text-input);
+  color: var(--text);
+}
+
+select {
+  width: 200px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background-color: var(--text-input);
+  color: var(--text);
+}
+
+select:hover {
+  background-color: var(--select-hover);
 }
 </style>

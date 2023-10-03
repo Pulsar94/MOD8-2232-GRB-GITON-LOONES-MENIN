@@ -1,9 +1,6 @@
 <template>
   <div class="chart-container">
-    <div
-      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
-      id="piechart"
-    ></div>
+    <div :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }" id="piechart"></div>
   </div>
 </template>
 <script>
@@ -133,12 +130,8 @@ export default {
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
-          const dataArray = [
-            ["Category", "Amount", { role: "tooltip", type: "string" }],
-          ];
-          for (const [category, amount] of Object.entries(
-            this.categoryTotals
-          )) {
+          const dataArray = [["Category", "Amount", { role: "tooltip", type: "string" }]];
+          for (const [category, amount] of Object.entries(this.categoryTotals)) {
             const tooltip = `${category}: $${Math.round(amount)}`;
             dataArray.push([category, amount, tooltip]);
           }
@@ -146,12 +139,8 @@ export default {
 
           const options = {
             title: "Spending by Category",
-            backgroundColor: getComputedStyle(
-              document.documentElement
-            ).getPropertyValue("--background-color"),
-            titleColor: getComputedStyle(
-              document.documentElement
-            ).getPropertyValue("--header-text"),
+            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
+            titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
             chartArea: {
               width: "100%",
               height: "100%",
@@ -160,32 +149,18 @@ export default {
               position: "right",
               alignment: "center",
               textStyle: {
-                color: getComputedStyle(
-                  document.documentElement
-                ).getPropertyValue("--text"),
+                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
             },
-            pieSliceBorderColor: getComputedStyle(
-              document.documentElement
-            ).getPropertyValue("--background-color"),
+            pieSliceBorderColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
             tooltip: { isHtml: true }, // this can be omitted if the tooltip doesn't contain HTML
           };
 
-          const chart = new google.visualization.PieChart(
-            document.getElementById("piechart")
-          );
+          const chart = new google.visualization.PieChart(document.getElementById("piechart"));
           chart.draw(data, options);
 
-          google.visualization.events.addListener(
-            chart,
-            "onmouseover",
-            selectHandler
-          );
-          google.visualization.events.addListener(
-            chart,
-            "onmouseout",
-            mouseoutHandler
-          );
+          google.visualization.events.addListener(chart, "onmouseover", selectHandler);
+          google.visualization.events.addListener(chart, "onmouseout", mouseoutHandler);
 
           const vm = this;
 
