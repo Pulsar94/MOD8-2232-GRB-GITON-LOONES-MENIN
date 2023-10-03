@@ -111,8 +111,8 @@ export default {
         i++;
       }
       this.ticks = dailyAmounts
-          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${item[0].getMonth()+1}/${item[0].getDate()}`}));      // Transform to desired format
-      // // console.log(ticks);
+          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth()+1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`}));      // Transform to desired format
+      console.log(this.ticks);
       return dailyAmounts;
     },
     weeklyAmount() {
@@ -139,7 +139,7 @@ export default {
       }
       this.ticks = weeklyAmounts
           .filter(item => item[0].getDay() === 1)  // Filter for the first day of the month
-          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${item[0].getMonth()+1}/${item[0].getDate()}`}));      // Transform to desired format
+          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth()+1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`}));      // Transform to desired format
       // // console.log(ticks);
       return weeklyAmounts;
     },
@@ -180,7 +180,7 @@ export default {
       }
       this.ticks = monthlyAmounts
           .filter(item => item[0].getDate() === 1)  // Filter for the first day of the month
-          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${item[0].getMonth()+1}/${item[0].getDate()}`}));      // Transform to desired format
+          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth()+1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`}));      // Transform to desired format
       // // console.log(ticks);
       return monthlyAmounts;
     },
