@@ -7,7 +7,7 @@ export const store = createStore({
         myInitialTransactionsArray: [],
         myTransactionsArray: [],
         numberOfDays: 0,
-        chosenTime: 31,
+        chosenTime: '31',
         user: {
             id: 1,
             name: 'Patrick',

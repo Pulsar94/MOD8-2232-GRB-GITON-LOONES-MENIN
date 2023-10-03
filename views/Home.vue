@@ -13,6 +13,7 @@
         <div>
           <h2>Key Features:</h2>
           <ul>
+
             <li>
               <strong>Expense Tracking:</strong> Easily record your daily
               expenses, categorize them, and gain insights into your spending
@@ -65,6 +66,7 @@
       <TotalAndAverageExpenses :transactions="myTransactionsArray" />
       <div class="pie-chart">
         <PieChart
+            class="pie-chart"
           @categorySelected="updateText"
           :chartWidth="'600px'"
           :chartHeight="'500px'"
@@ -151,6 +153,7 @@ import LineChart from "../components/LineChart.vue";
 import TableChart from "../components/TableChart.vue";
 import RecentTransactions from "../components/RecentTransactions.vue";
 
+
 export default {
   components: {
     TotalAndAverageExpenses,
@@ -181,6 +184,7 @@ export default {
     handleChangeChart(chartType) {
       this.currentChart = chartType;
     },
+
   },
 };
 </script>
@@ -337,6 +341,9 @@ button:hover {
 
   .container > * {
     vertical-align: top; /* ensures that inline-block children align properly */
+  }
+
+  .pie-chart {align-self: center;
   }
 }
 </style>

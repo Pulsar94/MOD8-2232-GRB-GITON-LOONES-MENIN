@@ -49,7 +49,9 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      ticks: null,
+    };
   },
   watch: {
     transactions: {
@@ -108,6 +110,9 @@ export default {
         date = this.addDays(date, 1);
         i++;
       }
+      this.ticks = dailyAmounts
+          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${item[0].getMonth()+1}/${item[0].getDate()}`}));      // Transform to desired format
+      // // console.log(ticks);
       return dailyAmounts;
     },
     weeklyAmount() {
@@ -129,9 +134,13 @@ export default {
         let dateString = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`;
         weeklyAmounts.push([new Date(dateString), amount]);
 
-        date = this.addDays(date, 7);
-        i += 7;
+        date = this.addDays(date, 1);
+        i++;
       }
+      this.ticks = weeklyAmounts
+          .filter(item => item[0].getDay() === 1)  // Filter for the first day of the month
+          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${item[0].getMonth()+1}/${item[0].getDate()}`}));      // Transform to desired format
+      // // console.log(ticks);
       return weeklyAmounts;
     },
 
@@ -169,10 +178,12 @@ export default {
         date = this.addDays(date, 1);
         i++;
       }
+      this.ticks = monthlyAmounts
+          .filter(item => item[0].getDate() === 1)  // Filter for the first day of the month
+          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${item[0].getMonth()+1}/${item[0].getDate()}`}));      // Transform to desired format
+      // // console.log(ticks);
       return monthlyAmounts;
     },
-
-
   },
 
   mounted() {
@@ -181,7 +192,7 @@ export default {
 
   methods: {
     totalBeforeDate(date) { //date is of Date type
-      const transactionsBeforeDate = this.transactions.filter((t) => t.rawDate < date).sort((a, b) => new Date(b.date) - new Date(a.date));
+      const transactionsBeforeDate = this.$store.state.myInitialTransactionsArray.filter((t) => t.rawDate < date).sort((a, b) => new Date(b.date) - new Date(a.date));
       const total = transactionsBeforeDate.reduce((sum, txn) => sum + txn.amount, 0);
       //console.log(total);
       return total;
@@ -202,10 +213,6 @@ export default {
               data.addColumn('number', 'Balance');
               data.addRows(dataArray);
 
-              const ticks = dataArray
-                  .filter(item => item[0].getDate() === 1)  // Filter for the first day of the month
-                  .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${item[0].getMonth()+1}/${item[0].getDate()}`}));      // Transform to desired format
-              // // console.log(ticks);
 
               // Define chart options
               const options = {
@@ -229,7 +236,7 @@ export default {
                   gridlines: {
                     color: 'transparent',
                   },
-                  ticks: ticks,
+                  ticks: this.ticks,
                   textStyle: {
                     color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
                   },

@@ -78,6 +78,7 @@ export default {
     this.drawChart();
   },
 
+
   methods: {
     handleContainerClick(chart, data) {
       const selection = chart.getSelection();
@@ -139,18 +140,15 @@ export default {
 
           function onclickHandler() {
             setTimeout(() => {
-
               console.log("Select event triggered");
-
               const selection = chart.getSelection();
               console.log("Current selection:", selection);
-
               if (selection.length > 0 && typeof selection[0].row !== 'undefined') {
                 // Pie slice is selected
                 const category = data.getValue(selection[0].row, 0);
                 const filteredTransactions = vm.transactions.filter((txn) => {
                   return txn.category.includes(category);
-                }).sort((a, b) => new Date(b.date) - new Date(a.date));
+                });
                 vm.$emit("filteredTransactions", filteredTransactions);
                 console.log("Filtered transactions emitted:", filteredTransactions);
               } else {

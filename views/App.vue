@@ -168,7 +168,7 @@ export default {
   color: var(--black);
   padding: 10px 15px;
   border-radius: 0 0 8px 8px;
-  height: 80px;
+  /* height: 80px; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -203,7 +203,7 @@ footer {
   padding: 10px 15px;
   margin-top: -13px;
   border-radius: 8px 8px 0 0;
-  height: 80px;
+  /* height: 80px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -212,7 +212,7 @@ footer {
 .footer-btn {
   background-color: var(--footer-btn);
   border: none;
-  margin: 0 30px;
+  margin: 20px 30px;
   font-size: 15px;
   padding: 10px 20px;
   border-radius: 8px;
@@ -229,5 +229,26 @@ footer {
 footer a {
   text-decoration: none;
   color: var(--black);
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-links li {
+    margin: 10px 0;
+  }
+
+  footer {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>
