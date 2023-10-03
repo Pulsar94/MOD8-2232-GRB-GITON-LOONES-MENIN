@@ -173,10 +173,45 @@ export default {
 }
 
 .recent-transactions .date {
-  width: 31%;
+  width: 25%;
 }
 
 .recent-transactions .amount {
-  width: 31%;
+  width: 37%;
 }
+
+td:last-child, th:last-child {
+  text-align: right;
+}
+
+input {
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background-color: var(--text-input);
+  color: var(--text);
+}
+
+select {
+  width: 200px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background-color: var(--text-input);
+  color: var(--text);
+}
+
+select:hover {
+  background-color: var(--select-hover);
+}
+
+button {
+  margin: 20px 15px 40px 15px;
+  padding: 5px 10px;
+  background-color: var(--form-button);
+  color: var(--black);
+  border: none;
+  border-radius: 5px;
+}
+
 </style>

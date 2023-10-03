@@ -65,6 +65,11 @@ export default {
     },
   },
   methods: {
+    toggleMenu() {
+      if(window.innerWidth < 680) {
+        this.navInactive = !this.navInactive;
+      }
+    },
     populateTransactions() {
       const categories = [
         "Utilities",

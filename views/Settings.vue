@@ -27,10 +27,10 @@
         <p>
           Notification preferences:
           <select name="notifications">
-            <option ref="email" value="email" :selected="initialNotifications == 'email'">Email</option>
-            <option ref="sms" value="sms" :selected="initialNotifications == 'sms'">SMS</option>
-            <option ref="both" value="both" :selected="initialNotifications == 'both'">Both</option>
-            <option ref="none" value="none" :selected="initialNotifications == 'none'">None</option>
+            <option ref="email" value="email" :selected="initialNotifications === 'email'">Email</option>
+            <option ref="sms" value="sms" :selected="initialNotifications === 'sms'">SMS</option>
+            <option ref="both" value="both" :selected="initialNotifications === 'both'">Both</option>
+            <option ref="none" value="none" :selected="initialNotifications === 'none'">None</option>
           </select>
         </p>
         <div class="buttons">

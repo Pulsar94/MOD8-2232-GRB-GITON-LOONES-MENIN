@@ -16,7 +16,7 @@ export default {
     },
     chartHeight: {
       type: String,
-      default: "500px",
+      default: "700px",
     },
     chartMargin: {
       type: String,
@@ -272,7 +272,7 @@ export default {
             series: { 5: { type: "line" } },
             chartArea: {
               width: "80%",
-              height: "80%",
+              height: "60%",
             },
 
 
@@ -282,7 +282,7 @@ export default {
               textStyle: {
                 color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
-              position: "bottom",
+              position: "in",
               margin: "-20px 0",
             },
             hAxis: {

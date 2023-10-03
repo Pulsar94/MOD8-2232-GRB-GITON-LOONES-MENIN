@@ -85,4 +85,19 @@ div.summary {
   justify-content: space-around;
   margin-bottom: 20px;
 }
+
+select {
+  width: 200px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background-color: var(--text-input);
+  color: var(--text);
+}
+
+select:hover {
+  background-color: var(--select-hover);
+}
+
+
 </style>
