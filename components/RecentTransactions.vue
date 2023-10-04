@@ -83,9 +83,17 @@ export default {
   methods: {
     prevPage() {
       if (this.currentPage > 0) this.currentPage--;
+      const ypos = document.documentElement.scrollHeight - window.scrollY;
+      setTimeout(() => {
+        window.scrollTo(0, document.documentElement.scrollHeight - ypos);
+      }, 1); // to remove to remove auto scroll
     },
     nextPage() {
       if (this.currentPage < Math.ceil(this.sortedTransactions.length / this.itemsPerPage) - 1) this.currentPage++;
+      const ypos = document.documentElement.scrollHeight - window.scrollY;
+      setTimeout(() => {
+        window.scrollTo(0, document.documentElement.scrollHeight - ypos);
+      }, 1);
     },
     transactionForm() {
       this.clicked = !this.clicked;
