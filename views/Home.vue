@@ -28,15 +28,15 @@
     <div class="container">
       <TotalAndAverageExpenses :transactions="myTransactionsArray" />
       <div class="pie-chart">
-        <PieChart @categorySelected="updateText" :chartWidth="'600px'" :chartHeight="'500px'" :chartMargin="'10px'" :transactions="myTransactionsArray" />
+        <PieChart @categorySelected="updateText" :chartWidth="'600px'" :chartHeight="'300px'" :chartMargin="'10px'" :transactions="myTransactionsArray" />
         <p>{{ selectedCategoryText }}</p>
       </div>
       <div class="combo-chart">
-        <ComboChart :chartWidth="'800px'" :chartHeight="'500px'" :chartMargin="'10px'" :transactions="myTransactionsArray" />
+        <ComboChart :chartWidth="'700px'" :chartHeight="'500px'" :chartMargin="'10px'" :transactions="myTransactionsArray" />
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim diam vulputate ut pharetra sit amet aliquam. Elit pellentesque habitant morbi tristique senectus et netus et. Vulputate enim nulla aliquet porttitor. Purus faucibus ornare suspendisse sed. Viverra justo nec ultrices dui sapien eget mi. Sit amet justo donec enim diam. Tincidunt ornare massa eget egestas purus viverra accumsan. Odio pellentesque diam volutpat commodo sed egestas. Integer eget aliquet nibh praesent tristique magna sit amet. Sit amet facilisis magna etiam tempor orci eu.</p>
       </div>
       <div class="line-chart">
-        <LineChart :chartWidth="'900px'" :chartHeight="'500px'" :chartMargin="'none'" :transactions="myTransactionsArray" />
+        <LineChart :chartWidth="'700px'" :chartHeight="'400px'" :chartMargin="'none'" :transactions="myTransactionsArray" />
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Leo integer malesuada nunc vel risus commodo. Vel turpis nunc eget lorem. Vitae elementum curabitur vitae nunc sed velit dignissim sodales ut. Ut tortor pretium viverra suspendisse potenti. Parturient montes nascetur ridiculus mus. Facilisi etiam dignissim diam quis enim. Enim blandit volutpat maecenas volutpat blandit aliquam etiam. Posuere ac ut consequat semper viverra nam libero. In tellus integer feugiat scelerisque varius. Est ultricies integer quis auctor elit sed vulputate mi sit. Est ullamcorper eget nulla facilisi etiam dignissim diam quis.</p>
       </div>
       <div class="table-chart">

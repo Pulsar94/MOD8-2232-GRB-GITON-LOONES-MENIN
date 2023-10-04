@@ -20,7 +20,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "50px auto",
+      default: "none",
     },
     transactionCount: {
       type: Number,
@@ -57,16 +57,16 @@ export default {
   watch: {
     transactions: {
       handler(newVal, oldVal) {
-        this.drawChart()
+        this.drawChart();
       },
-      deep: true
+      deep: true,
     },
     chosenTime: {
       handler(newVal, oldVal) {
-        this.drawChart()
+        this.drawChart();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   computed: {
     ...mapState(["chosenTime"]),
@@ -92,7 +92,7 @@ export default {
     },
 
     dailyAmount() {
-      const dailyAmounts = []//[['Date', 'Balance']];
+      const dailyAmounts = []; //[['Date', 'Balance']];
       const todayDate = new Date();
 
       const limitDate = new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
@@ -105,25 +105,24 @@ export default {
       let i = 0;
       while (i < days + 1) {
         amount = this.totalBeforeDate(date);
-        let dateString = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`;
+        let dateString = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
         dailyAmounts.push([new Date(dateString), amount]);
 
         date = this.addDays(date, 1);
         i++;
       }
-      this.ticks = dailyAmounts
-          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth()+1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`}));      // Transform to desired format
+      this.ticks = dailyAmounts.map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
       console.log(this.ticks);
       return dailyAmounts;
     },
     weeklyAmount() {
-      const weeklyAmounts = []//[['Date', 'Balance']];
+      const weeklyAmounts = []; //[['Date', 'Balance']];
       const todayDate = new Date();
-      const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth()+1}/${todayDate.getDate()}`;
+      const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth() + 1}/${todayDate.getDate()}`;
 
       const limitDate = new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
       const limitDateObj = new Date(limitDate);
-      const limitDateStr = `${limitDateObj.getFullYear()}/${limitDateObj.getMonth()+1}/${limitDateObj.getDate()}`;
+      const limitDateStr = `${limitDateObj.getFullYear()}/${limitDateObj.getMonth() + 1}/${limitDateObj.getDate()}`;
 
       const days = Math.round((todayDate.getTime() - limitDate) / (1000 * 60 * 60 * 24));
       let date = limitDateObj;
@@ -132,40 +131,29 @@ export default {
       let i = 0;
       while (i < days + 1) {
         amount = this.totalBeforeDate(date);
-        let dateString = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`;
+        let dateString = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
         weeklyAmounts.push([new Date(dateString), amount]);
 
         date = this.addDays(date, 1);
         i++;
       }
       this.ticks = weeklyAmounts
-          .filter(item => item[0].getDay() === 1)  // Filter for the first day of the month
-          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth()+1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`}));      // Transform to desired format
+        .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
+        .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
       // // console.log(ticks);
       return weeklyAmounts;
     },
 
     monthlyAmount() {
-      const monthlyAmounts = [];//[['Date', 'Balance']];
+      const monthlyAmounts = []; //[['Date', 'Balance']];
       const todayDate = new Date();
-      const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth()+1}/${todayDate.getDate()}`;
-      const limitDate = this.chosenTime === '-1' ?
-          this.transactions[this.transactions.length - 1].rawDate.getTime() :
-          (new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000);
+      const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth() + 1}/${todayDate.getDate()}`;
+      const limitDate = this.chosenTime === "-1" ? this.transactions[this.transactions.length - 1].rawDate.getTime() : new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
 
       const limitDateObj = new Date(limitDate);
-      const limitDateStr = `${limitDateObj.getFullYear()}/${limitDateObj.getMonth()+1}/${limitDateObj.getDate()}`;
+      const limitDateStr = `${limitDateObj.getFullYear()}/${limitDateObj.getMonth() + 1}/${limitDateObj.getDate()}`;
 
-      const days = Math.round(
-          (
-              (
-                  this.chosenTime === '-1' ?
-                      this.transactions[0].rawDate.getTime() :
-                      todayDate.getTime()
-              )
-              - limitDate
-          ) / (1000 * 60 * 60 * 24)
-      );
+      const days = Math.round(((this.chosenTime === "-1" ? this.transactions[0].rawDate.getTime() : todayDate.getTime()) - limitDate) / (1000 * 60 * 60 * 24));
       let date = limitDateObj;
 
       let amount = 0;
@@ -173,15 +161,15 @@ export default {
       console.log(days);
       while (i < days + 1) {
         amount = this.totalBeforeDate(date);
-        let actualDateStr = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`;
+        let actualDateStr = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
         monthlyAmounts.push([new Date(actualDateStr), amount]);
 
         date = this.addDays(date, 1);
         i++;
       }
       this.ticks = monthlyAmounts
-          .filter(item => item[0].getDate() === 1)  // Filter for the first day of the month
-          .map(item => ({v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth()+1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`}));      // Transform to desired format
+        .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
+        .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
       // // console.log(ticks);
       return monthlyAmounts;
     },
@@ -191,83 +179,82 @@ export default {
     this.drawChart();
   },
   methods: {
-    totalBeforeDate(date) { //date is of Date type
+    totalBeforeDate(date) {
+      //date is of Date type
       const transactionsBeforeDate = this.$store.state.myInitialTransactionsArray.filter((t) => t.rawDate < date).sort((a, b) => new Date(b.date) - new Date(a.date));
       const total = transactionsBeforeDate.reduce((sum, txn) => sum + txn.amount, 0);
       //console.log(total);
       return total;
     },
 
-
-
     drawChart() {
-          google.charts.load("current", { packages: ["corechart"] });
-          google.charts.setOnLoadCallback(() => {
-            try {
-              const dataArray = this.dataToDisplay;
-              console.log(dataArray);
+      google.charts.load("current", { packages: ["corechart"] });
+      google.charts.setOnLoadCallback(() => {
+        try {
+          const dataArray = this.dataToDisplay;
+          console.log(dataArray);
 
-              // Convert dataArray to a DataTable
-              const data = new google.visualization.DataTable();
-              data.addColumn('date', 'Date');
-              data.addColumn('number', 'Balance');
-              data.addRows(dataArray);
+          // Convert dataArray to a DataTable
+          const data = new google.visualization.DataTable();
+          data.addColumn("date", "Date");
+          data.addColumn("number", "Balance");
+          data.addRows(dataArray);
 
+          // Define chart options
+          const options = {
+            title: "Balance over time",
+            curveType: "function",
+            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
+            titleTextStyle: {
+              color: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
+            },
+            chartArea: {
+              width: "75%",
+              height: "60%",
+            },
+            legend: {
+              textStyle: {
+                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
+              },
+              position: "in",
+            },
+            hAxis: {
+              title: "Date",
+              titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
+              gridlines: {
+                color: "transparent",
+              },
+              ticks: this.ticks,
+              textStyle: {
+                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
+              },
+              slantedText: true,
+              slantedTextAngle: 45,
+            },
+            vAxis: {
+              title: "Balance",
+              titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
+              textStyle: {
+                color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
+              },
+            },
+          };
 
-              // Define chart options
-              const options = {
-                title: "Balance over time",
-                curveType: "function",
-                Legend: {
-                  position: "bottom"
-                },
-                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
-                titleTextStyle: {
-                  color: getComputedStyle(document.documentElement).getPropertyValue("--header-text")
-                },
-                legend: {
-                  textStyle: {
-                    color: getComputedStyle(document.documentElement).getPropertyValue("--text")
-                  }
-                },
-                hAxis: {
-                  title: "Date",
-                  titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
-                  gridlines: {
-                    color: 'transparent',
-                  },
-                  ticks: this.ticks,
-                  textStyle: {
-                    color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
-                  },
-                  slantedText: true,
-                  slantedTextAngle: 45,
-                },
-                vAxis: {
-                  title: "Balance",
-                  titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
-                  textStyle: {
-                    color: getComputedStyle(document.documentElement).getPropertyValue("--text")
-                  }
-                }
-              };
-
-              // Draw the chart
-              const chart = new google.visualization.LineChart(document.getElementById("linechart"));
-              chart.draw(data, options);
-            } catch (error) {
-              console.error("Error drawing the line chart:", error);
-            }
-          });
-        },
-
+          // Draw the chart
+          const chart = new google.visualization.LineChart(document.getElementById("linechart"));
+          chart.draw(data, options);
+        } catch (error) {
+          console.error("Error drawing the line chart:", error);
+        }
+      });
+    },
 
     addDays(date, number) {
-      if(number >= 0){
+      if (number >= 0) {
         const dateObj = new Date(date);
         dateObj.setDate(dateObj.getDate() + number);
         return dateObj;
-      }else {
+      } else {
         const dateObj = new Date(date);
         dateObj.setMonth(dateObj.getMonth() + Math.abs(number));
         //console.log(dateObj.getMonth() + Math.abs(number));
@@ -318,30 +305,6 @@ div.summary {
   margin-bottom: 20px;
 }
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!--<template>-->
 <!--  <div class="chart-container">-->
@@ -630,8 +593,6 @@ div.summary {
 <!--  margin-bottom: 20px;-->
 <!--}-->
 <!--</style>-->
-
-
 
 <!--
 <template>

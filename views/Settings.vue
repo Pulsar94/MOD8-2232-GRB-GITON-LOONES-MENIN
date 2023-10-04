@@ -24,15 +24,15 @@
         <p>Email: <input type="email" v-model="editedEmail" /></p>
         <p>Phone: <input type="number" v-model="editedPhone" /></p>
         <p>Password: <input type="password" v-model="editedPassword" /></p>
-        <p>
-          Notification preferences:
+        <div class="notification-container">
+          <p>Notification preferences:</p>
           <select name="notifications">
             <option ref="email" value="email" :selected="initialNotifications === 'email'">Email</option>
             <option ref="sms" value="sms" :selected="initialNotifications === 'sms'">SMS</option>
             <option ref="both" value="both" :selected="initialNotifications === 'both'">Both</option>
             <option ref="none" value="none" :selected="initialNotifications === 'none'">None</option>
           </select>
-        </p>
+        </div>
         <div class="buttons">
           <button type="submit">Save</button>
           <button type="button" @click="cancelEditing">Cancel</button>
@@ -238,5 +238,18 @@ select {
 
 select:hover {
   background-color: var(--select-hover);
+}
+
+.notification-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+@media (max-width: 400px) {
+  .notification-container {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>

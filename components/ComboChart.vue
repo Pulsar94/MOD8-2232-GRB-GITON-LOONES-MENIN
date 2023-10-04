@@ -5,7 +5,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import {computed} from "vue";
+import { computed } from "vue";
 
 export default {
   name: "combochart",
@@ -55,10 +55,10 @@ export default {
   watch: {
     transactions: {
       handler(newVal, oldVal) {
-        this.drawChart()
+        this.drawChart();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
 
   computed: {
@@ -112,7 +112,7 @@ export default {
 
   methods: {
     generateDailyDataTable() {
-      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];
+      const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
 
       const totalsByDate = {};
@@ -131,8 +131,8 @@ export default {
         // Check if the category exists in the transaction's category
         for (const category of this.categories) {
           if (transaction.category.includes(category.name)) {
-            totalsByDate[date][category.name] += -(transaction.amount);
-            break;  // Stop looping once we found a matching category
+            totalsByDate[date][category.name] += -transaction.amount;
+            break; // Stop looping once we found a matching category
           }
         }
       });
@@ -177,15 +177,15 @@ export default {
         // Initialize the week if not yet created
         if (!totalsByWeek[weekString]) {
           totalsByWeek[weekString] = {};
-          this.categories.forEach(c => {
-            totalsByWeek[weekString][c.name] = 0;  // Initialize every category for the date
+          this.categories.forEach((c) => {
+            totalsByWeek[weekString][c.name] = 0; // Initialize every category for the date
           });
         }
         // Check if the category exists in the transaction's category
         for (const category of this.categories) {
           if (transaction.category.includes(category.name)) {
-            totalsByWeek[weekString][category.name] += -(transaction.amount);
-            break;  // Stop looping once we found a matching category
+            totalsByWeek[weekString][category.name] += -transaction.amount;
+            break; // Stop looping once we found a matching category
           }
         }
       });
@@ -195,11 +195,11 @@ export default {
         let sum = 0;
         this.categories.forEach((c) => {
           const value = categories[c.name] || 0;
-          row.push({v: value, f: `$${Math.round(value)}`});
+          row.push({ v: value, f: `$${Math.round(value)}` });
           sum += value;
         });
         const mean = sum / this.categories.length;
-        row.push({v: mean, f: `$${mean.toFixed(2)}`});
+        row.push({ v: mean, f: `$${mean.toFixed(2)}` });
         dataTable.push(row);
       }
       dataTable = [headers, ...dataTable.slice(1).reverse()];
@@ -224,8 +224,8 @@ export default {
         // Check if the category exists in the transaction's category
         for (const category of this.categories) {
           if (transaction.category.includes(category.name)) {
-            totalsByMonth[monthYearKey][category.name] += -(transaction.amount);
-            break;  // Stop looping once we found a matching category
+            totalsByMonth[monthYearKey][category.name] += -transaction.amount;
+            break; // Stop looping once we found a matching category
           }
         }
       });
@@ -264,17 +264,16 @@ export default {
           const data = google.visualization.arrayToDataTable(dataArray());
 
           const options = {
-            title: 'Amount spent by category over time',
-            vaxis: {title: 'Cups'},
-            haxis: {title: 'Month'},
+            title: "Amount spent by category over time",
+            vaxis: { title: "Cups" },
+            haxis: { title: "Month" },
             tooltip: { isHtml: true },
             seriesType: "bars",
             series: { 5: { type: "line" } },
             chartArea: {
-              width: "80%",
+              width: "85%",
               height: "60%",
             },
-
 
             backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
             titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
@@ -299,20 +298,17 @@ export default {
             },
           };
 
-          const chart = new google.visualization.ComboChart(document.getElementById('combochart'));
+          const chart = new google.visualization.ComboChart(document.getElementById("combochart"));
           chart.draw(data, options);
-
 
           //google.visualization.events.addListener(chart, 'onmouseover', mouseoverHandler);
           //google.visualization.events.addListener(chart, 'onmouseout', mouseoutHandler);
-          google.visualization.events.addListener(chart, 'select', onclickHandler);
+          google.visualization.events.addListener(chart, "select", onclickHandler);
 
-          document.getElementById('combochart').addEventListener('click', () => {
+          document.getElementById("combochart").addEventListener("click", () => {
             // console.log("Container clicked");
             this.handleContainerClick(chart, data);
           });
-
-
 
           const vm = this;
           function onclickHandler() {
@@ -331,11 +327,10 @@ export default {
 
               // If the row is null, then it might be a click on the legend or axes
               if (selection[0].row === null) {
-
                 const clickedTargetID = selection[0].targetID;
                 console.log("clickedTargetID:", clickedTargetID);
 
-                if (selection[0].row === null && typeof selection[0].column !== 'undefined') {
+                if (selection[0].row === null && typeof selection[0].column !== "undefined") {
                   // This might indicate a category (legend) click
                   const clickedCategory = data.getColumnLabel(selection[0].column);
                   console.log("Clicked Category from legend:", clickedCategory);
@@ -343,7 +338,7 @@ export default {
                   const filteredTransactionsByCategory = vm.transactions.filter((txn) => txn.category === clickedCategory);
                   console.log("Filtered transactions by category:", filteredTransactionsByCategory);
                   vm.$emit("filteredTransactions", filteredTransactionsByCategory);
-                } else if (selection.length > 0 && typeof selection[0].row !== 'undefined') {
+                } else if (selection.length > 0 && typeof selection[0].row !== "undefined") {
                   // Handle the case where the chart background or other non-legend, non-data areas are clicked
                   vm.$emit("filteredTransactions", vm.transactions);
                   console.log("All transactions emitted");
@@ -353,64 +348,63 @@ export default {
               }
               // Handle when a bar/line is clicked
               let datePeriodString = data.getValue(selection[0].row, 0);
-              if (vm.chosenTime === '-1' || vm.chosenTime === '365'){
-                console.log(datePeriodString)
-                datePeriodString =(data.getValue(selection[0].row, 0) + "/01");
-                console.log(datePeriodString)
-
+              if (vm.chosenTime === "-1" || vm.chosenTime === "365") {
+                console.log(datePeriodString);
+                datePeriodString = data.getValue(selection[0].row, 0) + "/01";
+                console.log(datePeriodString);
               }
               const datePeriod = new Date(datePeriodString);
               const clickedCategory = data.getColumnLabel(selection[0].column);
 
               const currentDateYear = new Date().getFullYear();
-              const convertedDatePeriod = `${currentDateYear}/${("0" + (datePeriod.getMonth()+1)).slice(-2)}/${("0" + (datePeriod.getDate())).slice(-2)}`;
-              console.log(datePeriodString)
-              console.log(datePeriod, convertedDatePeriod)
+              const convertedDatePeriod = `${currentDateYear}/${("0" + (datePeriod.getMonth() + 1)).slice(-2)}/${("0" + datePeriod.getDate()).slice(-2)}`;
+              console.log(datePeriodString);
+              console.log(datePeriod, convertedDatePeriod);
 
-              const convertedDatePeriodO = datePeriodString.replace('-', '/');
+              const convertedDatePeriodO = datePeriodString.replace("-", "/");
 
-              console.log(convertedDatePeriodO)
+              console.log(convertedDatePeriodO);
               const mondayDate = new Date(convertedDatePeriod);
               const sundayDate = new Date(mondayDate);
 
               sundayDate.setDate(mondayDate.getDate() + 6); // Move to Sunday of that week
               let filteredTransactions = vm.transactions;
-              console.log(vm.chosenTime)
-              if(clickedCategory !== 'Mean'){
-                if (vm.chosenTime === '7'){
-                  console.log("777777777777")
+              console.log(vm.chosenTime);
+              if (clickedCategory !== "Mean") {
+                if (vm.chosenTime === "7") {
+                  console.log("777777777777");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate.getTime() === mondayDate.getTime() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                   });
-                }else if(vm.chosenTime === '31'){
-                  console.log("3131313131313")
+                } else if (vm.chosenTime === "31") {
+                  console.log("3131313131313");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate >= mondayDate && txnDate <= sundayDate && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                   });
-                }else if(vm.chosenTime === '365' || vm.chosenTime === '-1') {
-                  console.log("365365365365365")
+                } else if (vm.chosenTime === "365" || vm.chosenTime === "-1") {
+                  console.log("365365365365365");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                   });
                 }
-              }else {
-                if (vm.chosenTime === '7'){
-                  console.log("777777777777")
+              } else {
+                if (vm.chosenTime === "7") {
+                  console.log("777777777777");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate.getTime() === mondayDate.getTime();
                   });
-                }else if(vm.chosenTime === '31'){
-                  console.log("3131313131313")
+                } else if (vm.chosenTime === "31") {
+                  console.log("3131313131313");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate >= mondayDate && txnDate <= sundayDate;
                   });
-                }else if(vm.chosenTime === '365' || vm.chosenTime === '-1') {
-                  console.log("365365365365365")
+                } else if (vm.chosenTime === "365" || vm.chosenTime === "-1") {
+                  console.log("365365365365365");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear();
@@ -427,7 +421,7 @@ export default {
               vm.$emit("filteredTransactions", filteredTransactions);
             }, 10);
           }
-        }catch (error) {
+        } catch (error) {
           console.error("Error drawing the combo chart:", error);
         }
       });
@@ -472,17 +466,6 @@ div.summary {
   margin-bottom: 20px;
 }
 </style>
-
-
-
-
-
-
-
-
-
-
-
 
 <!--export default {-->
 <!--  name: "combochart",-->

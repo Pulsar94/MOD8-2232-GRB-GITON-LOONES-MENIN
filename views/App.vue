@@ -35,8 +35,12 @@
     <a href="/about/">
       <text class="footer-btn">Contact</text>
     </a>
-    <router-link class="footer-btn" to="/policy">Privacy Policy</router-link>
-    <router-link class="footer-btn" to="/terms">Terms of Service</router-link>
+    <div>
+      <router-link class="footer-btn" to="/policy">Privacy Policy</router-link>
+    </div>
+    <div>
+      <router-link class="footer-btn" to="/terms">Terms of Service</router-link>
+    </div>
   </footer>
 </template>
 
@@ -66,52 +70,22 @@ export default {
   },
   methods: {
     toggleMenu() {
-      if(window.innerWidth < 680) {
+      if (window.innerWidth < 680) {
         this.navInactive = !this.navInactive;
       }
     },
     populateTransactions() {
-      const categories = [
-        "Utilities",
-        "Dining",
-        "Travel",
-        "Entertainment",
-        "Groceries",
-      ];
-      const positiveCategories = [
-        "Received bonus",
-        "Refund",
-        "Gift received",
-        "Sold item",
-      ];
+      const categories = ["Utilities", "Dining", "Travel", "Entertainment", "Groceries"];
+      const positiveCategories = ["Received bonus", "Refund", "Gift received", "Sold item"];
 
-      const libelles = [
-        "Electricity",
-        "Water",
-        "Gas",
-        "Internet",
-        "Phone",
-        "Restaurant",
-        "Fast food",
-        "Coffee shop",
-        "Airplane",
-        "Train",
-        "Bus",
-        "Taxi",
-        "Movie",
-        "Concert",
-        "Clothes",
-        "Shoes",
-      ];
+      const libelles = ["Electricity", "Water", "Gas", "Internet", "Phone", "Restaurant", "Fast food", "Coffee shop", "Airplane", "Train", "Bus", "Taxi", "Movie", "Concert", "Clothes", "Shoes"];
 
       function getRandomCategories() {
         const randomIndex = Math.floor(Math.random() * categories.length);
         return categories[randomIndex];
       }
       function getRandomPositiveCategories() {
-        const randomIndex = Math.floor(
-          Math.random() * positiveCategories.length
-        );
+        const randomIndex = Math.floor(Math.random() * positiveCategories.length);
         return positiveCategories[randomIndex];
       }
 
@@ -146,7 +120,7 @@ export default {
       for (let i = 1; i <= 365; i++) {
         const date = new Date(2023, 0); // Start from January 1, 2023
         date.setDate(i); // Increase the date for each iteration
-         if (formatDate(date).split("/")[2] === "1") {
+        if (formatDate(date).split("/")[2] === "1") {
           this.myTransactionsArray.push({
             id: i,
             category: "Salary",
@@ -156,17 +130,17 @@ export default {
             rawDate: date,
           });
         } else if (i % 11 === 0 && formatDate(date).split("/")[2] !== "25") {
-           // For every 11th transaction, make it positive
-           this.myTransactionsArray.push({
-             id: i,
-             category: getRandomPositiveCategories(),
-             libelle: getRandomLibelle(),
-             amount: getRandomAmount(100, 250), // Positive amount
-             //amount: getRandomAmount(20, 120),
-             date: formatDate(date),
-             rawDate: date,
-           });
-         } else {
+          // For every 11th transaction, make it positive
+          this.myTransactionsArray.push({
+            id: i,
+            category: getRandomPositiveCategories(),
+            libelle: getRandomLibelle(),
+            amount: getRandomAmount(100, 250), // Positive amount
+            //amount: getRandomAmount(20, 120),
+            date: formatDate(date),
+            rawDate: date,
+          });
+        } else {
           this.myTransactionsArray.push({
             id: i,
             category: getRandomCategories(), // Negative category
@@ -188,7 +162,13 @@ export default {
 
       const todayDate = new Date();
       this.$store.commit("SET_INITIAL_TRANSACTIONS", this.myTransactionsArray);
-      this.$store.commit("SET_TRANSACTIONS", this.myTransactionsArray.filter((t) => t.rawDate < todayDate).filter((t) => t.rawDate > todayDate - this.$store.state.chosenTime * 24 * 60 * 60 * 1000).sort((a, b) => new Date(b.date) - new Date(a.date)));
+      this.$store.commit(
+        "SET_TRANSACTIONS",
+        this.myTransactionsArray
+          .filter((t) => t.rawDate < todayDate)
+          .filter((t) => t.rawDate > todayDate - this.$store.state.chosenTime * 24 * 60 * 60 * 1000)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+      );
       this.$store.commit("SET_DAYS", Math.round((todayDate.getTime() - new Date(2023, 0).getTime()) / (1000 * 60 * 60 * 24)));
     },
   },
@@ -237,9 +217,10 @@ footer {
   padding: 10px 15px;
   margin-top: -13px;
   border-radius: 8px 8px 0 0;
-  /* height: 80px; */
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
   align-items: center;
 }
 
@@ -254,6 +235,7 @@ footer {
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
+  flex-basis: calc(50% - 20px);
 }
 
 .footer-btn:hover {
@@ -292,10 +274,10 @@ footer a {
     margin: 10px 0;
   }
 
-  footer {
+  /* footer {
     flex-direction: column;
     align-items: center;
-  }
+  } */
 
   .header-nav {
     display: flex;
@@ -308,6 +290,12 @@ footer a {
     display: block;
     cursor: pointer;
     justify-self: right;
+  }
+
+  @media (max-width: 380px) {
+    img {
+      height: 60px;
+    }
   }
 }
 </style>
