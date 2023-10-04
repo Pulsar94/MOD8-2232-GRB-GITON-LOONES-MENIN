@@ -208,6 +208,10 @@ button {
   border-radius: 5px;
 }
 
+button:hover {
+  background-color: var(--form-button-hover);
+}
+
 @media (max-width: 670px) {
   .recent-transactions {
     padding: 0;

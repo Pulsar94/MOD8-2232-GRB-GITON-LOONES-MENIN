@@ -1,34 +1,36 @@
 <template>
-  <header class="header">
-    <div class="header-nav">
-      <a href="/">
-        <img class="logo" src="../assets/img/logo.svg" alt="Logo" />
-      </a>
-      <a href="javascript:void(0);" class="icon" @click="toggleMenu()">
-        <i class="fa fa-bars fa-xl"></i>
-      </a>
+  <div class="app-container">
+    <header class="header">
+      <div class="header-nav">
+        <a href="/">
+          <img class="logo" src="../assets/img/logo.svg" alt="Logo" />
+        </a>
+        <a href="javascript:void(0);" class="icon" @click="toggleMenu()">
+          <i class="fa fa-bars fa-xl"></i>
+        </a>
+      </div>
+      <nav>
+        <ul class="nav-links" v-if="!navInactive">
+          <li v-if="!navInactive">
+            <router-link to="/about" @click="toggleMenu()">About Us</router-link>
+          </li>
+          <li v-if="authenticated && !navInactive">
+            <router-link to="/dashboard" @click="toggleMenu()">Dashboard</router-link>
+          </li>
+          <li v-if="authenticated && !navInactive">
+            <router-link to="/settings" @click="toggleMenu()">Settings</router-link>
+          </li>
+          <li v-if="!authenticated && !navInactive">
+            <router-link to="/login" @click="toggleMenu()">Login</router-link>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div id="app">
+      <router-view></router-view>
     </div>
-    <nav>
-      <ul class="nav-links" v-if="!navInactive">
-        <li v-if="!navInactive">
-          <router-link to="/about" @click="toggleMenu()">About Us</router-link>
-        </li>
-        <li v-if="authenticated && !navInactive">
-          <router-link to="/dashboard" @click="toggleMenu()">Dashboard</router-link>
-        </li>
-        <li v-if="authenticated && !navInactive">
-          <router-link to="/settings" @click="toggleMenu()">Settings</router-link>
-        </li>
-        <li v-if="!authenticated && !navInactive">
-          <router-link to="/login" @click="toggleMenu()">Login</router-link>
-        </li>
-      </ul>
-    </nav>
-  </header>
-  <div id="app">
-    <router-view></router-view>
   </div>
-  <footer>
+  <footer ref="footer">
     <a href="/about/">
       <text class="footer-btn">About Us</text>
     </a>
@@ -59,6 +61,12 @@ export default {
   },
   created() {
     this.populateTransactions(); // Call the function when the component is created
+  },
+  mounted() {
+    setTimeout(() => {
+      const footerHeight = this.$refs.footer.offsetHeight;
+      document.documentElement.style.setProperty("--footer-height", `${footerHeight}px`);
+    }, 100);
   },
   computed: {
     myTransactionsArray() {
@@ -177,6 +185,10 @@ export default {
 
 <style scoped>
 @import url("../assets/css/variables.css");
+:root {
+  --footer-height: 0;
+}
+
 .header {
   background-color: var(--background);
   color: var(--black);
@@ -190,6 +202,12 @@ export default {
 
 img {
   height: 80px;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--footer-height));
 }
 
 .nav-links {
@@ -215,8 +233,8 @@ footer {
   background-color: var(--background);
   color: var(--black);
   padding: 10px 15px;
-  margin-top: -13px;
   border-radius: 8px 8px 0 0;
+  margin-top: auto;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
