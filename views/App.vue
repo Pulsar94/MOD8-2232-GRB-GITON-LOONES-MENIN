@@ -5,8 +5,11 @@
         <a href="/">
           <img class="logo" src="../assets/img/logo.svg" alt="Logo" />
         </a>
-        <a href="javascript:void(0);" class="icon" @click="toggleMenu()">
+        <a href="javascript:void(0);" class="icon" v-if="navInactive" @click="toggleMenu()">
           <i class="fa fa-bars fa-xl"></i>
+        </a>
+        <a href="javascript:void(0);" class="icon" v-else @click="toggleMenu()">
+          <i class="fa fa-times fa-xl"></i>
         </a>
       </div>
       <nav>

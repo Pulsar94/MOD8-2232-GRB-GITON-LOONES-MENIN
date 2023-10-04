@@ -88,7 +88,7 @@ export default {
       if (this.currentPage < Math.ceil(this.sortedTransactions.length / this.itemsPerPage) - 1) this.currentPage++;
     },
     transactionForm() {
-      this.clicked = true;
+      this.clicked = !this.clicked;
     },
     formatDate(date) {
       const month = date.getMonth() + 1; // 0-indexed month
