@@ -1,28 +1,26 @@
 <template>
   <div class="chart-container">
-    <div
-        id="combochart"
-        :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
-    ></div>
+    <div id="combochart" :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"></div>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
+import { computed } from "vue";
 
 export default {
   name: "combochart",
   props: {
     chartWidth: {
       type: String,
-      default: "900px",
+      default: window.innerWidth.valueOf() / 1.2 + "px",
     },
     chartHeight: {
       type: String,
-      default: "500px",
+      default: "700px",
     },
     chartMargin: {
       type: String,
-      default: "auto",
+      default: "50px auto",
     },
     transactionCount: {
       type: Number,
@@ -57,10 +55,10 @@ export default {
   watch: {
     transactions: {
       handler(newVal, oldVal) {
-        this.drawChart()
+        this.drawChart();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
 
   computed: {
@@ -134,27 +132,27 @@ export default {
 
   methods: {
     generateDailyDataTable() {
-      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];
+      const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
 
       const totalsByDate = {};
 
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         const date = transaction.date;
 
         // Initialize the date if not yet created
         if (!totalsByDate[date]) {
           totalsByDate[date] = {};
-          this.categories.forEach(c => {
-            totalsByDate[date][c.name] = 0;  // Initialize every category for the date
+          this.categories.forEach((c) => {
+            totalsByDate[date][c.name] = 0; // Initialize every category for the date
           });
         }
 
         // Check if the category exists in the transaction's category
         for (const category of this.categories) {
           if (transaction.category.includes(category.name)) {
-            totalsByDate[date][category.name] += -(transaction.amount);
-            break;  // Stop looping once we found a matching category
+            totalsByDate[date][category.name] += -transaction.amount;
+            break; // Stop looping once we found a matching category
           }
         }
       });
@@ -164,28 +162,26 @@ export default {
         const row = [date];
         let sum = 0;
 
-        this.categories.forEach(c => {
+        this.categories.forEach((c) => {
           const value = categories[c.name] || 0;
-          row.push({v: value, f: `$${Math.round(value)}`});
+          row.push({ v: value, f: `$${Math.round(value)}` });
           sum += value;
         });
         const mean = sum / this.categories.length;
-        row.push({v: mean, f: `$${mean.toFixed(2)}`});
+        row.push({ v: mean, f: `$${mean.toFixed(2)}` });
 
         dataTable.push(row);
       }
 
       dataTable = [headers, ...dataTable.slice(1).reverse()];
       return dataTable;
-
     },
     generateWeeklyDataTable() {
-      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];
+      const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
-
       const totalsByWeek = {};
 
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
         const startOfWeek = date;
         let dayOfWeek = date.getDay();
@@ -195,86 +191,77 @@ export default {
           dayOfWeek -= 1;
         }
         startOfWeek.setDate(date.getDate() - dayOfWeek);
-        const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(-2)}-${("0" + startOfWeek.getDate()).slice(-2)}`;
+        //const weekString = `${("0" + (startOfWeek.getMonth() + 1)).slice(-2)}/${("0" + startOfWeek.getDate()).slice(-2)}`;
+        const weekString = `${startOfWeek.getFullYear()}/${("0" + (startOfWeek.getMonth() + 1)).slice(-2)}/${("0" + startOfWeek.getDate()).slice(-2)}`;
 
         // Initialize the week if not yet created
         if (!totalsByWeek[weekString]) {
           totalsByWeek[weekString] = {};
-          this.categories.forEach(c => {
-            totalsByWeek[weekString][c.name] = 0;  // Initialize every category for the date
+          this.categories.forEach((c) => {
+            totalsByWeek[weekString][c.name] = 0; // Initialize every category for the date
           });
         }
-
         // Check if the category exists in the transaction's category
         for (const category of this.categories) {
           if (transaction.category.includes(category.name)) {
-            totalsByWeek[weekString][category.name] += -(transaction.amount);
-            break;  // Stop looping once we found a matching category
+            totalsByWeek[weekString][category.name] += -transaction.amount;
+            break; // Stop looping once we found a matching category
           }
         }
       });
-
       // Convert the object into an array format for Google Charts
       for (const [weekString, categories] of Object.entries(totalsByWeek)) {
         const row = [weekString];
         let sum = 0;
-        this.categories.forEach(c => {
+        this.categories.forEach((c) => {
           const value = categories[c.name] || 0;
-          row.push({v: value, f: `$${Math.round(value)}`});
+          row.push({ v: value, f: `$${Math.round(value)}` });
           sum += value;
         });
         const mean = sum / this.categories.length;
-        row.push({v: mean, f: `$${mean.toFixed(2)}`});
-
+        row.push({ v: mean, f: `$${mean.toFixed(2)}` });
         dataTable.push(row);
       }
-
       dataTable = [headers, ...dataTable.slice(1).reverse()];
       return dataTable;
-
     },
     generateMonthlyDataTable() {
-      const headers = ['Date', ...this.categories.map(c => c.name), 'Mean'];
+      const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
-
       const totalsByMonth = {};
 
-      this.transactions.forEach(transaction => {
+      this.transactions.forEach((transaction) => {
         const date = new Date(transaction.date);
-        const monthYearKey = `${("0" + (date.getMonth() + 1)).slice(-2)}-${date.getFullYear()}`;
+        const monthYearKey = `${date.getFullYear()}/${("0" + (date.getMonth() + 1)).slice(-2)}`;
 
         // Initialize the date if not yet created
         if (!totalsByMonth[monthYearKey]) {
           totalsByMonth[monthYearKey] = {};
-          this.categories.forEach(c => {
-            totalsByMonth[monthYearKey][c.name] = 0;  // Initialize every category for the date
+          this.categories.forEach((c) => {
+            totalsByMonth[monthYearKey][c.name] = 0; // Initialize every category for the date
           });
         }
-
         // Check if the category exists in the transaction's category
         for (const category of this.categories) {
           if (transaction.category.includes(category.name)) {
-            totalsByMonth[monthYearKey][category.name] += -(transaction.amount);
-            break;  // Stop looping once we found a matching category
+            totalsByMonth[monthYearKey][category.name] += -transaction.amount;
+            break; // Stop looping once we found a matching category
           }
         }
       });
-
       // Convert the object into an array format for Google Charts
       for (const [monthString, categories] of Object.entries(totalsByMonth)) {
         const row = [monthString];
         let sum = 0;
-        this.categories.forEach(c => {
+        this.categories.forEach((c) => {
           const value = categories[c.name] || 0;
-          row.push({v: value, f: `$${Math.round(value)}`});
+          row.push({ v: value, f: `$${Math.round(value)}` });
           sum += value;
         });
         const mean = sum / this.categories.length;
-        row.push({v: mean, f: `$${mean.toFixed(2)}`});
+        row.push({ v: mean, f: `$${mean.toFixed(2)}` });
         dataTable.push(row);
       }
-
-
       dataTable = [headers, ...dataTable.slice(1).reverse()];
       return dataTable;
     },
@@ -288,7 +275,7 @@ export default {
       }
     },
     drawChart() {
-      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
           // Some raw data (not necessarily accurate)
@@ -297,13 +284,16 @@ export default {
           const data = google.visualization.arrayToDataTable(dataArray());
 
           const options = {
-            title: 'Amount spent by category over time',
-            vaxis: {title: 'Cups'},
-            haxis: {title: 'Month'},
+            title: "Amount spent by category over time",
+            vaxis: { title: "Cups" },
+            haxis: { title: "Month" },
             tooltip: { isHtml: true },
-            seriesType: 'bars',
-            series: {5: {type: 'line'}},
-
+            seriesType: "bars",
+            series: { 5: { type: "line" } },
+            chartArea: {
+              width: "85%",
+              height: "60%",
+            },
 
             backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
             titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
@@ -311,36 +301,36 @@ export default {
               textStyle: {
                 color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
+              position: "in",
+              margin: "-20px 0",
             },
             hAxis: {
               textStyle: {
                 color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
+              slantedText: true,
+              slantedTextAngle: 45,
             },
             vAxis: {
               textStyle: {
                 color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
-            }
+            },
           };
 
-          const chart = new google.visualization.ComboChart(document.getElementById('combochart'));
+          const chart = new google.visualization.ComboChart(document.getElementById("combochart"));
           chart.draw(data, options);
-
 
           //google.visualization.events.addListener(chart, 'onmouseover', mouseoverHandler);
           //google.visualization.events.addListener(chart, 'onmouseout', mouseoutHandler);
-          google.visualization.events.addListener(chart, 'select', onclickHandler);
+          google.visualization.events.addListener(chart, "select", onclickHandler);
 
-          document.getElementById('combochart').addEventListener('click', () => {
+          document.getElementById("combochart").addEventListener("click", () => {
             // console.log("Container clicked");
             this.handleContainerClick(chart, data);
           });
 
-
-
           const vm = this;
-
           function onclickHandler() {
             setTimeout(() => {
               console.log("Select event triggered");
@@ -357,11 +347,10 @@ export default {
 
               // If the row is null, then it might be a click on the legend or axes
               if (selection[0].row === null) {
-
                 const clickedTargetID = selection[0].targetID;
                 console.log("clickedTargetID:", clickedTargetID);
 
-                if (selection[0].row === null && typeof selection[0].column !== 'undefined') {
+                if (selection[0].row === null && typeof selection[0].column !== "undefined") {
                   // This might indicate a category (legend) click
                   const clickedCategory = data.getColumnLabel(selection[0].column);
                   console.log("Clicked Category from legend:", clickedCategory);
@@ -369,7 +358,7 @@ export default {
                   const filteredTransactionsByCategory = vm.transactions.filter((txn) => txn.category === clickedCategory);
                   console.log("Filtered transactions by category:", filteredTransactionsByCategory);
                   vm.$emit("filteredTransactions", filteredTransactionsByCategory);
-                } else if (selection.length > 0 && typeof selection[0].row !== 'undefined') {
+                } else if (selection.length > 0 && typeof selection[0].row !== "undefined") {
                   // Handle the case where the chart background or other non-legend, non-data areas are clicked
                   vm.$emit("filteredTransactions", vm.transactions);
                   console.log("All transactions emitted");
@@ -377,22 +366,71 @@ export default {
 
                 return;
               }
-
               // Handle when a bar/line is clicked
-              const datePeriod = data.getValue(selection[0].row, 0);
+              let datePeriodString = data.getValue(selection[0].row, 0);
+              if (vm.chosenTime === "-1" || vm.chosenTime === "365") {
+                console.log(datePeriodString);
+                datePeriodString = data.getValue(selection[0].row, 0) + "/01";
+                console.log(datePeriodString);
+              }
+              const datePeriod = new Date(datePeriodString);
               const clickedCategory = data.getColumnLabel(selection[0].column);
 
               const currentDateYear = new Date().getFullYear();
-              const convertedDatePeriod = `${currentDateYear}/${datePeriod.replace('-', '/')}`;
+              const convertedDatePeriod = `${currentDateYear}/${("0" + (datePeriod.getMonth() + 1)).slice(-2)}/${("0" + datePeriod.getDate()).slice(-2)}`;
+              console.log(datePeriodString);
+              console.log(datePeriod, convertedDatePeriod);
 
+              const convertedDatePeriodO = datePeriodString.replace("-", "/");
+
+              console.log(convertedDatePeriodO);
               const mondayDate = new Date(convertedDatePeriod);
               const sundayDate = new Date(mondayDate);
-              sundayDate.setDate(mondayDate.getDate() + 6); // Move to Sunday of that week
 
-              const filteredTransactions = vm.transactions.filter((txn) => {
-                const txnDate = new Date(txn.date);
-                return txnDate >= mondayDate && txnDate <= sundayDate && txn.category.toLowerCase() === clickedCategory.toLowerCase();
-              });
+              sundayDate.setDate(mondayDate.getDate() + 6); // Move to Sunday of that week
+              let filteredTransactions = vm.transactions;
+              console.log(vm.chosenTime);
+              if (clickedCategory !== "Mean") {
+                if (vm.chosenTime === "7") {
+                  console.log("777777777777");
+                  filteredTransactions = vm.transactions.filter((txn) => {
+                    const txnDate = new Date(txn.date);
+                    return txnDate.getTime() === mondayDate.getTime() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
+                  });
+                } else if (vm.chosenTime === "31") {
+                  console.log("3131313131313");
+                  filteredTransactions = vm.transactions.filter((txn) => {
+                    const txnDate = new Date(txn.date);
+                    return txnDate >= mondayDate && txnDate <= sundayDate && txn.category.toLowerCase() === clickedCategory.toLowerCase();
+                  });
+                } else if (vm.chosenTime === "365" || vm.chosenTime === "-1") {
+                  console.log("365365365365365");
+                  filteredTransactions = vm.transactions.filter((txn) => {
+                    const txnDate = new Date(txn.date);
+                    return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
+                  });
+                }
+              } else {
+                if (vm.chosenTime === "7") {
+                  console.log("777777777777");
+                  filteredTransactions = vm.transactions.filter((txn) => {
+                    const txnDate = new Date(txn.date);
+                    return txnDate.getTime() === mondayDate.getTime();
+                  });
+                } else if (vm.chosenTime === "31") {
+                  console.log("3131313131313");
+                  filteredTransactions = vm.transactions.filter((txn) => {
+                    const txnDate = new Date(txn.date);
+                    return txnDate >= mondayDate && txnDate <= sundayDate;
+                  });
+                } else if (vm.chosenTime === "365" || vm.chosenTime === "-1") {
+                  console.log("365365365365365");
+                  filteredTransactions = vm.transactions.filter((txn) => {
+                    const txnDate = new Date(txn.date);
+                    return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear();
+                  });
+                }
+              }
 
               console.log("Retrieved category:", clickedCategory);
               console.log("Date range:", mondayDate, "to", sundayDate);
@@ -403,14 +441,11 @@ export default {
               vm.$emit("filteredTransactions", filteredTransactions);
             }, 10);
           }
-
-
-
-        }catch (error) {
+        } catch (error) {
           console.error("Error drawing the combo chart:", error);
         }
       });
-    }
+    },
   },
 };
 </script>
@@ -419,16 +454,13 @@ export default {
 div.amount {
   align-content: flex-end;
 }
-
 div.chart-container {
   display: flex;
   align-items: center;
 }
-
 div.nav-links li {
   display: inline;
 }
-
 div.nav-links a {
   text-decoration: none;
   color: var(--white);
@@ -454,42 +486,6 @@ div.summary {
   margin-bottom: 20px;
 }
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--<template>-->
-<!--  <div class="chart-container">-->
-<!--    <div-->
-<!--        id="combochart"-->
-<!--        :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"-->
-<!--    ></div>-->
-<!--  </div>-->
-<!--</template>-->
-<!--<script>-->
-<!--import { mapState } from "vuex";-->
 
 <!--export default {-->
 <!--  name: "combochart",-->
@@ -574,7 +570,7 @@ div.summary {
 
 <!--      this.transactions.forEach((txn) => {-->
 <!--        for (const category in totals) {-->
-<!--          if (txn.category.includes(category)) {-->
+<!--          if (txn.description.includes(category)) {-->
 <!--            totals[category] += Math.abs(txn.amount);-->
 <!--            break;-->
 <!--          }-->
@@ -607,9 +603,9 @@ div.summary {
 <!--          });-->
 <!--        }-->
 
-<!--        // Check if the category exists in the transaction's category-->
+<!--        // Check if the category exists in the transaction's description-->
 <!--        for (const category of this.categories) {-->
-<!--          if (transaction.category.includes(category.name)) {-->
+<!--          if (transaction.description.includes(category.name)) {-->
 <!--            totalsByDate[date][category.name] += Math.abs(transaction.amount);-->
 <!--            break;  // Stop looping once we found a matching category-->
 <!--          }-->
@@ -658,9 +654,9 @@ div.summary {
 <!--          });-->
 <!--        }-->
 
-<!--        // Check if the category exists in the transaction's category-->
+<!--        // Check if the category exists in the transaction's description-->
 <!--        for (const category of this.categories) {-->
-<!--          if (transaction.category.includes(category.name)) {-->
+<!--          if (transaction.description.includes(category.name)) {-->
 <!--            totalsByWeek[weekString][category.name] += Math.abs(transaction.amount);-->
 <!--            break;  // Stop looping once we found a matching category-->
 <!--          }-->
@@ -701,9 +697,9 @@ div.summary {
 <!--          });-->
 <!--        }-->
 
-<!--        // Check if the category exists in the transaction's category-->
+<!--        // Check if the category exists in the transaction's description-->
 <!--        for (const category of this.categories) {-->
-<!--          if (transaction.category.includes(category.name)) {-->
+<!--          if (transaction.description.includes(category.name)) {-->
 <!--            totalsByMonth[monthYearKey][category.name] += Math.abs(transaction.amount);-->
 <!--            break;  // Stop looping once we found a matching category-->
 <!--          }-->
@@ -724,10 +720,8 @@ div.summary {
 <!--        dataTable.push(row);-->
 <!--      }-->
 
-
 <!--      return dataTable;-->
 <!--    },-->
-
 
 <!--    drawChart() {-->
 <!--      google.charts.load('current', {'packages':['corechart']});-->

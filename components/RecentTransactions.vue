@@ -1,6 +1,6 @@
 <template>
   <div class="recent-transactions">
-    <h2>Recent Transactions</h2>
+    <h1>Recent Transactions</h1>
     <button @click="transactionForm">Add a transaction</button>
     <form>
       <select v-if="clicked" v-model="newTransaction.category">
@@ -15,11 +15,10 @@
         <option value="Sold item">Sold item</option>
         <option value="Salary">Salary</option>
       </select>
-      <input v-if="clicked" v-model="newTransaction.libelle" placeholder="Libelle" type="text"/>
-      <input v-if="clicked" v-model="newTransaction.amount" placeholder="Amount" type="number"/>
-      <input v-if="clicked" v-model="newTransaction.date" placeholder="Date" type="date"/>
+      <input v-if="clicked" v-model="newTransaction.libelle" placeholder="Libelle" type="text" />
+      <input v-if="clicked" v-model="newTransaction.amount" placeholder="Amount" type="number" />
+      <input v-if="clicked" v-model="newTransaction.date" placeholder="Date" type="date" />
       <button v-if="clicked" @click.prevent="addTransaction">Add</button>
-
     </form>
     <table>
       <thead>
@@ -34,7 +33,7 @@
         <tr v-for="txn in pagedTransactions" :key="txn.id">
           <td class="category">{{ txn.category }}</td>
           <td class="libelle">{{ txn.libelle }}</td>
-          <td>{{new Date(txn.date).getFullYear() }}/{{('0'+(new Date(txn.date).getMonth()+1)).slice(-2)}}/{{('0'+(new Date(txn.date).getDate())).slice(-2) }}</td>
+          <td>{{ new Date(txn.date).getFullYear() }}/{{ ("0" + (new Date(txn.date).getMonth() + 1)).slice(-2) }}/{{ ("0" + new Date(txn.date).getDate()).slice(-2) }}</td>
           <td class="amount">$ {{ txn.amount.toFixed(2) }}</td>
         </tr>
       </tbody>
@@ -45,7 +44,6 @@
 </template>
 
 <script>
-
 export default {
   props: {
     transactions: {
@@ -67,7 +65,11 @@ export default {
       clicked: false,
     };
   },
-
+  watch: {
+    chosenTime(newValue) {
+      console.log(newValue);
+    },
+  },
   computed: {
     pagedTransactions() {
       const start = this.currentPage * this.itemsPerPage;
@@ -80,15 +82,21 @@ export default {
   },
   methods: {
     prevPage() {
-      if (this.currentPage > 0)
-        this.currentPage--;
+      if (this.currentPage > 0) this.currentPage--;
+      const ypos = document.documentElement.scrollHeight - window.scrollY;
+      setTimeout(() => {
+        window.scrollTo(0, document.documentElement.scrollHeight - ypos);
+      }, 1); // to remove to remove auto scroll
     },
     nextPage() {
-      if (this.currentPage < Math.ceil(this.sortedTransactions.length / this.itemsPerPage) - 1)
-        this.currentPage++;
+      if (this.currentPage < Math.ceil(this.sortedTransactions.length / this.itemsPerPage) - 1) this.currentPage++;
+      const ypos = document.documentElement.scrollHeight - window.scrollY;
+      setTimeout(() => {
+        window.scrollTo(0, document.documentElement.scrollHeight - ypos);
+      }, 1);
     },
     transactionForm() {
-      this.clicked = true;
+      this.clicked = !this.clicked;
     },
     formatDate(date) {
       const month = date.getMonth() + 1; // 0-indexed month
@@ -100,9 +108,8 @@ export default {
       // Generating unique ID using Date.now()
       this.newTransaction.id = Date.now();
       this.newTransaction.date = this.formatDate(new Date(this.newTransaction.date));
-      if(this.newTransaction.category === "Received bonus" || this.newTransaction.category === "Refund" || this.newTransaction.category === "Gift received" || this.newTransaction.category === "Sold item" || this.newTransaction.category === "Salary")
-        this.newTransaction.amount = Math.abs(this.newTransaction.amount);
-      else{
+      if (this.newTransaction.category === "Received bonus" || this.newTransaction.category === "Refund" || this.newTransaction.category === "Gift received" || this.newTransaction.category === "Sold item" || this.newTransaction.category === "Salary") this.newTransaction.amount = Math.abs(this.newTransaction.amount);
+      else {
         this.newTransaction.amount = -Math.abs(this.newTransaction.amount);
       }
 
@@ -111,7 +118,7 @@ export default {
       console.log(transactionDate, limitDate);
 
       if (transactionDate > limitDate) {
-        this.$store.commit('addTransaction', this.newTransaction);
+        this.$store.commit("addTransaction", this.newTransaction);
       }
 
       this.clicked = false;
@@ -121,8 +128,7 @@ export default {
         amount: 1000,
         date: "",
       };
-    }
-
+    },
   },
 };
 </script>
@@ -143,35 +149,101 @@ export default {
   color: var(--header-text);
 }
 
-.recent-transactions table {
+table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.recent-transactions th,
-.recent-transactions td {
+th,
+td {
   padding: 10px;
   border-bottom: 1px solid var(--border);
   text-align: left;
 }
 
-.recent-transactions tbody tr:last-child td {
+tbody tr:last-child td {
   border-bottom: none;
 }
 
-.recent-transactions .category {
+.category {
   width: 31%;
 }
 
-.recent-transactions .libelle {
+.libelle {
   width: 31%;
 }
 
-.recent-transactions .date {
-  width: 31%;
+.date {
+  width: 25%;
 }
 
-.recent-transactions .amount {
-  width: 31%;
+.amount {
+  width: 37%;
+}
+
+td:last-child,
+th:last-child {
+  text-align: right;
+}
+
+input {
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background-color: var(--text-input);
+  color: var(--text);
+}
+
+select {
+  width: 200px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background-color: var(--text-input);
+  color: var(--text);
+}
+
+select:hover {
+  background-color: var(--select-hover);
+}
+
+button {
+  margin: 20px 15px 40px 15px;
+  padding: 5px 10px;
+  background-color: var(--form-button);
+  color: var(--black);
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: var(--form-button-hover);
+}
+
+@media (max-width: 670px) {
+  .recent-transactions {
+    padding: 0;
+  }
+
+  td {
+    padding: 10px 2px;
+    font-size: 12px;
+  }
+
+  .category {
+    width: auto;
+  }
+
+  .libelle {
+    width: auto;
+  }
+
+  .date {
+    width: auto;
+  }
+
+  .amount {
+    width: auto;
+  }
 }
 </style>

@@ -1,104 +1,50 @@
 <template>
-  <div class="home-container">
-    <h2>Welcome to Budget Vision!</h2>
-    <p>
-      Struggling to keep track of your spending? Overwhelmed by numerous bills,
-      receipts, and expenses? Say hello to Budget Vision—your trusted partner in
-      financial management.
-    </p>
-    <p>
-      Our platform offers you a comprehensive view of all your expenditures,
-      breaking them down into easy-to-understand categories and visual diagrams.
-      We simplify budgeting so that you can focus on making better financial
-      decisions.
-    </p>
-    <p>
-      Unlock the power of smart spending. With Budget Vision, you gain insight,
-      clarity, and control over your financial world. Don't just view your
-      expenses—understand them.
-    </p>
+  <body>
+    <div class="description">
+      <h1>Welcome to Your Financial Companion</h1>
+      <p>Are you looking for a simple and efficient way to take control of your finances? Look no further than Your Financial Companion, your all-in-one solution for managing expenses, tracking income, and achieving your financial goals.</p>
 
-    <h2>Here's a preview :</h2>
+      <div class="presentation">
+        <div>
+          <h2>Key Features:</h2>
+          <ul>
+            <li><strong>Expense Tracking:</strong> Easily record your daily expenses, categorize them, and gain insights into your spending habits.</li>
+            <li><strong>Budget Management:</strong> Set monthly budgets for different spending categories and receive alerts to stay on track.</li>
+            <li><strong>Financial Goals:</strong> Define your financial objectives, whether it's saving for a dream vacation or paying off debt, and track your progress.</li>
+            <li><strong>Automated Expense Categorization:</strong> Let our smart categorization engine organize your expenses for you, or customize it to fit your unique needs.</li>
+            <li><strong>Detailed Reports:</strong> Access detailed monthly spending reports and analyze your financial data with intuitive charts and graphs.</li>
+            <li><strong>Secure and Personalized:</strong> Your data's security is our top priority. We offer customizable account settings, two-factor authentication, and more.</li>
+            <li><strong>24/7 Support:</strong> Need assistance or have questions? Our support team is here to help you whenever you need it.</li>
+          </ul>
+        </div>
+        <img src="../assets/img/home_image.svg" alt="Image" />
+      </div>
+
+      <p>Take the first step towards financial freedom and join Your Financial Companion today. Sign up now and start making informed financial decisions, achieving your goals, and securing your financial future. Your financial journey begins here.</p>
+    </div>
+
+    <h2 id="preview-header">Here's a preview :</h2>
 
     <div class="container">
       <TotalAndAverageExpenses :transactions="myTransactionsArray" />
       <div class="pie-chart">
-        <PieChart
-          @categorySelected="updateText"
-          :chartWidth="'900px'"
-          :chartHeight="'500px'"
-          :chartMargin="'none'"
-          :transactions="myTransactionsArray"
-        />
+        <PieChart @categorySelected="updateText" :chartWidth="'600px'" :chartHeight="'300px'" :chartMargin="'10px'" :transactions="myTransactionsArray" />
         <p>{{ selectedCategoryText }}</p>
       </div>
       <div class="combo-chart">
-        <ComboChart
-          :chartWidth="'900px'"
-          :chartHeight="'500px'"
-          :chartMargin="'none'"
-          :transactions="myTransactionsArray"
-        />
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim diam
-          vulputate ut pharetra sit amet aliquam. Elit pellentesque habitant
-          morbi tristique senectus et netus et. Vulputate enim nulla aliquet
-          porttitor. Purus faucibus ornare suspendisse sed. Viverra justo nec
-          ultrices dui sapien eget mi. Sit amet justo donec enim diam. Tincidunt
-          ornare massa eget egestas purus viverra accumsan. Odio pellentesque
-          diam volutpat commodo sed egestas. Integer eget aliquet nibh praesent
-          tristique magna sit amet. Sit amet facilisis magna etiam tempor orci
-          eu.
-        </p>
+        <ComboChart :chartWidth="'700px'" :chartHeight="'500px'" :chartMargin="'10px'" :transactions="myTransactionsArray" />
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim diam vulputate ut pharetra sit amet aliquam. Elit pellentesque habitant morbi tristique senectus et netus et. Vulputate enim nulla aliquet porttitor. Purus faucibus ornare suspendisse sed. Viverra justo nec ultrices dui sapien eget mi. Sit amet justo donec enim diam. Tincidunt ornare massa eget egestas purus viverra accumsan. Odio pellentesque diam volutpat commodo sed egestas. Integer eget aliquet nibh praesent tristique magna sit amet. Sit amet facilisis magna etiam tempor orci eu.</p>
       </div>
       <div class="line-chart">
-        <LineChart
-          :chartWidth="'900px'"
-          :chartHeight="'500px'"
-          :chartMargin="'none'"
-          :transactions="myTransactionsArray"
-        />
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Leo
-          integer malesuada nunc vel risus commodo. Vel turpis nunc eget lorem.
-          Vitae elementum curabitur vitae nunc sed velit dignissim sodales ut.
-          Ut tortor pretium viverra suspendisse potenti. Parturient montes
-          nascetur ridiculus mus. Facilisi etiam dignissim diam quis enim. Enim
-          blandit volutpat maecenas volutpat blandit aliquam etiam. Posuere ac
-          ut consequat semper viverra nam libero. In tellus integer feugiat
-          scelerisque varius. Est ultricies integer quis auctor elit sed
-          vulputate mi sit. Est ullamcorper eget nulla facilisi etiam dignissim
-          diam quis.
-        </p>
+        <LineChart :chartWidth="'700px'" :chartHeight="'400px'" :chartMargin="'none'" :transactions="myTransactionsArray" />
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Leo integer malesuada nunc vel risus commodo. Vel turpis nunc eget lorem. Vitae elementum curabitur vitae nunc sed velit dignissim sodales ut. Ut tortor pretium viverra suspendisse potenti. Parturient montes nascetur ridiculus mus. Facilisi etiam dignissim diam quis enim. Enim blandit volutpat maecenas volutpat blandit aliquam etiam. Posuere ac ut consequat semper viverra nam libero. In tellus integer feugiat scelerisque varius. Est ultricies integer quis auctor elit sed vulputate mi sit. Est ullamcorper eget nulla facilisi etiam dignissim diam quis.</p>
       </div>
       <div class="table-chart">
-        <TableChart
-          :chartWidth="'750px'"
-          :chartHeight="'500px'"
-          :chartMargin="'none'"
-          :transactions="myTransactionsArray"
-        />
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Amet
-          consectetur adipiscing elit duis tristique sollicitudin nibh sit amet.
-          Convallis tellus id interdum velit. Nibh sed pulvinar proin gravida
-          hendrerit. Sed vulputate odio ut enim blandit volutpat maecenas. Lorem
-          sed risus ultricies tristique nulla aliquet. Sed turpis tincidunt id
-          aliquet risus feugiat. Dictum varius duis at consectetur. Nulla
-          aliquet enim tortor at. Metus dictum at tempor commodo ullamcorper a
-          lacus. Ullamcorper dignissim cras tincidunt lobortis feugiat. At
-          volutpat diam ut venenatis tellus in. Sapien faucibus et molestie ac
-          feugiat sed lectus vestibulum. Tincidunt lobortis feugiat vivamus at
-          augue. Facilisis magna etiam tempor orci eu lobortis elementum.
-          Pretium fusce id velit ut tortor pretium. Etiam dignissim diam quis
-          enim. Eu non diam phasellus vestibulum lorem sed.
-        </p>
+        <TableChart :chartWidth="'750px'" :chartHeight="'500px'" :chartMargin="'0'" :transactions="myTransactionsArray" />
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Amet consectetur adipiscing elit duis tristique sollicitudin nibh sit amet. Convallis tellus id interdum velit. Nibh sed pulvinar proin gravida hendrerit. Sed vulputate odio ut enim blandit volutpat maecenas. Lorem sed risus ultricies tristique nulla aliquet. Sed turpis tincidunt id aliquet risus feugiat. Dictum varius duis at consectetur. Nulla aliquet enim tortor at. Metus dictum at tempor commodo ullamcorper a lacus. Ullamcorper dignissim cras tincidunt lobortis feugiat. At volutpat diam ut venenatis tellus in. Sapien faucibus et molestie ac feugiat sed lectus vestibulum. Tincidunt lobortis feugiat vivamus at augue. Facilisis magna etiam tempor orci eu lobortis elementum. Pretium fusce id velit ut tortor pretium. Etiam dignissim diam quis enim. Eu non diam phasellus vestibulum lorem sed.</p>
       </div>
     </div>
-  </div>
+  </body>
 </template>
 
 <script>
@@ -124,8 +70,7 @@ export default {
   data() {
     return {
       currentChart: "Pie", // default to showing the current chart
-      selectedCategoryText:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper sem dolor, id ullamcorper metus condimentum eget. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec eu efficitur neque. Nulla eget tincidunt purus. Nullam a dapibus sapien. Phasellus quis diam bibendum, fringilla erat eu, dictum quam. Donec eu elit libero. Cras condimentum vel quam et pulvinar. Vivamus a commodo odio. Nullam sollicitudin, sem vitae blandit iaculis, massa urna consectetur tortor, imperdiet bibendum urna dui at mauris. In hac habitasse platea dictumst. Duis pulvinar nunc felis, vulputate lobortis eros tincidunt non. Vestibulum finibus nulla scelerisque, viverra arcu at, faucibus enim.\n",
+      selectedCategoryText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper sem dolor, id ullamcorper metus condimentum eget. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec eu efficitur neque. Nulla eget tincidunt purus. Nullam a dapibus sapien. Phasellus quis diam bibendum, fringilla erat eu, dictum quam. Donec eu elit libero. Cras condimentum vel quam et pulvinar. Vivamus a commodo odio. Nullam sollicitudin, sem vitae blandit iaculis, massa urna consectetur tortor, imperdiet bibendum urna dui at mauris. In hac habitasse platea dictumst. Duis pulvinar nunc felis, vulputate lobortis eros tincidunt non. Vestibulum finibus nulla scelerisque, viverra arcu at, faucibus enim.\n",
     };
   },
   computed: {
@@ -147,9 +92,33 @@ export default {
 <style scoped>
 @import url("../assets/css/variables.css");
 
+.description {
+  margin: 0 auto;
+  width: 80%;
+  text-align: left;
+}
+
+.presentation {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#preview-header {
+  margin-top: 50px;
+}
+
+img {
+  width: 35vw;
+  margin-left: 12px;
+}
+
 .pie-chart {
   display: flex;
   flex-direction: row;
+  margin: 0 auto;
+  padding: 0;
 }
 .pie-chart > p {
   margin-top: 160px;
@@ -183,20 +152,8 @@ export default {
 .container > * {
   vertical-align: top; /* ensures that inline-block children align properly */
 }
-.vertical-nav {
-  float: left;
-}
 
-.nav-links li {
-  display: inline;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: var(--white);
-}
-
-.home-container {
+body {
   text-align: center;
   margin: 0;
   margin-top: 50px;
@@ -208,6 +165,11 @@ export default {
 
 p {
   color: var(--text);
+  font-size: large;
+}
+
+li {
+  font-size: large;
 }
 
 button {
@@ -221,5 +183,64 @@ button {
 
 button:hover {
   background-color: var(--button-hover);
+}
+
+@media (max-width: 1000px) {
+  .description {
+    width: 100%;
+  }
+
+  img {
+    width: 100%;
+    margin: 0;
+  }
+
+  .presentation {
+    flex-direction: column;
+  }
+
+  .presentation > div {
+    margin-bottom: 20px;
+  }
+
+  .pie-chart {
+    flex-direction: column;
+  }
+
+  .combo-chart {
+    flex-direction: column;
+  }
+
+  .line-chart {
+    flex-direction: column;
+  }
+
+  .table-chart {
+    flex-direction: column;
+  }
+
+  .pie-chart > p {
+    margin-top: 0;
+  }
+
+  .combo-chart > p {
+    margin-top: 0;
+  }
+
+  .line-chart > p {
+    margin-top: 0;
+  }
+
+  .table-chart > p {
+    margin-top: 0;
+  }
+
+  .container {
+    position: relative;
+  }
+
+  .container > * {
+    vertical-align: top; /* ensures that inline-block children align properly */
+  }
 }
 </style>

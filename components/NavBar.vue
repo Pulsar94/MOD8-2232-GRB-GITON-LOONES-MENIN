@@ -9,6 +9,12 @@
       <!-- Add other links as needed -->
     </ul>
   </div>
+  <select @change="showChart(selectedChart)">
+    <option value="Pie" selected>Pie Chart</option>
+    <option value="Combo">Combo Chart</option>
+    <option value="Line">Line Chart</option>
+    <option value="Table">Table</option>
+  </select>
 </template>
 
 <script>
@@ -17,6 +23,8 @@ export default {
   methods: {
     showChart(chartType) {
       this.$emit("changeChart", chartType);
+      const optionSelected = document.querySelector(`option[value=${chartType}]`);
+      optionSelected.selected = true;
     },
   },
 };
@@ -50,5 +58,28 @@ export default {
 
 .nav-links a:hover {
   background-color: var(--navbar-hover); /* A slightly lighter shade of blue */
+}
+
+select {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .vertical-nav {
+    display: none;
+  }
+
+  select {
+    display: block;
+    margin: 10px auto;
+    background-color: var(--navbar);
+    color: var(--black);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 7px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 600;
+  }
 }
 </style>

@@ -8,13 +8,11 @@
 </template>
 <script>
 export default {
-
   name: "PieChart",
-
   props: {
     chartWidth: {
       type: String,
-      default: "900px",
+      default: window.innerWidth.valueOf() / 1.5 + "px",
     },
     chartHeight: {
       type: String,
@@ -22,7 +20,7 @@ export default {
     },
     chartMargin: {
       type: String,
-      default: "auto",
+      default: "50px auto",
     },
     categories: {
       type: Array,
@@ -42,7 +40,6 @@ export default {
   data() {
     return {};
   },
-
   computed: {
     transactions() {
       return this.$store.state.transactions;
@@ -77,7 +74,6 @@ export default {
   mounted() {
     this.drawChart();
   },
-
   methods: {
     handleContainerClick(chart, data) {
       const selection = chart.getSelection();
@@ -87,7 +83,6 @@ export default {
       }
     },
     drawChart() {
-
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
@@ -102,7 +97,13 @@ export default {
             title: "Spending by Category",
             backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
             titleColor: getComputedStyle(document.documentElement).getPropertyValue("--header-text"),
+            chartArea: {
+              width: "100%",
+              height: "90%",
+            },
             legend: {
+              position: "right",
+              alignment: "center",
               textStyle: {
                 color: getComputedStyle(document.documentElement).getPropertyValue("--text"),
               },
@@ -139,12 +140,9 @@ export default {
 
           function onclickHandler() {
             setTimeout(() => {
-
               console.log("Select event triggered");
-
               const selection = chart.getSelection();
               console.log("Current selection:", selection);
-
               if (selection.length > 0 && typeof selection[0].row !== 'undefined') {
                 // Pie slice is selected
                 const category = data.getValue(selection[0].row, 0);

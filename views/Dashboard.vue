@@ -8,11 +8,11 @@
 
       <p v-if="currentChart === 'Combo' && chosenTime === '-3'"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>Please select a date range<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
 
-      <LineChart v-if="currentChart === 'Line'" :transactions="myInitialTransactionsArray"/>
+      <LineChart v-if="currentChart === 'Line'" :transactions="myTransactionsArray"/>
       <Table @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Table'" :transactions="myTransactionsArray"/>
     </div>
 
-    <RecentTransactions :transactions="filteredTransactions" />
+    <RecentTransactions class="transactions" :transactions="filteredTransactions" />
   </div>
 </template>
 
@@ -68,6 +68,10 @@ export default {
 @import url("../assets/css/variables.css");
 .container {
   position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .container > * {
@@ -110,5 +114,23 @@ button {
 
 button:hover {
   background-color: var(--button-hover);
+}
+
+@media (max-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .vertical-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .vertical-nav li {
+    display: block;
+  }
+  .vertical-nav a {
+    margin: 10px 0;
+  }
 }
 </style>

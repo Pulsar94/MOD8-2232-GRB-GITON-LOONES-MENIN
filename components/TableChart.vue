@@ -1,9 +1,6 @@
 <template>
   <div class="chart-container">
-    <div
-      id="tablechart"
-      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
-    ></div>
+    <div id="tablechart" :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"></div>
   </div>
 </template>
 
@@ -14,7 +11,7 @@ export default {
   props: {
     chartWidth: {
       type: String,
-      default: "750px",
+      default: window.innerWidth.valueOf() / 1.25 + "px",
     },
     chartHeight: {
       type: String,
@@ -138,9 +135,7 @@ export default {
             cssClassNames: cssClassNames,
           };
 
-          const table = new google.visualization.Table(
-            document.getElementById("tablechart")
-          );
+          const table = new google.visualization.Table(document.getElementById("tablechart"));
 
           table.draw(data, options);
 
@@ -179,7 +174,7 @@ export default {
                 const category = data.getValue(selection[0].row, 0);
                 const filteredTransactions = vm.transactions.filter((txn) => {
                   return txn.category.includes(category);
-                });
+                }).sort((a, b) => new Date(b.date) - new Date(a.date));
                 vm.$emit("filteredTransactions", filteredTransactions);
                 console.log("Filtered transactions emitted:", filteredTransactions);
               } else {
