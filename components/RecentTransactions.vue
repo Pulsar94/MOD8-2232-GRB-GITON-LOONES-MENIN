@@ -2,7 +2,7 @@
   <div class="recent-transactions">
     <h1>Recent Transactions</h1>
     <button @click="transactionForm">Add a transaction</button>
-    <form>
+    <form @submit.prevent="submitForm">
       <select v-if="clicked" v-model="newTransaction.category">
         <option value="Utilities">Utilities</option>
         <option value="Dining">Dining</option>
@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import {integer} from "@vuelidate/validators";
+
 export default {
   props: {
     transactions: {
@@ -81,6 +83,11 @@ export default {
     },
   },
   methods: {
+    submitForm() {
+      if (this.newTransaction.amount instanceof integer){
+        alert("Please enter a valid amount")
+      }
+    },
     prevPage() {
       if (this.currentPage > 0) this.currentPage--;
       const ypos = document.documentElement.scrollHeight - window.scrollY;
@@ -99,7 +106,7 @@ export default {
       this.clicked = !this.clicked;
     },
     formatDate(date) {
-      const month = date.getMonth() + 1; // 0-indexed month
+      const month = date.getMonth() + 1;
       const day = date.getDate();
       const year = date.getFullYear();
       return `${year}/${month}/${day}`;

@@ -13,6 +13,7 @@
             {{ passwordShown === initialPassword ? "Hide" : "Show" }}
           </button>
         </p>
+        <p>Limit: {{ limit }}</p>
         <div class="buttons">
           <button type="button" @click="logOut">Log Out</button>
           <button @click="editing = true">Edit</button>
@@ -24,6 +25,7 @@
         <p>Email: <input type="email" v-model="editedEmail" /></p>
         <p>Phone: <input type="number" v-model="editedPhone" /></p>
         <p>Password: <input type="password" v-model="editedPassword" /></p>
+        <p>Limit: <input type="number" v-model="limit" /></p>
         <div class="notification-container">
           <p>Notification preferences:</p>
           <select name="notifications">
@@ -69,9 +71,12 @@ export default {
     const editing = ref(false);
     const passwordShown = ref("•".repeat(editedPassword.value.length));
 
+    const limit = ref(store.state.limit);
+
     const saveChanges = () => {
+      console.log(limit)
       if (!editedName.value || !editedAge.value || !editedEmail.value || !editedPhone.value || !editedPassword.value) {
-        alert("Please fill in all fields");
+        alert("Please fill in  allfields");
         return;
       }
 
@@ -105,6 +110,7 @@ export default {
 
       console.log(updatedUser);
 
+      store.commit("SET_LIMIT", limit.value);
       store.commit("UPDATE_USER", updatedUser);
 
       editing.value = false;
@@ -144,6 +150,7 @@ export default {
       saveChanges,
       cancelEditing,
       logOut,
+      limit,
     };
   },
   data: () => ({

@@ -12,6 +12,8 @@
       <Table @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Table'" :transactions="myTransactionsArray"
       />
     </div>
+<!--    <h2>limit: {{limit}},balance: {{balance}} </h2>-->
+    <h1 v-if="balance < limit">You are over your limit</h1>
 
     <RecentTransactions class="transactions" :transactions="filteredTransactions" />
   </div>
@@ -41,9 +43,22 @@ export default {
     return {
       currentChart: "Pie",
       filteredTransactions: this.$store.state.myTransactionsArray,
+      limit: this.$store.state.limit,
+      balance: this.$store.state.balance,
     };
   },
   computed: {
+    balance() {
+      //create alert dialog
+      if (this.$store.state.balance < this.$store.state.limit) {
+        alert("You are over your limit");
+      }
+
+      return this.$store.state.balance;
+    },
+    LineChart() {
+      return LineChart
+    },
     myTransactionsArray() {
       return this.$store.state.myTransactionsArray;
     },
@@ -51,6 +66,7 @@ export default {
       return this.$store.state.myInitialTransactionsArray;
     },
   },
+
   methods: {
     handleChangeChart(chartType) {
       this.currentChart = chartType;
@@ -129,6 +145,16 @@ button:hover {
   }
   .vertical-nav a {
     margin: 10px 0;
+  }
+}
+h1 {
+  animation: blinker 1ms linear infinite;
+  color: red;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
   }
 }
 </style>

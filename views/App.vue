@@ -75,6 +75,9 @@ export default {
     myTransactionsArray() {
       return this.$store.state.myTransactionsArray;
     },
+    myInitialTransactionsArray() {
+      return this.$store.state.myInitialTransactionsArray;
+    },
     authenticated() {
       return this.$store.state.authenticated;
     },
@@ -171,6 +174,7 @@ export default {
       //   rawDate: new Date(2020, 0, 1),
       // });
 
+
       const todayDate = new Date();
       this.$store.commit("SET_INITIAL_TRANSACTIONS", this.myTransactionsArray);
       this.$store.commit(
@@ -180,6 +184,13 @@ export default {
           .filter((t) => t.rawDate > todayDate - this.$store.state.chosenTime * 24 * 60 * 60 * 1000)
           .sort((a, b) => new Date(b.date) - new Date(a.date))
       );
+
+      this.$store.commit("SET_BALANCE", this.myInitialTransactionsArray
+          .filter((t) => t.rawDate < todayDate)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+      );
+      console.log(this.$store.state.balance);
+
       this.$store.commit("SET_DAYS", Math.round((todayDate.getTime() - new Date(2023, 0).getTime()) / (1000 * 60 * 60 * 24)));
     },
   },
