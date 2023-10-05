@@ -1,5 +1,5 @@
 // store.js
-import { createStore } from 'vuex';
+import {createStore} from 'vuex';
 import {toRaw} from "vue";
 
 export const store = createStore({
@@ -21,13 +21,25 @@ export const store = createStore({
             age: 24,
         },
         authenticated: true,
+        limit: -3000,
+        balance: 0,
     },
     mutations: {
         SET_INITIAL_TRANSACTIONS(state, transactions) {
             state.myInitialTransactionsArray = transactions;
+
         },
         SET_TRANSACTIONS(state, transactions) {
             state.myTransactionsArray = transactions;
+        },
+        SET_BALANCE(state, transactions) {
+            state.balance = 0;
+            //update balance
+            for (let i = 0; i < transactions.length; i++) {
+                console.log(state.balance + " + " + transactions[i].amount)
+                state.balance += transactions[i].amount;
+                console.log("= " + state.balance, transactions[i].date)
+            }
         },
         SET_DAYS(state, days) {
             state.numberOfDays = days;
@@ -53,7 +65,10 @@ export const store = createStore({
         },
         addTransaction(state, transaction) {
             state.myTransactionsArray.push(toRaw(transaction));
-            // state.myInitialTransactionsArray.push(toRaw(transaction));
+            state.myInitialTransactionsArray.push(toRaw(transaction));
+            //update balance
+            console.log(state.balance)
+            state.balance = state.myTransactionsArray.reduce((sum, txn) => sum + txn.amount, 0);
         },
         LOG_IN(state) {
             state.authenticated = true;
@@ -61,6 +76,9 @@ export const store = createStore({
         LOG_OUT(state) {
             state.authenticated = false;
         },
+        SET_LIMIT(state, limit) {
+            state.limit = limit;
+        }
     },
     getters: {
         transactions: (state) => state.myTransactionsArray
