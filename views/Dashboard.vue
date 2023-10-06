@@ -1,27 +1,20 @@
 <template>
   <div class="home-container">
-    <TotalAndAverageExpenses :transactions="myTransactionsArray" />
+    <TotalAndAverageExpenses @filteredTransactions="updateRecentTransactions" :transactions="myTransactionsArray" />
     <div class="container">
       <NavBar @changeChart="handleChangeChart" />
-      <PieChart
-        v-if="currentChart === 'Pie'"
-        :transactions="myTransactionsArray"
-      />
-      <ComboChart
-        v-if="currentChart === 'Combo'"
-        :transactions="myTransactionsArray"
-      />
-      <LineChart
-        v-if="currentChart === 'Line'"
-        :transactions="myTransactionsArray"
-      />
-      <Table
-        v-if="currentChart === 'Table'"
-        :transactions="myTransactionsArray"
-      />
-    </div>
+      <PieChart @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Pie'" :transactions="myTransactionsArray"/>
+      <ComboChart @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Combo' && chosenTime !== '-3'" :transactions="myTransactionsArray"/>
 
-    <RecentTransactions :transactions="myTransactionsArray" />
+      <p v-if="currentChart === 'Combo' && chosenTime === '-3'"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>Please select a date range<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+
+      <LineChart v-if="currentChart === 'Line'" :transactions="myTransactionsArray"/>
+      <Table @filteredTransactions="updateRecentTransactions" v-if="currentChart === 'Table'" :transactions="myTransactionsArray"/>
+    </div>
+<!--    <h2>limit: {{limit}},balance: {{balance}} </h2>-->
+    <h1 v-if="balance < limit">You are over your limit</h1>
+
+    <RecentTransactions class="transactions" :transactions="filteredTransactions" />
   </div>
 </template>
 
@@ -33,6 +26,7 @@ import LineChart from "../components/LineChart.vue";
 import Table from "../components/TableChart.vue";
 import RecentTransactions from "../components/RecentTransactions.vue";
 import TotalAndAverageExpenses from "../components/TotalAndAverageExpenses.vue";
+import {mapState} from "vuex";
 
 export default {
   components: {
@@ -48,16 +42,40 @@ export default {
   data() {
     return {
       currentChart: "Pie",
+      filteredTransactions: this.$store.state.myTransactionsArray,
+      limit: this.$store.state.limit,
+      balance: this.$store.state.balance,
     };
   },
   computed: {
+    ...mapState(["chosenTime"]),
+
+    balance() {
+      //create alert dialog
+      if (this.$store.state.balance < this.$store.state.limit) {
+        alert("You are over your limit");
+      }
+
+      return this.$store.state.balance;
+    },
+    LineChart() {
+      return LineChart
+    },
+
     myTransactionsArray() {
       return this.$store.state.myTransactionsArray;
     },
+    myInitialTransactionsArray() {
+      return this.$store.state.myInitialTransactionsArray;
+    },
   },
+
   methods: {
     handleChangeChart(chartType) {
       this.currentChart = chartType;
+    },
+    updateRecentTransactions(filteredTransactions) {
+      this.filteredTransactions = filteredTransactions;
     },
   },
 };
@@ -67,6 +85,10 @@ export default {
 @import url("../assets/css/variables.css");
 .container {
   position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .container > * {
@@ -109,5 +131,33 @@ button {
 
 button:hover {
   background-color: var(--button-hover);
+}
+
+@media (max-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .vertical-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .vertical-nav li {
+    display: block;
+  }
+  .vertical-nav a {
+    margin: 10px 0;
+  }
+}
+h1 {
+  animation: blinker 1ms linear infinite;
+  color: red;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }
 </style>

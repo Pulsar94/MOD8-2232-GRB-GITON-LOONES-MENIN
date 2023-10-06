@@ -1,18 +1,17 @@
 <template>
   <div class="chart-container">
-    <div
-      id="tablechart"
-      :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
-    ></div>
+    <div id="tablechart" :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"></div>
   </div>
 </template>
+
+
 <script>
 export default {
   name: "TableChart",
   props: {
     chartWidth: {
       type: String,
-      default: "750px",
+      default: window.innerWidth.valueOf() / 1.25 + "px",
     },
     chartHeight: {
       type: String,
@@ -53,13 +52,18 @@ export default {
     return {};
   },
   watch: {
-    transactions(newVal, oldVal) {
-      if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
-        this.drawChart();
-      }
-    },
+    transactions: {
+      handler(newVal, oldVal) {
+        this.drawChart()
+      },
+      deep: true
+    }
   },
   computed: {
+    transactions() {
+      return this.$store.state.transactions;
+    },
+
     categoryTotals() {
       const totals = {
         Utilities: 0,
@@ -71,8 +75,8 @@ export default {
 
       this.transactions.forEach((txn) => {
         for (const category in totals) {
-          if (txn.description.includes(category)) {
-            totals[category] += txn.amount;
+          if (txn.category.includes(category)) {
+            totals[category] += Math.abs(txn.amount);
             break;
           }
         }
@@ -86,9 +90,17 @@ export default {
     this.drawChart();
   },
   methods: {
+    handleContainerClick(chart, data) {
+      const selection = chart.getSelection();
+      if (!selection.length) {  // If no selection, then user clicked outside a slice
+        this.$emit("filteredTransactions", this.transactions);
+        console.log("All transactions emitted");
+      }
+    },
+
     drawChart() {
       this.transactions.forEach((transaction) => {
-        const category = transaction.description.split(" ")[2]; // Assuming format "CARD X0000 8/9 Utilities"
+        const category = transaction.category.split(" ")[2]; // Assuming format "CARD X0000 8/9 Utilities"
         if (this.categoryTotals.hasOwnProperty(category)) {
           this.categoryTotals[category] += transaction.amount;
         }
@@ -99,8 +111,12 @@ export default {
         try {
           const data = new google.visualization.DataTable();
           data.addColumn("string", "Category");
-          data.addColumn("number", "Amount");
-          data.addRows([...Object.entries(this.categoryTotals)]);
+          data.addColumn("string", "Amount"); //
+          // Format the amounts to include the $ sign
+          const formattedData = Object.entries(this.categoryTotals).map(([category, amount]) => {
+            return [category, `$${amount.toFixed(2)}`];
+          });
+          data.addRows(formattedData);
           const cssClassNames = {
             headerRow: "header-row",
             tableRow: "table-row",
@@ -119,11 +135,57 @@ export default {
             cssClassNames: cssClassNames,
           };
 
-          const table = new google.visualization.Table(
-            document.getElementById("tablechart")
-          );
+          const table = new google.visualization.Table(document.getElementById("tablechart"));
 
           table.draw(data, options);
+
+          // google.visualization.events.addListener(table, 'onmouseover', mouseoverHandler);
+          // google.visualization.events.addListener(table, 'onmouseout', mouseoutHandler);
+          google.visualization.events.addListener(table, 'select', onclickHandler);
+
+          document.getElementById('tablechart').addEventListener('click', () => {
+            this.handleContainerClick(table, data);
+          });
+
+
+          const vm = this;
+
+          function mouseoverHandler(e) {
+            if (e.row != null) {
+              //changing text in home
+              const category = data.getValue(e.row, 0);
+              vm.$emit("categorySelected", category);
+            }
+          }
+          function mouseoutHandler() {
+            vm.$emit("categorySelected", "Lorem ipsum dolor ...");
+          }
+
+          function onclickHandler() {
+            setTimeout(() => {
+
+              console.log("Select event triggered");
+
+              const selection = table.getSelection();
+              console.log("Current selection:", selection);
+
+              if (selection.length > 0 && typeof selection[0].row !== 'undefined') {
+                // Pie slice is selected
+                const category = data.getValue(selection[0].row, 0);
+                const filteredTransactions = vm.transactions.filter((txn) => {
+                  return txn.category.includes(category);
+                }).sort((a, b) => new Date(b.date) - new Date(a.date));
+                vm.$emit("filteredTransactions", filteredTransactions);
+                console.log("Filtered transactions emitted:", filteredTransactions);
+              } else {
+                // Nothing is selected, or something other than a pie slice is selected
+                vm.$emit("filteredTransactions", vm.transactions);
+                console.log("All transactions emitted");
+              }
+            }, 100);
+          }
+
+
         } catch (error) {
           console.error("Error drawing the table:", error);
         }
