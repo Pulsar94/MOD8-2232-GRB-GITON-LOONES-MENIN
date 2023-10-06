@@ -11,7 +11,7 @@ export const store = createStore({
         // chosenTime: '31',
         month: null,
         year: null,
-        dateRange: null,
+        dateRange: '',
         user: {
             id: 1,
             name: 'Patrick',

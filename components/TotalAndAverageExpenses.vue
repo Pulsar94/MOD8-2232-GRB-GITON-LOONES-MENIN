@@ -7,14 +7,14 @@
         <option value="365">a year</option>
         <option value="31">a month</option>
         <option value="7">a week</option>
-        <option value="-3">custom</option>
+        <option value="-2">custom</option>
       </select>: ${{ Math.abs(totalExpenses) }}
     </div>
     <div>Total Gain: ${{ Math.abs(totalGain) }}</div>
     <div>Difference: ${{ totalGain + totalExpenses }}</div>
     <div>Average Daily Expense: ${{ Math.abs(averageDailyExpense) }}</div>
     <div class="datepicker">
-      <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '-3'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" range :format="'yyyy-MM-dd'" ></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '-2'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" range :format="'yyyy-MM-dd'" ></VueDatePicker>
       <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '7'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" week-picker :format="'yyyy-MM-dd'"></VueDatePicker>
       <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '31'" v-model="month" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" month-picker :format="'yyyy-MM'"></VueDatePicker>
       <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '365'" v-model="year" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" year-picker :format="'yyyy'"></VueDatePicker>
@@ -26,6 +26,7 @@ import lineChart from "./LineChart.vue";
 import pieChart from "./PieChart.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import router from "../router";
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
   this.isDarkMode = e.matches;
 });
@@ -61,6 +62,7 @@ export default {
             .filter((t) => t.rawDate > todayDate - newValue * 24 * 60 * 60 * 1000)
             .sort((a, b) => new Date(b.date) - new Date(a.date))
         );
+
       } else {
         this.$emit("filteredTransactions", this.$store.state.myInitialTransactionsArray);
         this.$store.commit("SET_TRANSACTIONS", this.$store.state.myInitialTransactionsArray);
@@ -91,11 +93,12 @@ export default {
       this.$forceUpdate();
     },
     dateRange(newValue) {
+      console.log(newValue)
       const todayDate = new Date()
       if (newValue !== null && newValue.length === 2) {
-        this.$store.commit('SET_CHOSEN_TIME', '-2');
+        // this.$store.commit('SET_CHOSEN_TIME', '7');
         this.$store.commit('SET_DATE_RANGE', newValue)
-        this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray.filter(t => t.rawDate < todayDate).filter(t => t.rawDate > this.dateRange[0] && t.rawDate < this.dateRange[1]));
+        this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray.filter(t => t.rawDate < todayDate).filter(t => new Date(t.rawDate.getTime() + 1000*60*60*24) > this.dateRange[0] && t.rawDate < this.dateRange[1]));
         this.$emit("filteredTransactions", this.$store.state.myTransactionsArray);
       } else {
         console.log("AAAAAAAAAAAA")
@@ -196,11 +199,8 @@ export default {
 <style scoped>
 .datepicker {
   width: 300px;
-  text-decoration-color: red;
 }
-@media (prefers-color-scheme: dark) {
 
-}
 .dp__theme_dark{
   --dp-background-color: #212121;
   --dp-text-color: #ffffff;

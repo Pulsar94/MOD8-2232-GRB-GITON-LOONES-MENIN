@@ -2,7 +2,7 @@
   <div class="recent-transactions">
     <h1>Recent Transactions</h1>
     <button @click="transactionForm">Add a transaction</button>
-    <form @submit.prevent="submitForm">
+    <form v-if="clicked" @submit.prevent="submitForm">
       <select v-if="clicked" v-model="newTransaction.category">
         <option value="Utilities">Utilities</option>
         <option value="Dining">Dining</option>
@@ -15,10 +15,11 @@
         <option value="Sold item">Sold item</option>
         <option value="Salary">Salary</option>
       </select>
-      <input v-if="clicked" v-model="newTransaction.libelle" placeholder="Libelle" type="text" />
-      <input v-if="clicked" v-model="newTransaction.amount" placeholder="Amount" type="number" />
-      <input v-if="clicked" v-model="newTransaction.date" placeholder="Date" type="date" />
-      <button v-if="clicked" @click.prevent="addTransaction">Add</button>
+      <input v-model="newTransaction.libelle" placeholder="Libelle" type="text" />
+      <input v-model="newTransaction.amount" placeholder="Amount" type="number" />
+<!--  <input v-model="newTransaction.date" placeholder="Date" type="date" />-->
+      <VueDatePicker class="datepicker" :dark="true" v-model="newTransaction.date" auto-apply :max-date="new Date()" ></VueDatePicker>
+      <button class="addbutton" @click.prevent="addTransaction">Add</button>
     </form>
     <table>
       <thead>
@@ -45,8 +46,10 @@
 
 <script>
 import {integer} from "@vuelidate/validators";
+import VueDatePicker from "@vuepic/vue-datepicker";
 
 export default {
+  components: {VueDatePicker},
   props: {
     transactions: {
       type: Array,
@@ -142,6 +145,68 @@ export default {
 
 <style scoped>
 @import url("../assets/css/variables.css");
+
+.datepicker {
+  width: 200px;
+  justify-self: center;
+}
+
+
+.addbutton{
+  margin: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.dp__theme_dark{
+  --dp-background-color: #212121;
+  --dp-text-color: #ffffff;
+  --dp-hover-color: #484848;
+  --dp-hover-text-color: #ffffff;
+  --dp-hover-icon-color: #959595;
+  --dp-primary-color: #005cb2;
+  --dp-primary-text-color: #ffffff;
+  --dp-secondary-color: #a9a9a9;
+  --dp-border-color: #2d2d2d;
+  --dp-menu-border-color: #2d2d2d;
+  --dp-border-color-hover: #aaaeb7;
+  --dp-disabled-color: #737373;
+  --dp-scroll-bar-background: #212121;
+  --dp-scroll-bar-color: #484848;
+  --dp-success-color: #00701a;
+  --dp-success-color-disabled: #428f59;
+  --dp-icon-color: #959595;
+  --dp-danger-color: #e53935;
+  --dp-highlight-color: rgba(0, 92, 178, 0.2);
+}
+.dp__theme_light {
+  --dp-background-color: #ffffff;
+  --dp-text-color: #212121;
+  --dp-hover-color: #f3f3f3;
+  --dp-hover-text-color: #212121;
+  --dp-hover-icon-color: #959595;
+  --dp-primary-color: #1976d2;
+  --dp-primary-text-color: #f8f5f5;
+  --dp-secondary-color: #c0c4cc;
+  --dp-border-color: #ddd;
+  --dp-menu-border-color: #ddd;
+  --dp-border-color-hover: #aaaeb7;
+  --dp-disabled-color: #f6f6f6;
+  --dp-scroll-bar-background: #f3f3f3;
+  --dp-scroll-bar-color: #959595;
+  --dp-success-color: #76d275;
+  --dp-success-color-disabled: #a3d9b1;
+  --dp-icon-color: #959595;
+  --dp-danger-color: #ff6f60;
+  --dp-highlight-color: rgba(25, 118, 210, 0.1);
+}
+
+
 .recent-transactions {
   border-radius: 5px;
   padding: 20px;

@@ -77,6 +77,11 @@ export default {
       return this.$store.state.chosenTime;
     },
     dataToDisplay() {
+      console.log(this.chosenTime)
+      if (this.chosenTime === '-2'){
+        this.chosenTime = '7'
+        this.$store.commit("SET_CHOSEN_TIME" , '7')
+      }
       switch (this.chosenTime) {
         case "7":
           return this.dailyAmount;
@@ -92,85 +97,173 @@ export default {
     },
 
     dailyAmount() {
-      const dailyAmounts = []; //[['Date', 'Balance']];
-      const todayDate = new Date();
+      const dailyAmounts = [];
+      if (this.$store.state.dateRange){
 
-      const limitDate = new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
-      const limitDateObj = new Date(limitDate);
+        const filteredTransactions = this.transactions//.filter(t => t.rawDate < this.$store.state.dateRange[1] && t.rawDate >= this.$store.state.dateRange[0])
+        const uniqueDatesSet = new Set();
+        filteredTransactions.forEach((t) => {
+          const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
+          uniqueDatesSet.add(dateStr);
+        });
 
-      const days = Math.round((todayDate.getTime() - limitDate) / (1000 * 60 * 60 * 24));
-      let date = limitDateObj;
-      console.log(date);
-      let amount = 0;
-      let i = 0;
-      while (i < days + 1) {
-        amount = this.totalBeforeDate(date);
-        let dateString = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
-        dailyAmounts.push([new Date(dateString), amount]);
+        uniqueDatesSet.forEach((dateStr) => {
+          const [year, month, day] = dateStr.split('/').map(Number);
+          const date = new Date(year, month - 1, day);
+          const amount = this.totalBeforeDate(date);
+          dailyAmounts.push([date, amount]);
+        });
 
-        date = this.addDays(date, 1);
-        i++;
+        if(this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0]  < 21 * 86400000){
+          this.ticks = dailyAmounts.map((item) => ({
+            v: item[0],
+            f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`
+          }));
+        } else if(this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 92 * 86400000) {
+          //filter for the first day of the week
+          this.ticks = dailyAmounts
+              .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
+              .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
+
+        } else {
+          console.log("AAAAAAAAAAAAAAAAAA")
+          this.ticks = dailyAmounts
+              .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
+              .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
+        }
+
+        } else {
+        const todayDate = new Date();
+
+        const limitDate = new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
+        const limitDateObj = new Date(limitDate);
+
+        const days = Math.round((todayDate.getTime() - limitDate) / (1000 * 60 * 60 * 24));
+        let date = limitDateObj;
+        console.log(date);
+        let amount = 0;
+        let i = 0;
+        while (i < days + 1) {
+          amount = this.totalBeforeDate(date);
+          let dateString = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+          dailyAmounts.push([new Date(dateString), amount]);
+
+          date = this.addDays(date, 1);
+          i++;
+        }
+        this.ticks = dailyAmounts.map((item) => ({
+          v: item[0],
+          f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`
+        })); // Transform to desired format
+        console.log(this.ticks);
       }
-      this.ticks = dailyAmounts.map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
-      console.log(this.ticks);
+      console.log(dailyAmounts)
       return dailyAmounts;
     },
     weeklyAmount() {
       const weeklyAmounts = []; //[['Date', 'Balance']];
-      const todayDate = new Date();
-      const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth() + 1}/${todayDate.getDate()}`;
+      if (this.$store.state.month){
+        const filteredTransactions = this.transactions
+        const uniqueDatesSet = new Set();
+        filteredTransactions.forEach((t) => {
+          const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
+          uniqueDatesSet.add(dateStr);
+        });
 
-      const limitDate = new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
-      const limitDateObj = new Date(limitDate);
-      const limitDateStr = `${limitDateObj.getFullYear()}/${limitDateObj.getMonth() + 1}/${limitDateObj.getDate()}`;
+        uniqueDatesSet.forEach((dateStr) => {
+          const [year, month, day] = dateStr.split('/').map(Number);
+          const date = new Date(year, month - 1, day);
+          const amount = this.totalBeforeDate(date);
+          weeklyAmounts.push([date, amount]);
+        });
 
-      const days = Math.round((todayDate.getTime() - limitDate) / (1000 * 60 * 60 * 24));
-      let date = limitDateObj;
-      console.log(date);
-      let amount = 0;
-      let i = 0;
-      while (i < days + 1) {
-        amount = this.totalBeforeDate(date);
-        let dateString = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
-        weeklyAmounts.push([new Date(dateString), amount]);
+        this.ticks = weeklyAmounts
+            .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
+            .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
+      } else {
+        console.log(this.$store.state.month)
+        const todayDate = new Date();
+        const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth() + 1}/${todayDate.getDate()}`;
 
-        date = this.addDays(date, 1);
-        i++;
+        const limitDate = new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
+        const limitDateObj = new Date(limitDate);
+        const limitDateStr = `${limitDateObj.getFullYear()}/${limitDateObj.getMonth() + 1}/${limitDateObj.getDate()}`;
+
+        const days = Math.round((todayDate.getTime() - limitDate) / (1000 * 60 * 60 * 24));
+        let date = limitDateObj;
+        // console.log(date);
+        let amount = 0;
+        let i = 0;
+        while (i < days + 1) {
+          amount = this.totalBeforeDate(date);
+          let dateString = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+          weeklyAmounts.push([new Date(dateString), amount]);
+
+          date = this.addDays(date, 1);
+          i++;
+        }
+        this.ticks = weeklyAmounts
+            .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
+            .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
+        // // console.log(ticks);
       }
-      this.ticks = weeklyAmounts
-        .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
-        .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
-      // // console.log(ticks);
+
+      console.log(weeklyAmounts)
       return weeklyAmounts;
     },
-
     monthlyAmount() {
       const monthlyAmounts = []; //[['Date', 'Balance']];
-      const todayDate = new Date();
-      const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth() + 1}/${todayDate.getDate()}`;
-      const limitDate = this.chosenTime === "-1" ? this.transactions[this.transactions.length - 1].rawDate.getTime() : new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
+      if (this.$store.state.year){
+        const filteredTransactions = this.transactions
+        const uniqueDatesSet = new Set();
+        filteredTransactions.forEach((t) => {
+          const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
+          uniqueDatesSet.add(dateStr);
+        });
 
-      const limitDateObj = new Date(limitDate);
-      const limitDateStr = `${limitDateObj.getFullYear()}/${limitDateObj.getMonth() + 1}/${limitDateObj.getDate()}`;
+        uniqueDatesSet.forEach((dateStr) => {
+          const [year, month, day] = dateStr.split('/').map(Number);
+          const date = new Date(year, month - 1, day);
+          const amount = this.totalBeforeDate(date);
+          monthlyAmounts.push([date, amount]);
+        });
 
-      const days = Math.round(((this.chosenTime === "-1" ? this.transactions[0].rawDate.getTime() : todayDate.getTime()) - limitDate) / (1000 * 60 * 60 * 24));
-      let date = limitDateObj;
+        this.ticks = monthlyAmounts
+            .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
+            .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
 
-      let amount = 0;
-      let i = 0;
-      console.log(days);
-      while (i < days + 1) {
-        amount = this.totalBeforeDate(date);
-        let actualDateStr = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
-        monthlyAmounts.push([new Date(actualDateStr), amount]);
+      } else {
 
-        date = this.addDays(date, 1);
-        i++;
+        const todayDate = new Date();
+        const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth() + 1}/${todayDate.getDate()}`;
+        const limitDate = this.chosenTime === "-1" ? this.transactions[this.transactions.length - 1].rawDate.getTime() : new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
+
+        const limitDateObj = new Date(limitDate);
+        const limitDateStr = `${limitDateObj.getFullYear()}/${limitDateObj.getMonth() + 1}/${limitDateObj.getDate()}`;
+
+        const days = Math.round(((this.chosenTime === "-1" ? this.transactions[0].rawDate.getTime() : todayDate.getTime()) - limitDate) / (1000 * 60 * 60 * 24));
+        let date = limitDateObj;
+
+        let amount = 0;
+        let i = 0;
+        console.log(days);
+        while (i < days + 1) {
+          amount = this.totalBeforeDate(date);
+          let actualDateStr = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+          monthlyAmounts.push([new Date(actualDateStr), amount]);
+
+          date = this.addDays(date, 1);
+          i++;
+        }
+        this.ticks = monthlyAmounts
+            .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
+            .map((item) => ({
+              v: item[0],
+              f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`
+            })); // Transform to desired format
+        // // console.log(ticks);
       }
-      this.ticks = monthlyAmounts
-        .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
-        .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
-      // // console.log(ticks);
+      console.log(monthlyAmounts)
       return monthlyAmounts;
     },
   },
