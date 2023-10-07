@@ -70,17 +70,17 @@ export default {
 
     dataToDisplay() {
       console.log(this.chosenTime);
-      if(this.$store.state.dateRange){
+      if (this.$store.state.dateRange) {
         console.log(this.$store.state.dateRange[1], this.$store.state.dateRange[0]);
         console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0]);
         console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000);
         console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000);
 
-        if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000){
+        if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000) {
           return this.generateDailyDataTable;
-        }else if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000){
+        } else if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000) {
           return this.generateWeeklyDataTable;
-        }else {
+        } else {
           return this.generateMonthlyDataTable;
         }
       }
@@ -94,7 +94,7 @@ export default {
         case "-1":
           return this.generateMonthlyDataTable;
         case "-3":
-          console.log("BBBBBBBBB")
+          console.log("BBBBBBBBB");
           this.chosenTime = "365";
           return this.generateMonthlyDataTable;
 
@@ -322,21 +322,21 @@ export default {
           const chart = new google.visualization.ComboChart(document.getElementById("combochart"));
           chart.draw(data, options);
 
-          google.visualization.events.addListener(chart, 'onmouseover', mouseoverHandler);
-          google.visualization.events.addListener(chart, 'onmouseout', mouseoutHandler);
+          google.visualization.events.addListener(chart, "onmouseover", mouseoverHandler);
+          google.visualization.events.addListener(chart, "onmouseout", mouseoutHandler);
           google.visualization.events.addListener(chart, "select", onclickHandler);
 
           function mouseoverHandler(e) {
             if (e.row != null) {
               //changing text in home
-              const date = data.getValue(e.row, 0);
+              const categoryTexts = ["Hover here to explore utility expenses! Utilities include electricity, water, and more. Understand your utility spending and make efficient choices", "Savor dining expenses! Dining covers restaurant outings and delightful meals. Discover your dining expenses and manage your culinary indulgences.", "Journey through travel expenses! Travel encompasses getaways and trips. Analyze your travel spending and plan memorable adventures.", "Enjoy entertainment costs! Entertainment expenses reflect your leisure activities and fun outings. Track your entertainment spending for balanced budgeting.", "Shop smart with grocery expenses! Groceries include daily essentials and delightful treats. Stay on top of your grocery spending for a cost-effective lifestyle.", "Explore your average spending! Mean expense represents your overall spending pattern. Discover your financial baseline and work toward your budgeting goals."];
               const category = data.getColumnLabel(e.column);
-              console.log(category)
-              vm.$emit("categorySelected", date+category);
+              if (category !== "Mean") vm.$emit("categorySelected", categoryTexts[vm.categories.findIndex((cat) => cat.name === category)]);
+              else vm.$emit("categorySelected", categoryTexts[5]);
             }
           }
           function mouseoutHandler() {
-            vm.$emit("categorySelected", "Lorem ipsum dolor ...");
+            vm.$emit("categorySelected", "The combo chart is your go-to tool for a holistic view of your financial landscape. Combining both bar and line graphs, it offers an in-depth perspective on your income and expenses over time. Track your financial progress with precision, monitor fluctuations, and detect trends in your financial journey. By visualizing your financial data in this comprehensive chart, you gain valuable insights to steer your financial life in the right direction.");
           }
 
           document.getElementById("combochart").addEventListener("click", () => {

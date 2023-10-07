@@ -74,7 +74,7 @@ export default {
     const limit = ref(store.state.limit);
 
     const saveChanges = () => {
-      console.log(limit)
+      console.log(limit);
       if (!editedName.value || !editedAge.value || !editedEmail.value || !editedPhone.value || !editedPassword.value) {
         alert("Please fill in  allfields");
         return;
