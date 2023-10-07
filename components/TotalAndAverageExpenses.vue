@@ -70,7 +70,6 @@ export default {
       this.$forceUpdate();
     },
     month(newValue) {
-      // console.log(newValue)
       if (newValue) {
         const todayDate = new Date()
         this.$store.commit('SET_MONTH', newValue);
@@ -93,7 +92,6 @@ export default {
       this.$forceUpdate();
     },
     dateRange(newValue) {
-      // console.log(newValue)
       const todayDate = new Date()
       if (newValue !== null && newValue.length === 2) {
         // this.$store.commit('SET_CHOSEN_TIME', '7');
@@ -101,7 +99,6 @@ export default {
         this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray.filter(t => t.rawDate < todayDate).filter(t => new Date(t.rawDate.getTime() + 1000*60*60*24) > this.dateRange[0] && t.rawDate < this.dateRange[1]));
         this.$emit("filteredTransactions", this.$store.state.myTransactionsArray);
       } else {
-        // console.log("AAAAAAAAAAAA")
         this.$store.commit('SET_CHOSEN_TIME', '-3');
         this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray);
       }
@@ -168,14 +165,12 @@ export default {
     },
     setSelectWidth() {
       const select = document.querySelector("select");
-      // console.log(select.value);
       if (window.innerWidth < 680) {
         select.style.width = "19.2ch";
         return;
       }
       switch (select.value) {
         case "-1": {
-          // console.log("here");
           select.style.width = "19.2ch";
           break;
         }

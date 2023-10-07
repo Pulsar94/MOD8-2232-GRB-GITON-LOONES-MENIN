@@ -165,14 +165,6 @@ export default {
           });
         }
       }
-      // this.myTransactionsArray.push({
-      //   id: new Date().getTime(),
-      //   category: "AAAAAAAAA",
-      //   libelle: "AAAAAAAAA",
-      //   amount: 4000, // Positive amount
-      //   date: formatDate(new Date(2020, 0, 1)),
-      //   rawDate: new Date(2020, 0, 1),
-      // });
 
       const todayDate = new Date();
       this.$store.commit("SET_INITIAL_TRANSACTIONS", this.myTransactionsArray);
@@ -188,7 +180,6 @@ export default {
         "SET_BALANCE",
         this.myInitialTransactionsArray.filter((t) => t.rawDate < todayDate).sort((a, b) => new Date(b.date) - new Date(a.date))
       );
-      // console.log(this.$store.state.balance);
 
       this.$store.commit("SET_DAYS", Math.round((todayDate.getTime() - new Date(2023, 0).getTime()) / (1000 * 60 * 60 * 24)));
     },

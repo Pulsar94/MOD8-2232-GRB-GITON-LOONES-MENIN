@@ -72,7 +72,6 @@ export default {
   },
   watch: {
     chosenTime(newValue) {
-      // console.log(newValue);
     },
   },
   computed: {
@@ -125,7 +124,6 @@ export default {
 
       const transactionDate = new Date(this.newTransaction.date).getTime();
       const limitDate = new Date().getTime() - this.$store.state.chosenTime * 24 * 60 * 60 * 1000;
-      // console.log(transactionDate, limitDate);
 
       if (transactionDate > limitDate) {
         this.$store.commit("addTransaction", this.newTransaction);
