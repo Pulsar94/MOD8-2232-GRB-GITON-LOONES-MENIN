@@ -16,7 +16,7 @@
       </div>
       <div class="form-group">
         <label for="age">Age</label>
-        <input type="number" id="age" max="150" min="5" v-model="age" required />
+        <input type="number" id="age" max="120" min="5" v-model="age" required />
       </div>
       <div class="form-group">
         <label for="password">Password</label>
