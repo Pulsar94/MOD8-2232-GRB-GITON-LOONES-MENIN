@@ -34,12 +34,12 @@
     </div>
   </div>
   <footer ref="footer">
-    <a href="/about/">
-      <text class="footer-btn">About Us</text>
-    </a>
-    <a href="/about/">
-      <text class="footer-btn">Contact</text>
-    </a>
+    <div>
+      <router-link class="footer-btn" to="/about">About Us</router-link>
+    </div>
+    <div>
+      <router-link class="footer-btn" to="/about">Contact Us</router-link>
+    </div>
     <div>
       <router-link class="footer-btn" to="/policy">Privacy Policy</router-link>
     </div>
@@ -174,7 +174,6 @@ export default {
       //   rawDate: new Date(2020, 0, 1),
       // });
 
-
       const todayDate = new Date();
       this.$store.commit("SET_INITIAL_TRANSACTIONS", this.myTransactionsArray);
       this.$store.commit(
@@ -185,9 +184,9 @@ export default {
           .sort((a, b) => new Date(b.date) - new Date(a.date))
       );
 
-      this.$store.commit("SET_BALANCE", this.myInitialTransactionsArray
-          .filter((t) => t.rawDate < todayDate)
-          .sort((a, b) => new Date(b.date) - new Date(a.date))
+      this.$store.commit(
+        "SET_BALANCE",
+        this.myInitialTransactionsArray.filter((t) => t.rawDate < todayDate).sort((a, b) => new Date(b.date) - new Date(a.date))
       );
       // console.log(this.$store.state.balance);
 
