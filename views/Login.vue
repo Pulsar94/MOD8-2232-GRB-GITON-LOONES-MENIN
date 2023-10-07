@@ -15,7 +15,7 @@
       </p>
     </form>
   </div>
-  <div>
+  <div id="signup">
     <p>Don't have an account? <RouterLink to="/signup">Sign up</RouterLink></p>
   </div>
 </template>
@@ -58,6 +58,7 @@
 </script>
 
 <style scoped>
+  
 @import url("../assets/css/variables.css");
 .nav-links li {
   display: inline;
@@ -87,5 +88,14 @@ button:hover {
 
 #login-view {
   text-align: center;
+}
+
+#signup{
+  text-align: center;
+  margin-top: 50px;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>
