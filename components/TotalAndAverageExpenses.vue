@@ -13,7 +13,7 @@
     <div>Total Gain: ${{ Math.abs(totalGain) }}</div>
     <div>Difference: ${{ totalGain + totalExpenses }}</div>
     <div>Average Daily Expense: ${{ Math.abs(averageDailyExpense) }}</div>
-    <div class="datepicker">
+    <div class="datepicker" v-if="this.router.currentRoute.path === `/dashboard`">
       <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '-2'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" range :format="'yyyy-MM-dd'" ></VueDatePicker>
       <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '7'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" week-picker :format="'yyyy-MM-dd'"></VueDatePicker>
       <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '31'" v-model="month" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" month-picker :format="'yyyy-MM'"></VueDatePicker>
@@ -26,14 +26,18 @@ import lineChart from "./LineChart.vue";
 import pieChart from "./PieChart.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import router from "../router";
+import {useRouter} from "vue-router";
+
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
   this.isDarkMode = e.matches;
 });
+
 export default {
   components: { VueDatePicker },
+
   data() {
     return {
+      router: useRouter(),
       chosenTime: '31',
       month: null,
       year: null,
@@ -42,7 +46,6 @@ export default {
       isDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
     }
   },
-
   watch: {
     chosenTime(newValue) {
       const todayDate = new Date();

@@ -47,7 +47,6 @@
 <script>
 import {integer} from "@vuelidate/validators";
 import VueDatePicker from "@vuepic/vue-datepicker";
-
 export default {
   components: {VueDatePicker},
   props: {

@@ -120,9 +120,7 @@ export default {
           google.visualization.events.addListener(chart, 'onmouseout', mouseoutHandler);
           google.visualization.events.addListener(chart, 'select', onclickHandler);
 
-          document.getElementById('piechart').addEventListener('click', () => {
-            this.handleContainerClick(chart, data);
-          });
+
 
 
           const vm = this;
@@ -137,6 +135,10 @@ export default {
           function mouseoutHandler() {
             vm.$emit("categorySelected", "Lorem ipsum dolor ...");
           }
+
+          document.getElementById('piechart').addEventListener('click', () => {
+            this.handleContainerClick(chart, data);
+          });
 
           function onclickHandler() {
             setTimeout(() => {

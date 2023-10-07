@@ -70,6 +70,20 @@ export default {
 
     dataToDisplay() {
       console.log(this.chosenTime);
+      if(this.$store.state.dateRange){
+        console.log(this.$store.state.dateRange[1], this.$store.state.dateRange[0]);
+        console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0]);
+        console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000);
+        console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000);
+
+        if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000){
+          return this.generateDailyDataTable;
+        }else if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000){
+          return this.generateWeeklyDataTable;
+        }else {
+          return this.generateMonthlyDataTable;
+        }
+      }
       switch (this.chosenTime) {
         case "7":
           return this.generateDailyDataTable;
@@ -79,19 +93,6 @@ export default {
           return this.generateMonthlyDataTable;
         case "-1":
           return this.generateMonthlyDataTable;
-        case "-2":
-          console.log(this.$store.state.dateRange[1], this.$store.state.dateRange[0]);
-          console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0]);
-          console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000);
-          console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000);
-
-          if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000){
-            return this.generateDailyDataTable;
-          }else if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000){
-            return this.generateWeeklyDataTable;
-          }else {
-            return this.generateMonthlyDataTable;
-          }
         case "-3":
           console.log("BBBBBBBBB")
           this.chosenTime = "365";
@@ -321,9 +322,22 @@ export default {
           const chart = new google.visualization.ComboChart(document.getElementById("combochart"));
           chart.draw(data, options);
 
-          //google.visualization.events.addListener(chart, 'onmouseover', mouseoverHandler);
-          //google.visualization.events.addListener(chart, 'onmouseout', mouseoutHandler);
+          google.visualization.events.addListener(chart, 'onmouseover', mouseoverHandler);
+          google.visualization.events.addListener(chart, 'onmouseout', mouseoutHandler);
           google.visualization.events.addListener(chart, "select", onclickHandler);
+
+          function mouseoverHandler(e) {
+            if (e.row != null) {
+              //changing text in home
+              const date = data.getValue(e.row, 0);
+              const category = data.getColumnLabel(e.column);
+              console.log(category)
+              vm.$emit("categorySelected", date+category);
+            }
+          }
+          function mouseoutHandler() {
+            vm.$emit("categorySelected", "Lorem ipsum dolor ...");
+          }
 
           document.getElementById("combochart").addEventListener("click", () => {
             // console.log("Container clicked");
