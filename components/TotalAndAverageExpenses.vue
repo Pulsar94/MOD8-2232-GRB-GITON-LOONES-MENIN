@@ -14,10 +14,10 @@
     <div>Difference: ${{ totalGain + totalExpenses }}</div>
     <div>Average Daily Expense: ${{ Math.abs(averageDailyExpense) }}</div>
     <div class="datepicker" v-if="this.router.currentRoute.path === `/dashboard`">
-      <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '-2'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" range :format="'yyyy-MM-dd'"></VueDatePicker>
-      <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '7'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" week-picker :format="'yyyy-MM-dd'"></VueDatePicker>
-      <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '31'" v-model="month" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" month-picker :format="'yyyy-MM'"></VueDatePicker>
-      <VueDatePicker :dark="isDarkMode" v-if="chosenTime === '365'" v-model="year" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" year-picker :format="'yyyy'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '-2'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" range :format="'yyyy-MM-dd'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '7'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" week-picker :format="'yyyy-MM-dd'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '31'" v-model="month" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" month-picker :format="'yyyy-MM'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '365'" v-model="year" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" year-picker :format="'yyyy'"></VueDatePicker>
     </div>
   </div>
 </template>
@@ -186,25 +186,24 @@ export default {
       const select = document.querySelector("select");
       console.log(select.value);
       if (window.innerWidth < 680) {
-        select.style.width = "19.2ch";
+        select.style.width = "21ch";
         return;
       }
       switch (select.value) {
         case "-1": {
-          console.log("here");
-          select.style.width = "19.2ch";
+          select.style.width = "21ch";
           break;
         }
         case "365": {
-          select.style.width = "9ch";
+          select.style.width = "10ch";
           break;
         }
         case "31": {
-          select.style.width = "10.3ch";
+          select.style.width = "11ch";
           break;
         }
         case "7": {
-          select.style.width = "9.2ch";
+          select.style.width = "10ch";
           break;
         }
       }
@@ -213,51 +212,22 @@ export default {
 };
 </script>
 <style scoped>
-.datepicker {
+/* .datepicker {
   width: 300px;
+} */
+
+.dp__theme_light {
+  --dp-button-height: 150px;
 }
 
-.dp__theme_dark {
-  --dp-background-color: #212121;
-  --dp-text-color: #ffffff;
-  --dp-hover-color: #484848;
-  --dp-hover-text-color: #ffffff;
-  --dp-hover-icon-color: #959595;
-  --dp-primary-color: #005cb2;
-  --dp-primary-text-color: #ffffff;
-  --dp-secondary-color: #a9a9a9;
-  --dp-border-color: #2d2d2d;
-  --dp-menu-border-color: #2d2d2d;
-  --dp-border-color-hover: #aaaeb7;
-  --dp-disabled-color: #737373;
-  --dp-scroll-bar-background: #212121;
-  --dp-scroll-bar-color: #484848;
-  --dp-success-color: #00701a;
-  --dp-success-color-disabled: #428f59;
-  --dp-icon-color: #959595;
-  --dp-danger-color: #e53935;
-  --dp-highlight-color: rgba(0, 92, 178, 0.2);
+::v-deep .dp__theme_dark input {
+  margin-top: -10px;
+  height: 25px;
 }
-.dp__theme_light {
-  --dp-background-color: #ffffff;
-  --dp-text-color: #212121;
-  --dp-hover-color: #f3f3f3;
-  --dp-hover-text-color: #212121;
-  --dp-hover-icon-color: #959595;
-  --dp-primary-color: #1976d2;
-  --dp-primary-text-color: #f8f5f5;
-  --dp-secondary-color: #c0c4cc;
-  --dp-border-color: #ddd;
-  --dp-menu-border-color: #ddd;
-  --dp-border-color-hover: #aaaeb7;
-  --dp-disabled-color: #f6f6f6;
-  --dp-scroll-bar-background: #f3f3f3;
-  --dp-scroll-bar-color: #959595;
-  --dp-success-color: #76d275;
-  --dp-success-color-disabled: #a3d9b1;
-  --dp-icon-color: #959595;
-  --dp-danger-color: #ff6f60;
-  --dp-highlight-color: rgba(25, 118, 210, 0.1);
+
+::v-deep .dp__theme_dark svg {
+  margin-top: -2px;
+  margin-left: -2px;
 }
 
 div.summary {
@@ -267,12 +237,13 @@ div.summary {
 }
 
 select {
-  padding: 5px;
+  margin: 0 5px;
   border: 1px solid var(--border);
   border-radius: 5px;
   background-color: var(--text-input);
   color: var(--text);
-  width: 10.3ch;
+  width: 11ch;
+  height: 20px;
 }
 
 select:hover {
@@ -291,7 +262,7 @@ select:hover {
   }
 
   select {
-    width: 19.2ch;
+    width: 20ch;
   }
 
   .summary > div {
@@ -304,5 +275,11 @@ select:hover {
     flex-direction: column;
     align-items: center;
   }
+}
+</style>
+
+<style>
+.dp__theme_dark {
+  --dp-month-year-row-height: 150px;
 }
 </style>
