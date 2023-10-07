@@ -7,6 +7,7 @@ import About from "./views/About.vue";
 import Settings from "./views/Settings.vue";
 import PrivacyPolicy from "./privacy/PrivacyPolicy.vue";
 import TermsOfService from "./privacy/TermsOfService.vue";
+import Signup from "./views/SignUp.vue";
 
 const routes = [
   { path: "/", component: Home },
@@ -16,6 +17,7 @@ const routes = [
   { path: "/settings", component: Settings },
   { path: "/policy", component: PrivacyPolicy },
   { path: "/terms", component: TermsOfService },
+  { path: "/signup", component: Signup}
 ];
 
 const router = createRouter({

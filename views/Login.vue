@@ -3,7 +3,7 @@
     <h2>Login</h2>
     <form @submit.prevent="handleLogin()">
       <p>
-        <label for="username">Username:</label>
+        <label for="username">Email:</label>
         <input type="text" id="username" v-model="askedUsername" required/>
       </p>
       <p>
@@ -15,12 +15,15 @@
       </p>
     </form>
   </div>
+  <div>
+    <p>Don't have an account? <RouterLink to="/signup">Sign up</RouterLink></p>
+  </div>
 </template>
 
 <script setup>
   import { useStore } from "vuex";
   import { ref } from "vue";
-  import { useRouter } from "vue-router";
+  import { useRouter, RouterLink } from "vue-router";
   
   const askedUsername = ref("");
   const askedPassword = ref("");
@@ -28,10 +31,16 @@
   const router = useRouter();
   const users = ref(store.state.user);
 
+  
+
   function handleLogin() {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(askedUsername.value)) {
+                  alert("Please enter a valid email address");
+                  return;
+                }
     const user = ref(users.value.map((user) => {
           if( user.email === askedUsername.value && user.password === askedPassword.value){
-            // verifier que le username est une adresse mail
             store.commit("SET_USER_ID_ACTIVE", askedUsername.value)
             logIn()
           }
@@ -39,7 +48,6 @@
     if (!store.state.authenticated) {
       alert("Invalid credentials");
     }
-    // console.log(`Username: ${askedUsername.value}, Password: ${askedPassword.value}`);
   };
 
   const logIn = () => {
