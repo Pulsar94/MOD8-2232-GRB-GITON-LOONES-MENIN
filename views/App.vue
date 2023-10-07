@@ -2,9 +2,9 @@
   <div class="app-container">
     <header class="header">
       <div class="header-nav">
-        <a href="/">
+        <router-link to="/">
           <img class="logo" src="../assets/img/logo.svg" alt="Logo" />
-        </a>
+        </router-link>
         <a href="javascript:void(0);" class="icon" v-if="navInactive" @click="toggleMenu()">
           <i class="fa fa-bars fa-xl"></i>
         </a>
