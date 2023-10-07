@@ -1,9 +1,6 @@
 <template>
   <div class="chart-container">
-    <div
-        :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }"
-        id="piechart"
-    ></div>
+    <div :style="{ width: chartWidth, height: chartHeight, margin: chartMargin }" id="piechart"></div>
   </div>
 </template>
 <script>
@@ -66,10 +63,10 @@ export default {
   watch: {
     transactions: {
       handler(newVal, oldVal) {
-        this.drawChart()
+        this.drawChart();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   mounted() {
     this.drawChart();
@@ -77,16 +74,17 @@ export default {
   methods: {
     handleContainerClick(chart, data) {
       const selection = chart.getSelection();
-      if (!selection.length) {  // If no selection, then user clicked outside a slice
+      if (!selection.length) {
+        // If no selection, then user clicked outside a slice
         this.$emit("filteredTransactions", this.transactions);
-        // console.log("All transactions emitted");
+        console.log("All transactions emitted");
       }
     },
     drawChart() {
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
-          const dataArray = [["Category", "Amount", { role: 'tooltip', type: 'string' }]];
+          const dataArray = [["Category", "Amount", { role: "tooltip", type: "string" }]];
           for (const [category, amount] of Object.entries(this.categoryTotals)) {
             const tooltip = `${category}: $${Math.round(amount)}`;
             dataArray.push([category, amount, tooltip]);
@@ -109,52 +107,52 @@ export default {
               },
             },
             pieSliceBorderColor: getComputedStyle(document.documentElement).getPropertyValue("--background-color"),
-            tooltip: { isHtml: true }  // this can be omitted if the tooltip doesn't contain HTML
+            tooltip: { isHtml: true }, // this can be omitted if the tooltip doesn't contain HTML
           };
 
-          const chart = new google.visualization.PieChart(document.getElementById('piechart'));
+          const chart = new google.visualization.PieChart(document.getElementById("piechart"));
 
           chart.draw(data, options);
 
-          google.visualization.events.addListener(chart, 'onmouseover', mouseoverHandler);
-          google.visualization.events.addListener(chart, 'onmouseout', mouseoutHandler);
-          google.visualization.events.addListener(chart, 'select', onclickHandler);
-
-          document.getElementById('piechart').addEventListener('click', () => {
-            this.handleContainerClick(chart, data);
-          });
-
+          google.visualization.events.addListener(chart, "onmouseover", mouseoverHandler);
+          google.visualization.events.addListener(chart, "onmouseout", mouseoutHandler);
+          google.visualization.events.addListener(chart, "select", onclickHandler);
 
           const vm = this;
 
           function mouseoverHandler(e) {
             if (e.row != null) {
               //changing text in home
+              const categoryTexts = ["Hover here to enlighten your budget! Utilities, including electricity and water bills, allow you to gauge your monthly spending. Manage your consumption wisely to keep your finances in balance.", "Satisfy your taste and budget! Dining expenses reflect your restaurant outings and culinary indulgences. Discover how to dine well while staying within your financial comfort zone.", "Plan your adventures within budget! Travel expenses encompass your vacations and trips. Explore the world without overspending by tracking your travel expenses.", "Entertain yourself responsibly! Entertainment expenses capture your leisure activities and fun outings. Enjoy life's pleasures while keeping an eye on your spending.", "Shop smartly! Groceries expenses include your food and household purchases. Learn how to optimize your grocery budget by tracking your spending."];
               const category = data.getValue(e.row, 0);
-              vm.$emit("categorySelected", category);
+              vm.$emit("categorySelected", categoryTexts[vm.categories.findIndex((cat) => cat.name === category)]);
             }
           }
           function mouseoutHandler() {
-            vm.$emit("categorySelected", "Lorem ipsum dolor ...");
+            vm.$emit("categorySelected", "The pie chart is a powerful visualization tool that provides you with a comprehensive overview of your expenses. It elegantly breaks down your spending into various categories, allowing you to instantly grasp where your money is allocated. Whether it's groceries, entertainment, or utilities, this chart simplifies financial data, making it easier for you to identify areas where you can optimize your budget and make informed financial decisions.");
           }
+
+          document.getElementById("piechart").addEventListener("click", () => {
+            this.handleContainerClick(chart, data);
+          });
 
           function onclickHandler() {
             setTimeout(() => {
-              // console.log("Select event triggered");
+              console.log("Select event triggered");
               const selection = chart.getSelection();
-              // console.log("Current selection:", selection);
-              if (selection.length > 0 && typeof selection[0].row !== 'undefined') {
+              console.log("Current selection:", selection);
+              if (selection.length > 0 && typeof selection[0].row !== "undefined") {
                 // Pie slice is selected
                 const category = data.getValue(selection[0].row, 0);
                 const filteredTransactions = vm.transactions.filter((txn) => {
                   return txn.category.includes(category);
                 });
                 vm.$emit("filteredTransactions", filteredTransactions);
-                // console.log("Filtered transactions emitted:", filteredTransactions);
+                console.log("Filtered transactions emitted:", filteredTransactions);
               } else {
                 // Nothing is selected, or something other than a pie slice is selected
                 vm.$emit("filteredTransactions", vm.transactions);
-                // console.log("All transactions emitted");
+                console.log("All transactions emitted");
               }
             }, 100);
           }
@@ -208,8 +206,6 @@ div.summary {
   margin-bottom: 20px;
 }
 </style>
-
-
 
 <!--
 <template>

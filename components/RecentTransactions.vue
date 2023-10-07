@@ -17,8 +17,8 @@
       </select>
       <input v-model="newTransaction.libelle" placeholder="Libelle" type="text" />
       <input v-model="newTransaction.amount" placeholder="Amount" type="number" />
-<!--  <input v-model="newTransaction.date" placeholder="Date" type="date" />-->
-      <VueDatePicker class="datepicker" :dark="true" v-model="newTransaction.date" auto-apply :max-date="new Date()" ></VueDatePicker>
+      <!--  <input v-model="newTransaction.date" placeholder="Date" type="date" />-->
+      <VueDatePicker class="datepicker" :dark="true" v-model="newTransaction.date" auto-apply :max-date="new Date()"></VueDatePicker>
       <button class="addbutton" @click.prevent="addTransaction">Add</button>
     </form>
     <table>
@@ -45,11 +45,10 @@
 </template>
 
 <script>
-import {integer} from "@vuelidate/validators";
+import { integer } from "@vuelidate/validators";
 import VueDatePicker from "@vuepic/vue-datepicker";
-
 export default {
-  components: {VueDatePicker},
+  components: { VueDatePicker },
   props: {
     transactions: {
       type: Array,
@@ -87,8 +86,8 @@ export default {
   },
   methods: {
     submitForm() {
-      if (this.newTransaction.amount instanceof integer){
-        alert("Please enter a valid amount")
+      if (this.newTransaction.amount instanceof integer) {
+        alert("Please enter a valid amount");
       }
     },
     prevPage() {
@@ -117,7 +116,7 @@ export default {
     addTransaction() {
       // Generating unique ID using Date.now()
       this.newTransaction.id = Date.now();
-      this.newTransaction.date = this.formatDate(new Date(this.newTransaction.date));
+      this.newTransaction.date = this.formatDate(new Date(this.newTransaction.date.replace(/-/g, "/")));
       if (this.newTransaction.category === "Received bonus" || this.newTransaction.category === "Refund" || this.newTransaction.category === "Gift received" || this.newTransaction.category === "Sold item" || this.newTransaction.category === "Salary") this.newTransaction.amount = Math.abs(this.newTransaction.amount);
       else {
         this.newTransaction.amount = -Math.abs(this.newTransaction.amount);
@@ -151,8 +150,7 @@ export default {
   justify-self: center;
 }
 
-
-.addbutton{
+.addbutton {
   margin: 0;
 }
 
@@ -163,7 +161,7 @@ form {
   justify-content: center;
 }
 
-.dp__theme_dark{
+.dp__theme_dark {
   --dp-background-color: #212121;
   --dp-text-color: #ffffff;
   --dp-hover-color: #484848;
@@ -205,7 +203,6 @@ form {
   --dp-danger-color: #ff6f60;
   --dp-highlight-color: rgba(25, 118, 210, 0.1);
 }
-
 
 .recent-transactions {
   border-radius: 5px;

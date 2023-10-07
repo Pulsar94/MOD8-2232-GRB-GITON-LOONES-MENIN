@@ -139,8 +139,6 @@ export default {
 
           table.draw(data, options);
 
-          // google.visualization.events.addListener(table, 'onmouseover', mouseoverHandler);
-          // google.visualization.events.addListener(table, 'onmouseout', mouseoutHandler);
           google.visualization.events.addListener(table, 'select', onclickHandler);
 
           document.getElementById('tablechart').addEventListener('click', () => {
@@ -149,17 +147,6 @@ export default {
 
 
           const vm = this;
-
-          function mouseoverHandler(e) {
-            if (e.row != null) {
-              //changing text in home
-              const category = data.getValue(e.row, 0);
-              vm.$emit("categorySelected", category);
-            }
-          }
-          function mouseoutHandler() {
-            vm.$emit("categorySelected", "Lorem ipsum dolor ...");
-          }
 
           function onclickHandler() {
             setTimeout(() => {

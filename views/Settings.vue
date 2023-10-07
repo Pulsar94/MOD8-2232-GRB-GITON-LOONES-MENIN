@@ -3,14 +3,14 @@
     <h1>Settings</h1>
     <form @submit.prevent="saveChanges">
       <div class="informations" v-if="!editing">
-        <p>Name: {{ userName }}</p>
-        <p>Age: {{ userAge }}</p>
-        <p>Email: {{ userEmail }}</p>
-        <p>Phone: {{ userPhone }}</p>
+        <p>Name: {{ initialName }}</p>
+        <p>Age: {{ initialAge }}</p>
+        <p>Email: {{ initialEmail }}</p>
+        <p>Phone: {{ initialPhone }}</p>
         <p>
           Password: {{ passwordShown }}
           <button type="button" id="password" @click="togglePasswordVisibility">
-            {{ passwordShown === userPassword ? "Hide" : "Show" }}
+            {{ passwordShown === initialPassword ? "Hide" : "Show" }}
           </button>
         </p>
         <p>Limit: {{ limit }}</p>
@@ -29,10 +29,10 @@
         <div class="notification-container">
           <p>Notification preferences:</p>
           <select name="notifications">
-            <option ref="email" value="email" :selected="userNotifications === 'email'">Email</option>
-            <option ref="sms" value="sms" :selected="userNotifications === 'sms'">SMS</option>
-            <option ref="both" value="both" :selected="userNotifications === 'both'">Both</option>
-            <option ref="none" value="none" :selected="userNotifications === 'none'">None</option>
+            <option ref="email" value="email" :selected="initialNotifications === 'email'">Email</option>
+            <option ref="sms" value="sms" :selected="initialNotifications === 'sms'">SMS</option>
+            <option ref="both" value="both" :selected="initialNotifications === 'both'">Both</option>
+            <option ref="none" value="none" :selected="initialNotifications === 'none'">None</option>
           </select>
         </div>
         <div class="buttons">
@@ -54,25 +54,19 @@ export default {
     const store = useStore();
     const router = useRouter();
 
-    const users = ref(store.state.user);
+    const initialName = ref(store.state.user.name);
+    const initialAge = ref(store.state.user.age);
+    const initialEmail = ref(store.state.user.email);
+    const initialPhone = ref(store.state.user.phone);
+    const initialPassword = ref(store.state.user.password);
+    const initialNotifications = ref(store.state.user.notifications);
 
-    const user = users.value.find((user) => {
-      return user.email === store.state.userIDActive;
-    });
-
-    const userName = ref(user.name);
-    const userAge = ref(user.age);
-    const userEmail = ref(user.email);
-    const userPhone = ref(user.phone);
-    const userPassword = ref(user.password);
-    const userNotifications = ref(user.notifications);
-
-    const editedName = ref(user.name);
-    const editedAge = ref(user.age);
-    const editedEmail = ref(user.email);
-    const editedPhone = ref(user.phone);
-    const editedPassword = ref(user.password);
-    const editedNotifications = ref(user.notifications);
+    const editedName = ref(store.state.user.name);
+    const editedAge = ref(store.state.user.age);
+    const editedEmail = ref(store.state.user.email);
+    const editedPhone = ref(store.state.user.phone);
+    const editedPassword = ref(store.state.user.password);
+    const editedNotifications = ref(store.state.user.notifications);
 
     const editing = ref(false);
     const passwordShown = ref("•".repeat(editedPassword.value.length));
@@ -80,7 +74,7 @@ export default {
     const limit = ref(store.state.limit);
 
     const saveChanges = () => {
-      // console.log(limit)
+      console.log(limit);
       if (!editedName.value || !editedAge.value || !editedEmail.value || !editedPhone.value || !editedPassword.value) {
         alert("Please fill in  allfields");
         return;
@@ -98,12 +92,12 @@ export default {
 
       editedNotifications.value = document.querySelector("select[name=notifications]").value;
 
-      userName.value = editedName.value;
-      userAge.value = editedAge.value;
-      userEmail.value = editedEmail.value;
-      userPhone.value = editedPhone.value;
-      userPassword.value = editedPassword.value;
-      userNotifications.value = editedNotifications.value;
+      initialName.value = editedName.value;
+      initialAge.value = editedAge.value;
+      initialEmail.value = editedEmail.value;
+      initialPhone.value = editedPhone.value;
+      initialPassword.value = editedPassword.value;
+      initialNotifications.value = editedNotifications.value;
 
       const updatedUser = {
         name: editedName.value,
@@ -114,7 +108,7 @@ export default {
         notifications: editedNotifications.value,
       };
 
-      // console.log(updatedUser);
+      console.log(updatedUser);
 
       store.commit("SET_LIMIT", limit.value);
       store.commit("UPDATE_USER", updatedUser);
@@ -123,11 +117,11 @@ export default {
     };
 
     const cancelEditing = () => {
-      editedName.value = userName.value;
-      editedAge.value = userAge.value;
-      editedEmail.value = userEmail.value;
-      editedPhone.value = userPassword.value;
-      editedPassword.value = userNotifications.value;
+      editedName.value = initialName.value;
+      editedAge.value = initialAge.value;
+      editedEmail.value = initialEmail.value;
+      editedPhone.value = initialPhone.value;
+      editedPassword.value = initialPassword.value;
 
       editing.value = false;
     };
@@ -139,12 +133,12 @@ export default {
     };
 
     return {
-      userName,
-      userAge,
-      userEmail,
-      userPhone,
-      userPassword,
-      userNotifications,
+      initialName,
+      initialAge,
+      initialEmail,
+      initialPhone,
+      initialPassword,
+      initialNotifications,
       editedName,
       editedAge,
       editedEmail,
@@ -168,7 +162,7 @@ export default {
   }),
   methods: {
     togglePasswordVisibility() {
-      this.passwordShown = this.passwordShown === this.userPassword ? "•".repeat(this.userPassword.length) : this.userPassword;
+      this.passwordShown = this.passwordShown === this.initialPassword ? "•".repeat(this.initialPassword.length) : this.initialPassword;
     },
   },
 };

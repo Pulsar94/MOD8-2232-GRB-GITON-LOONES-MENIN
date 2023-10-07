@@ -69,37 +69,39 @@ export default {
     },
 
     dataToDisplay() {
-      // console.log(this.chosenTime);
+      console.log(this.chosenTime);
+      if (this.$store.state.dateRange && this.chosenTime === "-2") {
+        console.log(this.$store.state.dateRange[1], this.$store.state.dateRange[0]);
+        console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0]);
+        console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000);
+        console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000);
+
+        if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000) {
+          return this.generateDailyDataTable;
+        } else if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000) {
+          return this.generateWeeklyDataTable;
+        } else {
+          return this.generateMonthlyDataTable;
+        }
+      }
       switch (this.chosenTime) {
         case "7":
           return this.generateDailyDataTable;
         case "31":
+          console.log("CCCCCCCCCCCCCCCCCCCCCCC");
           return this.generateWeeklyDataTable;
         case "365":
           return this.generateMonthlyDataTable;
         case "-1":
           return this.generateMonthlyDataTable;
         case "-2":
-          // console.log(this.$store.state.dateRange[1], this.$store.state.dateRange[0]);
-          // console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0]);
-          // console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000);
-          // console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000);
-
-          if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000){
-            return this.generateDailyDataTable;
-          }else if (this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000){
-            return this.generateWeeklyDataTable;
-          }else {
-            return this.generateMonthlyDataTable;
-          }
-        case "-3":
-          // console.log("BBBBBBBBB")
+          console.log("BBBBBBBBB");
           this.chosenTime = "365";
           return this.generateMonthlyDataTable;
 
         default:
-          // console.log("default");
-          // console.log(this.chosenTime);
+          console.log("default");
+          console.log(this.chosenTime);
           return this.generateWeeklyDataTable;
       }
     },
@@ -321,9 +323,22 @@ export default {
           const chart = new google.visualization.ComboChart(document.getElementById("combochart"));
           chart.draw(data, options);
 
-          //google.visualization.events.addListener(chart, 'onmouseover', mouseoverHandler);
-          //google.visualization.events.addListener(chart, 'onmouseout', mouseoutHandler);
+          google.visualization.events.addListener(chart, "onmouseover", mouseoverHandler);
+          google.visualization.events.addListener(chart, "onmouseout", mouseoutHandler);
           google.visualization.events.addListener(chart, "select", onclickHandler);
+
+          function mouseoverHandler(e) {
+            if (e.row != null) {
+              //changing text in home
+              const categoryTexts = ["Hover here to explore utility expenses! Utilities include electricity, water, and more. Understand your utility spending and make efficient choices", "Savor dining expenses! Dining covers restaurant outings and delightful meals. Discover your dining expenses and manage your culinary indulgences.", "Journey through travel expenses! Travel encompasses getaways and trips. Analyze your travel spending and plan memorable adventures.", "Enjoy entertainment costs! Entertainment expenses reflect your leisure activities and fun outings. Track your entertainment spending for balanced budgeting.", "Shop smart with grocery expenses! Groceries include daily essentials and delightful treats. Stay on top of your grocery spending for a cost-effective lifestyle.", "Explore your average spending! Mean expense represents your overall spending pattern. Discover your financial baseline and work toward your budgeting goals."];
+              const category = data.getColumnLabel(e.column);
+              if (category !== "Mean") vm.$emit("categorySelected", categoryTexts[vm.categories.findIndex((cat) => cat.name === category)]);
+              else vm.$emit("categorySelected", categoryTexts[5]);
+            }
+          }
+          function mouseoutHandler() {
+            vm.$emit("categorySelected", "The combo chart is your go-to tool for a holistic view of your financial landscape. Combining both bar and line graphs, it offers an in-depth perspective on your income and expenses over time. Track your financial progress with precision, monitor fluctuations, and detect trends in your financial journey. By visualizing your financial data in this comprehensive chart, you gain valuable insights to steer your financial life in the right direction.");
+          }
 
           document.getElementById("combochart").addEventListener("click", () => {
             // console.log("Container clicked");
@@ -333,35 +348,35 @@ export default {
           const vm = this;
           function onclickHandler() {
             setTimeout(() => {
-              // console.log("Select event triggered");
+              console.log("Select event triggered");
 
               const selection = chart.getSelection();
-              // console.log("Current selection:", selection);
+              console.log("Current selection:", selection);
 
               // If no selection, emit all transactions
               if (selection.length === 0) {
                 vm.$emit("filteredTransactions", vm.transactions);
-                // console.log("All transactions emitted");
+                console.log("All transactions emitted");
                 return;
               }
 
               // If the row is null, then it might be a click on the legend or axes
               if (selection[0].row === null) {
                 const clickedTargetID = selection[0].targetID;
-                // console.log("clickedTargetID:", clickedTargetID);
+                console.log("clickedTargetID:", clickedTargetID);
 
                 if (selection[0].row === null && typeof selection[0].column !== "undefined") {
                   // This might indicate a category (legend) click
                   const clickedCategory = data.getColumnLabel(selection[0].column);
-                  // console.log("Clicked Category from legend:", clickedCategory);
+                  console.log("Clicked Category from legend:", clickedCategory);
 
                   const filteredTransactionsByCategory = vm.transactions.filter((txn) => txn.category === clickedCategory);
-                  // console.log("Filtered transactions by category:", filteredTransactionsByCategory);
+                  console.log("Filtered transactions by category:", filteredTransactionsByCategory);
                   vm.$emit("filteredTransactions", filteredTransactionsByCategory);
                 } else if (selection.length > 0 && typeof selection[0].row !== "undefined") {
                   // Handle the case where the chart background or other non-legend, non-data areas are clicked
                   vm.$emit("filteredTransactions", vm.transactions);
-                  // console.log("All transactions emitted");
+                  console.log("All transactions emitted");
                 }
 
                 return;
@@ -369,42 +384,42 @@ export default {
               // Handle when a bar/line is clicked
               let datePeriodString = data.getValue(selection[0].row, 0);
               if (vm.chosenTime === "-1" || vm.chosenTime === "365") {
-                // console.log(datePeriodString);
+                console.log(datePeriodString);
                 datePeriodString = data.getValue(selection[0].row, 0) + "/01";
-                // console.log(datePeriodString);
+                console.log(datePeriodString);
               }
               const datePeriod = new Date(datePeriodString);
               const clickedCategory = data.getColumnLabel(selection[0].column);
 
               const currentDateYear = new Date().getFullYear();
               const convertedDatePeriod = `${currentDateYear}/${("0" + (datePeriod.getMonth() + 1)).slice(-2)}/${("0" + datePeriod.getDate()).slice(-2)}`;
-              // console.log(datePeriodString);
-              // console.log(datePeriod, convertedDatePeriod);
+              console.log(datePeriodString);
+              console.log(datePeriod, convertedDatePeriod);
 
               const convertedDatePeriodO = datePeriodString.replace("-", "/");
 
-              // console.log(convertedDatePeriodO);
+              console.log(convertedDatePeriodO);
               const mondayDate = new Date(convertedDatePeriod);
               const sundayDate = new Date(mondayDate);
 
               sundayDate.setDate(mondayDate.getDate() + 6); // Move to Sunday of that week
               let filteredTransactions = vm.transactions;
-              // console.log(vm.chosenTime);
+              console.log(vm.chosenTime);
               if (clickedCategory !== "Mean") {
                 if (vm.chosenTime === "7") {
-                  // console.log("777777777777");
+                  console.log("777777777777");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate.getTime() === mondayDate.getTime() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                   });
                 } else if (vm.chosenTime === "31") {
-                  // console.log("3131313131313");
+                  console.log("3131313131313");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate >= mondayDate && txnDate <= sundayDate && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                   });
                 } else if (vm.chosenTime === "365" || vm.chosenTime === "-1") {
-                  // console.log("365365365365365");
+                  console.log("365365365365365");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
@@ -412,19 +427,19 @@ export default {
                 }
               } else {
                 if (vm.chosenTime === "7") {
-                  // console.log("777777777777");
+                  console.log("777777777777");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate.getTime() === mondayDate.getTime();
                   });
                 } else if (vm.chosenTime === "31") {
-                  // console.log("3131313131313");
+                  console.log("3131313131313");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate >= mondayDate && txnDate <= sundayDate;
                   });
                 } else if (vm.chosenTime === "365" || vm.chosenTime === "-1") {
-                  // console.log("365365365365365");
+                  console.log("365365365365365");
                   filteredTransactions = vm.transactions.filter((txn) => {
                     const txnDate = new Date(txn.date);
                     return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear();
@@ -432,11 +447,11 @@ export default {
                 }
               }
 
-              // console.log("Retrieved category:", clickedCategory);
-              // console.log("Date range:", mondayDate, "to", sundayDate);
-              // console.log(JSON.parse(JSON.stringify(vm.transactions.slice(0, 10))));
-              // console.log("Sample transactions:", vm.transactions.slice(0, 10));
-              // console.log("Filtered transactions for the week and category:", filteredTransactions);
+              console.log("Retrieved category:", clickedCategory);
+              console.log("Date range:", mondayDate, "to", sundayDate);
+              console.log(JSON.parse(JSON.stringify(vm.transactions.slice(0, 10))));
+              console.log("Sample transactions:", vm.transactions.slice(0, 10));
+              console.log("Filtered transactions for the week and category:", filteredTransactions);
 
               vm.$emit("filteredTransactions", filteredTransactions);
             }, 10);
