@@ -2,9 +2,9 @@
   <div class="app-container">
     <header class="header">
       <div class="header-nav">
-        <a href="/">
+        <router-link to="/">
           <img class="logo" src="../assets/img/logo.svg" alt="Logo" />
-        </a>
+        </router-link>
         <a href="javascript:void(0);" class="icon" v-if="navInactive" @click="toggleMenu()">
           <i class="fa fa-bars fa-xl"></i>
         </a>
@@ -34,12 +34,12 @@
     </div>
   </div>
   <footer ref="footer">
-    <a href="/about/">
-      <text class="footer-btn">About Us</text>
-    </a>
-    <a href="/about/">
-      <text class="footer-btn">Contact</text>
-    </a>
+    <div>
+      <router-link class="footer-btn" to="/about">About Us</router-link>
+    </div>
+    <div>
+      <router-link class="footer-btn" to="/about">Contact Us</router-link>
+    </div>
     <div>
       <router-link class="footer-btn" to="/policy">Privacy Policy</router-link>
     </div>
@@ -174,7 +174,6 @@ export default {
       //   rawDate: new Date(2020, 0, 1),
       // });
 
-
       const todayDate = new Date();
       this.$store.commit("SET_INITIAL_TRANSACTIONS", this.myTransactionsArray);
       this.$store.commit(
@@ -185,11 +184,11 @@ export default {
           .sort((a, b) => new Date(b.date) - new Date(a.date))
       );
 
-      this.$store.commit("SET_BALANCE", this.myInitialTransactionsArray
-          .filter((t) => t.rawDate < todayDate)
-          .sort((a, b) => new Date(b.date) - new Date(a.date))
+      this.$store.commit(
+        "SET_BALANCE",
+        this.myInitialTransactionsArray.filter((t) => t.rawDate < todayDate).sort((a, b) => new Date(b.date) - new Date(a.date))
       );
-      console.log(this.$store.state.balance);
+      // console.log(this.$store.state.balance);
 
       this.$store.commit("SET_DAYS", Math.round((todayDate.getTime() - new Date(2023, 0).getTime()) / (1000 * 60 * 60 * 24)));
     },

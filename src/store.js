@@ -12,7 +12,15 @@ export const store = createStore({
         month: null,
         year: null,
         dateRange: '',
-        user: {
+        // user: {
+        //     id: 1,
+        //     name: 'Patrick',
+        //     email: 'patrick@gmail.com',
+        //     password: '123456',
+        //     phone: '1234567890',
+        //     age: 24,
+        // },
+        user: [{
             id: 1,
             name: 'Patrick',
             email: 'patrick@gmail.com',
@@ -20,11 +28,23 @@ export const store = createStore({
             phone: '1234567890',
             age: 24,
         },
-        authenticated: true,
+        {
+            id: 2,
+            name: 'admin',
+            email: 'admin@gmail.com',
+            password: 'admin',
+            phone: '0000000000',
+            age: 100,
+        }],
+        authenticated: false,
         limit: -3000,
         balance: 0,
+        userIDActive: "",
     },
     mutations: {
+        SET_USER_ID_ACTIVE(state, userIDActive) {
+            state.userIDActive = userIDActive;
+        },
         SET_INITIAL_TRANSACTIONS(state, transactions) {
             state.myInitialTransactionsArray = transactions;
 
@@ -36,9 +56,9 @@ export const store = createStore({
             state.balance = 0;
             //update balance
             for (let i = 0; i < transactions.length; i++) {
-                console.log(state.balance + " + " + transactions[i].amount)
+                // console.log(state.balance + " + " + transactions[i].amount)
                 state.balance += transactions[i].amount;
-                console.log("= " + state.balance, transactions[i].date)
+                // console.log("= " + state.balance, transactions[i].date)
             }
         },
         SET_DAYS(state, days) {
@@ -63,11 +83,14 @@ export const store = createStore({
             state.user.phone = updatedUser.phone;
             state.user.password = updatedUser.password;
         },
+        ADD_USER(state, user){
+            state.user.push(user);
+        },
         addTransaction(state, transaction) {
             state.myTransactionsArray.push(toRaw(transaction));
             state.myInitialTransactionsArray.push(toRaw(transaction));
             //update balance
-            console.log(state.balance)
+            // console.log(state.balance)
             state.balance = state.myTransactionsArray.reduce((sum, txn) => sum + txn.amount, 0);
         },
         LOG_IN(state) {
@@ -75,6 +98,7 @@ export const store = createStore({
         },
         LOG_OUT(state) {
             state.authenticated = false;
+            state.userIDActive = "";
         },
         SET_LIMIT(state, limit) {
             state.limit = limit;

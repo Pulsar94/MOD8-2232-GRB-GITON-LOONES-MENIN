@@ -77,7 +77,7 @@ export default {
       return this.$store.state.chosenTime;
     },
     dataToDisplay() {
-      console.log(this.chosenTime)
+      // console.log(this.chosenTime)
       if (this.chosenTime === '-2'){
         this.chosenTime = '7'
         this.$store.commit("SET_CHOSEN_TIME" , '7')
@@ -126,7 +126,7 @@ export default {
               .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
 
         } else {
-          console.log("AAAAAAAAAAAAAAAAAA")
+          // console.log("AAAAAAAAAAAAAAAAAA")
           this.ticks = dailyAmounts
               .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
               .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
@@ -140,7 +140,7 @@ export default {
 
         const days = Math.round((todayDate.getTime() - limitDate) / (1000 * 60 * 60 * 24));
         let date = limitDateObj;
-        console.log(date);
+        // console.log(date);
         let amount = 0;
         let i = 0;
         while (i < days + 1) {
@@ -155,9 +155,9 @@ export default {
           v: item[0],
           f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`
         })); // Transform to desired format
-        console.log(this.ticks);
+        // console.log(this.ticks);
       }
-      console.log(dailyAmounts)
+      // console.log(dailyAmounts)
       return dailyAmounts;
     },
     weeklyAmount() {
@@ -181,7 +181,7 @@ export default {
             .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
             .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
       } else {
-        console.log(this.$store.state.month)
+        // console.log(this.$store.state.month)
         const todayDate = new Date();
         const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth() + 1}/${todayDate.getDate()}`;
 
@@ -208,7 +208,7 @@ export default {
         // // console.log(ticks);
       }
 
-      console.log(weeklyAmounts)
+      // console.log(weeklyAmounts)
       return weeklyAmounts;
     },
     monthlyAmount() {
@@ -246,7 +246,7 @@ export default {
 
         let amount = 0;
         let i = 0;
-        console.log(days);
+        // console.log(days);
         while (i < days + 1) {
           amount = this.totalBeforeDate(date);
           let actualDateStr = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
@@ -263,7 +263,7 @@ export default {
             })); // Transform to desired format
         // // console.log(ticks);
       }
-      console.log(monthlyAmounts)
+      // console.log(monthlyAmounts)
       return monthlyAmounts;
     },
   },
@@ -285,7 +285,7 @@ export default {
       google.charts.setOnLoadCallback(() => {
         try {
           const dataArray = this.dataToDisplay;
-          console.log(dataArray);
+          // console.log(dataArray);
 
           // Convert dataArray to a DataTable
           const data = new google.visualization.DataTable();

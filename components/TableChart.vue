@@ -94,7 +94,7 @@ export default {
       const selection = chart.getSelection();
       if (!selection.length) {  // If no selection, then user clicked outside a slice
         this.$emit("filteredTransactions", this.transactions);
-        console.log("All transactions emitted");
+        // console.log("All transactions emitted");
       }
     },
 
@@ -164,10 +164,10 @@ export default {
           function onclickHandler() {
             setTimeout(() => {
 
-              console.log("Select event triggered");
+              // console.log("Select event triggered");
 
               const selection = table.getSelection();
-              console.log("Current selection:", selection);
+              // console.log("Current selection:", selection);
 
               if (selection.length > 0 && typeof selection[0].row !== 'undefined') {
                 // Pie slice is selected
@@ -176,11 +176,11 @@ export default {
                   return txn.category.includes(category);
                 }).sort((a, b) => new Date(b.date) - new Date(a.date));
                 vm.$emit("filteredTransactions", filteredTransactions);
-                console.log("Filtered transactions emitted:", filteredTransactions);
+                // console.log("Filtered transactions emitted:", filteredTransactions);
               } else {
                 // Nothing is selected, or something other than a pie slice is selected
                 vm.$emit("filteredTransactions", vm.transactions);
-                console.log("All transactions emitted");
+                // console.log("All transactions emitted");
               }
             }, 100);
           }
