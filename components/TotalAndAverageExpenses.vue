@@ -215,11 +215,6 @@ export default {
 /* .datepicker {
   width: 300px;
 } */
-
-.dp__theme_light {
-  --dp-button-height: 150px;
-}
-
 ::v-deep .dp__theme_dark input {
   margin-top: -10px;
   height: 25px;
@@ -275,11 +270,5 @@ select:hover {
     flex-direction: column;
     align-items: center;
   }
-}
-</style>
-
-<style>
-.dp__theme_dark {
-  --dp-month-year-row-height: 150px;
 }
 </style>
