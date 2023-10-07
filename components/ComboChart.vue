@@ -70,7 +70,7 @@ export default {
 
     dataToDisplay() {
       console.log(this.chosenTime);
-      if(this.$store.state.dateRange){
+      if(this.$store.state.dateRange && this.chosenTime === "-2"){
         console.log(this.$store.state.dateRange[1], this.$store.state.dateRange[0]);
         console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0]);
         console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000);
@@ -88,12 +88,13 @@ export default {
         case "7":
           return this.generateDailyDataTable;
         case "31":
+          console.log("CCCCCCCCCCCCCCCCCCCCCCC")
           return this.generateWeeklyDataTable;
         case "365":
           return this.generateMonthlyDataTable;
         case "-1":
           return this.generateMonthlyDataTable;
-        case "-3":
+        case "-2":
           console.log("BBBBBBBBB")
           this.chosenTime = "365";
           return this.generateMonthlyDataTable;

@@ -22,34 +22,39 @@
   </div>
 </template>
 <script>
-import lineChart from "./LineChart.vue";
-import pieChart from "./PieChart.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import {useRouter} from "vue-router";
-
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-  this.isDarkMode = e.matches;
-});
 
 export default {
   components: { VueDatePicker },
 
   data() {
     return {
+      vm: this.watch,
       router: useRouter(),
       chosenTime: '31',
-      month: null,
-      year: null,
+      month: {month: new Date().getMonth(), year: new Date().getFullYear()},
+      year: new Date().getFullYear(),
       dateRange: null,
       myInitialTransactionsArray: this.$store.state.myInitialTransactionsArray,
       isDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
     }
   },
+  mounted() {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      this.isDarkMode = e.matches;
+    });
+  },
   watch: {
     chosenTime(newValue) {
       const todayDate = new Date();
       this.$store.commit("SET_CHOSEN_TIME", newValue);
+      this.dateRange = null;
+      if (newValue === "-2" || newValue === "7") {
+        console.log(this)
+        this.dateRange = [new Date(todayDate.getTime() - 1000*60*60*24*6), todayDate];
+      }
       if (newValue !== "-1") {
         this.$emit(
           "filteredTransactions",
@@ -85,6 +90,8 @@ export default {
       this.$forceUpdate();
     },
     year(newValue) {
+      console.log(newValue)
+
       if (newValue) {
         const todayDate = new Date()
         this.$store.commit('SET_YEAR', newValue);
@@ -104,10 +111,9 @@ export default {
         this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray.filter(t => t.rawDate < todayDate).filter(t => new Date(t.rawDate.getTime() + 1000*60*60*24) > this.dateRange[0] && t.rawDate < this.dateRange[1]));
         this.$emit("filteredTransactions", this.$store.state.myTransactionsArray);
       } else {
-        console.log("AAAAAAAAAAAA")
-        this.$store.commit('SET_CHOSEN_TIME', '-3');
-        this.$store.commit('SET_TRANSACTIONS', this.$store.state.myInitialTransactionsArray);
+        console.log("dateRange : newValue null")
       }
+      this.$forceUpdate();
     },
   },
   name: "TotalAndAverageExpenses",
