@@ -78,11 +78,14 @@ export default {
     },
     dataToDisplay() {
       console.log(this.chosenTime)
-      if (this.chosenTime === '-2'){
-        this.chosenTime = '7'
-        this.$store.commit("SET_CHOSEN_TIME" , '7')
+      // if (this.chosenTime === '-2'){
+      //   this.chosenTime = '7'
+      //   this.$store.commit("SET_CHOSEN_TIME" , '7')
+      // }
+      if (this.$store.state.dateRange){
+        return this.customAmount;
       }
-      switch (this.chosenTime) {
+        switch (this.chosenTime) {
         case "7":
           return this.dailyAmount;
         case "31":
@@ -96,67 +99,69 @@ export default {
       }
     },
 
-    dailyAmount() {
+    customAmount(){
       const dailyAmounts = [];
-      if (this.$store.state.dateRange){
 
-        const filteredTransactions = this.transactions//.filter(t => t.rawDate < this.$store.state.dateRange[1] && t.rawDate >= this.$store.state.dateRange[0])
-        const uniqueDatesSet = new Set();
-        filteredTransactions.forEach((t) => {
-          const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
-          uniqueDatesSet.add(dateStr);
-        });
+      const filteredTransactions = this.transactions//.filter(t => t.rawDate < this.$store.state.dateRange[1] && t.rawDate >= this.$store.state.dateRange[0])
+      const uniqueDatesSet = new Set();
+      filteredTransactions.forEach((t) => {
+        const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
+        uniqueDatesSet.add(dateStr);
+      });
 
-        uniqueDatesSet.forEach((dateStr) => {
-          const [year, month, day] = dateStr.split('/').map(Number);
-          const date = new Date(year, month - 1, day);
-          const amount = this.totalBeforeDate(date);
-          dailyAmounts.push([date, amount]);
-        });
+      uniqueDatesSet.forEach((dateStr) => {
+        const [year, month, day] = dateStr.split('/').map(Number);
+        const date = new Date(year, month - 1, day);
+        const amount = this.totalBeforeDate(date);
+        dailyAmounts.push([date, amount]);
+      });
 
-        if(this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0]  < 21 * 86400000){
-          this.ticks = dailyAmounts.map((item) => ({
-            v: item[0],
-            f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`
-          }));
-        } else if(this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 92 * 86400000) {
-          //filter for the first day of the week
-          this.ticks = dailyAmounts
-              .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
-              .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
-
-        } else {
-          console.log("AAAAAAAAAAAAAAAAAA")
-          this.ticks = dailyAmounts
-              .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
-              .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
-        }
-
-        } else {
-        const todayDate = new Date();
-
-        const limitDate = new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
-        const limitDateObj = new Date(limitDate);
-
-        const days = Math.round((todayDate.getTime() - limitDate) / (1000 * 60 * 60 * 24));
-        let date = limitDateObj;
-        console.log(date);
-        let amount = 0;
-        let i = 0;
-        while (i < days + 1) {
-          amount = this.totalBeforeDate(date);
-          let dateString = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
-          dailyAmounts.push([new Date(dateString), amount]);
-
-          date = this.addDays(date, 1);
-          i++;
-        }
+      if(this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0]  < 21 * 86400000){
         this.ticks = dailyAmounts.map((item) => ({
           v: item[0],
           f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`
-        })); // Transform to desired format
-        console.log(this.ticks);
+        }));
+      } else if(this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 92 * 86400000) {
+        //filter for the first day of the week
+        this.ticks = dailyAmounts
+            .filter((item) => item[0].getDay() === 1) // Filter for the first day of the week
+            .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
+      } else {
+        console.log("AAAAAAAAAAAAAAAAAA")
+        this.ticks = dailyAmounts
+            .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
+            .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
       }
+      return dailyAmounts;
+
+    },
+
+    dailyAmount() {
+      const dailyAmounts = [];
+      const todayDate = new Date();
+
+      const limitDate = new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
+      const limitDateObj = new Date(limitDate);
+
+      const days = Math.round((todayDate.getTime() - limitDate) / (1000 * 60 * 60 * 24));
+      let date = limitDateObj;
+      console.log(date);
+      let amount = 0;
+      let i = 0;
+      while (i < days + 1) {
+        amount = this.totalBeforeDate(date);
+        let dateString = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+        dailyAmounts.push([new Date(dateString), amount]);
+
+        date = this.addDays(date, 1);
+        i++;
+      }
+      this.ticks = dailyAmounts.map((item) => ({
+        v: item[0],
+        f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`
+      })); // Transform to desired format
+      console.log(this.ticks);
+
       console.log(dailyAmounts)
       return dailyAmounts;
     },
