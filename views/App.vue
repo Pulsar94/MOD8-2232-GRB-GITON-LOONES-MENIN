@@ -189,7 +189,7 @@ export default {
           .filter((t) => t.rawDate < todayDate)
           .sort((a, b) => new Date(b.date) - new Date(a.date))
       );
-      console.log(this.$store.state.balance);
+      // console.log(this.$store.state.balance);
 
       this.$store.commit("SET_DAYS", Math.round((todayDate.getTime() - new Date(2023, 0).getTime()) / (1000 * 60 * 60 * 24)));
     },

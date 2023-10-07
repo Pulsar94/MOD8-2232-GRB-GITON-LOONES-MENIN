@@ -1,14 +1,14 @@
 <template>
   <div id="login-view">
     <h2>Login</h2>
-    <form @submit.prevent="handleLogin">
+    <form @submit.prevent="handleLogin()">
       <p>
         <label for="username">Username:</label>
-        <input type="text" id="username" v-model="username" />
+        <input type="text" id="username" v-model="askedUsername" required/>
       </p>
       <p>
         <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" />
+        <input type="password" id="password" v-model="askedPassword" required/>
       </p>
       <p>
         <button type="submit">Login</button>
@@ -18,19 +18,35 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+  import { useStore } from "vuex";
+  import { ref } from "vue";
+  import { useRouter } from "vue-router";
+  
+  const askedUsername = ref("");
+  const askedPassword = ref("");
+  const store = useStore();
+  const router = useRouter();
+  const users = ref(store.state.user);
 
-const username = ref("");
-const password = ref("");
+  function handleLogin() {
+    const user = ref(users.value.map((user) => {
+          if( user.email === askedUsername.value && user.password === askedPassword.value){
+            // verifier que le username est une adresse mail
+            store.commit("SET_USER_ID_ACTIVE", askedUsername.value)
+            logIn()
+          }
+      }));
+    if (!store.state.authenticated) {
+      alert("Invalid credentials");
+    }
+    // console.log(`Username: ${askedUsername.value}, Password: ${askedPassword.value}`);
+  };
 
-const handleLogin = () => {
-  if (username.value === "admin" && password.value === "admin") {
-    alert("You successfully logged in");
-  } else {
-    alert("Invalid credentials");
-  }
-  console.log(`Username: ${username.value}, Password: ${password.value}`);
-};
+  const logIn = () => {
+      store.commit("LOG_IN");
+      alert("You successfully logged in");
+      router.push("/dashboard");
+    };
 </script>
 
 <style scoped>
