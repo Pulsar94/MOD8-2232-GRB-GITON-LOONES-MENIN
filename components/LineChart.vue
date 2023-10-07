@@ -82,7 +82,7 @@ export default {
       //   this.chosenTime = '7'
       //   this.$store.commit("SET_CHOSEN_TIME" , '7')
       // }
-      if (this.$store.state.dateRange){
+      if(this.$store.state.dateRange && this.chosenTime === "-2"){
         return this.customAmount;
       }
         switch (this.chosenTime) {
