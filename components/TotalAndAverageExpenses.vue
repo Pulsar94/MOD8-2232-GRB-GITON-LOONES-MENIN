@@ -14,10 +14,10 @@
     <div>Difference: ${{ totalGain + totalExpenses }}</div>
     <div>Average Daily Expense: ${{ Math.abs(averageDailyExpense) }}</div>
     <div class="datepicker" v-if="this.router.currentRoute.path === `/dashboard`">
-      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '-2'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" range :format="'yyyy-MM-dd'"></VueDatePicker>
-      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '7'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" week-picker :format="'yyyy-MM-dd'"></VueDatePicker>
-      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '31'" v-model="month" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" month-picker :format="'yyyy-MM'"></VueDatePicker>
-      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '365'" v-model="year" auto-apply :min-date="myInitialTransactionsArray[0].rawDate" :max-date="new Date()" year-picker :format="'yyyy'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '-2'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[[this.myInitialTransactionsArray.length-1]].rawDate" :max-date="new Date()" range :format="'yyyy-MM-dd'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '7'" v-model="dateRange" auto-apply :min-date="myInitialTransactionsArray[[this.myInitialTransactionsArray.length-1]].rawDate" :max-date="new Date()" week-picker :format="'yyyy-MM-dd'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '31'" v-model="month" auto-apply :min-date="myInitialTransactionsArray[[this.myInitialTransactionsArray.length-1]].rawDate" :max-date="new Date()" month-picker :format="'yyyy-MM'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '365'" v-model="year" auto-apply :min-date="myInitialTransactionsArray[[this.myInitialTransactionsArray.length-1]].rawDate" :max-date="new Date()" year-picker :format="'yyyy'"></VueDatePicker>
     </div>
   </div>
 </template>
@@ -37,7 +37,7 @@ export default {
       month: { month: new Date().getMonth(), year: new Date().getFullYear() },
       year: new Date().getFullYear(),
       dateRange: null,
-      myInitialTransactionsArray: this.$store.state.myInitialTransactionsArray,
+      myInitialTransactionsArray: this.$store.state.myInitialTransactionsArray.sort((a, b) => new Date(b.date) - new Date(a.date)),
       isDarkMode: window.matchMedia("(prefers-color-scheme: dark)").matches,
     };
   },

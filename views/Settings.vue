@@ -54,21 +54,28 @@ export default {
     const store = useStore();
     const router = useRouter();
 
-    const initialName = ref(store.state.user.name);
-    const initialAge = ref(store.state.user.age);
-    const initialEmail = ref(store.state.user.email);
-    const initialPhone = ref(store.state.user.phone);
-    const initialPassword = ref(store.state.user.password);
-    const initialNotifications = ref(store.state.user.notifications);
+    const users = ref(store.state.user);
 
-    const editedName = ref(store.state.user.name);
-    const editedAge = ref(store.state.user.age);
-    const editedEmail = ref(store.state.user.email);
-    const editedPhone = ref(store.state.user.phone);
-    const editedPassword = ref(store.state.user.password);
-    const editedNotifications = ref(store.state.user.notifications);
+    const user = users.value.find((user) => {
+      return user.email === store.state.userIDActive;
+    });
+
+    const initialName = ref(user.name);
+    const initialAge = ref(user.age);
+    const initialEmail = ref(user.email);
+    const initialPhone = ref(user.phone);
+    const initialPassword = ref(user.password);
+    const initialNotifications = ref(user.notifications);
+
+    const editedName = ref(user.name);
+    const editedAge = ref(user.age);
+    const editedEmail = ref(user.email);
+    const editedPhone = ref(user.phone);
+    const editedPassword = ref(user.password);
+    const editedNotifications = ref(user.notifications);
 
     const editing = ref(false);
+    console.log(editedPassword)
     const passwordShown = ref("•".repeat(editedPassword.value.length));
 
     const limit = ref(store.state.limit);
@@ -114,6 +121,8 @@ export default {
       store.commit("UPDATE_USER", updatedUser);
 
       editing.value = false;
+
+      passwordShown.value = "•".repeat(editedPassword.value.length);
     };
 
     const cancelEditing = () => {
