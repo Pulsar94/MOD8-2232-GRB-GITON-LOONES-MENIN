@@ -115,7 +115,7 @@ export default {
     addTransaction() {
       // Generating unique ID using Date.now()
       this.newTransaction.id = Date.now();
-      this.newTransaction.date = this.formatDate(new Date(this.newTransaction.date.replace(/-/g, "/")));
+      this.newTransaction.date = this.formatDate(new Date(this.newTransaction.date));//.replace(/-/g, "/")));
       if (this.newTransaction.category === "Received bonus" || this.newTransaction.category === "Refund" || this.newTransaction.category === "Gift received" || this.newTransaction.category === "Sold item" || this.newTransaction.category === "Salary") this.newTransaction.amount = Math.abs(this.newTransaction.amount);
       else {
         this.newTransaction.amount = -Math.abs(this.newTransaction.amount);

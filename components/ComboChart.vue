@@ -421,6 +421,29 @@ export default {
                     const txnDate = new Date(txn.date);
                     return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                   });
+                } else if(vm.chosenTime === '-2') {
+                  if (vm.$store.state.dateRange && vm.chosenTime === "-2") {
+
+                    if (vm.$store.state.dateRange[1] - vm.$store.state.dateRange[0] < 21 * 86400000) {
+                      console.log("777777777777");
+                      filteredTransactions = vm.transactions.filter((txn) => {
+                        const txnDate = new Date(txn.date);
+                        return txnDate.getTime() === mondayDate.getTime() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
+                      });
+                    } else if (vm.$store.state.dateRange[1] - vm.$store.state.dateRange[0] < 92 * 86400000) {
+                      console.log("3131313131313");
+                      filteredTransactions = vm.transactions.filter((txn) => {
+                        const txnDate = new Date(txn.date);
+                        return txnDate >= mondayDate && txnDate <= sundayDate && txn.category.toLowerCase() === clickedCategory.toLowerCase();
+                      });
+                    } else {
+                      console.log("365365365365365");
+                      filteredTransactions = vm.transactions.filter((txn) => {
+                        const txnDate = new Date(txn.date);
+                        return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
+                      });
+                    }
+                  }
                 }
               } else {
                 if (vm.chosenTime === "7") {
@@ -441,6 +464,33 @@ export default {
                     const txnDate = new Date(txn.date);
                     return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear();
                   });
+                } else if(vm.chosenTime === '-2'){
+                  if (vm.$store.state.dateRange && vm.chosenTime === "-2") {
+                    // console.log(this.$store.state.dateRange[1], this.$store.state.dateRange[0]);
+                    // console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0]);
+                    // console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 21 * 86400000);
+                    // console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0] < 92 * 86400000);
+
+                    if (vm.$store.state.dateRange[1] - vm.$store.state.dateRange[0] < 21 * 86400000) {
+                      console.log("777777777777");
+                      filteredTransactions = vm.transactions.filter((txn) => {
+                        const txnDate = new Date(txn.date);
+                        return txnDate.getTime() === mondayDate.getTime();
+                      });
+                    } else if (vm.$store.state.dateRange[1] - vm.$store.state.dateRange[0] < 92 * 86400000) {
+                      console.log("3131313131313");
+                      filteredTransactions = vm.transactions.filter((txn) => {
+                        const txnDate = new Date(txn.date);
+                        return txnDate >= mondayDate && txnDate <= sundayDate;
+                      });
+                    } else {
+                      console.log("365365365365365");
+                      filteredTransactions = vm.transactions.filter((txn) => {
+                        const txnDate = new Date(txn.date);
+                        return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear();
+                      });
+                    }
+                  }
                 }
               }
 
