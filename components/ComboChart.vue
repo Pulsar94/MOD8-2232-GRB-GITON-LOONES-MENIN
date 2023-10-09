@@ -88,17 +88,14 @@ export default {
         case "7":
           return this.generateDailyDataTable;
         case "31":
-          console.log("CCCCCCCCCCCCCCCCCCCCCCC");
           return this.generateWeeklyDataTable;
         case "365":
           return this.generateMonthlyDataTable;
         case "-1":
           return this.generateMonthlyDataTable;
         case "-2":
-          console.log("BBBBBBBBB");
           this.chosenTime = "365";
           return this.generateMonthlyDataTable;
-
         default:
           console.log("default");
           console.log(this.chosenTime);

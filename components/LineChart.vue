@@ -85,7 +85,7 @@ export default {
       if(this.$store.state.dateRange && this.chosenTime === "-2"){
         return this.customAmount;
       }
-        switch (this.chosenTime) {
+      switch (this.chosenTime) {
         case "7":
           return this.dailyAmount;
         case "31":

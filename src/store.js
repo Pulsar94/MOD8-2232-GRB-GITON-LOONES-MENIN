@@ -74,6 +74,9 @@ export const store = createStore({
             state.user.phone = updatedUser.phone;
             state.user.password = updatedUser.password;
         },
+        ADD_USER(state, user){
+            state.user.push(user);
+        },
         addTransaction(state, transaction) {
             state.myTransactionsArray.push(toRaw(transaction));
             state.myInitialTransactionsArray.push(toRaw(transaction));
