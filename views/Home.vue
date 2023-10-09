@@ -28,20 +28,20 @@
     <div class="container">
       <TotalAndAverageExpenses :transactions="myTransactionsArray" />
       <div class="pie-chart">
-        <PieChart @categorySelected="updateText" :chartWidth="'600px'" :chartHeight="'300px'" :chartMargin="'10px'" :transactions="myTransactionsArray" />
-        <p>{{ selectedCategoryText }}</p>
+        <PieChart @categorySelected="updatePieText" :chartWidth="'600px'" :chartHeight="'300px'" :chartMargin="'10px'" :transactions="myTransactionsArray" />
+        <p>{{ selectedPieText }}</p>
       </div>
       <div class="combo-chart">
-        <ComboChart :chartWidth="'700px'" :chartHeight="'500px'" :chartMargin="'10px'" :transactions="myTransactionsArray" />
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim diam vulputate ut pharetra sit amet aliquam. Elit pellentesque habitant morbi tristique senectus et netus et. Vulputate enim nulla aliquet porttitor. Purus faucibus ornare suspendisse sed. Viverra justo nec ultrices dui sapien eget mi. Sit amet justo donec enim diam. Tincidunt ornare massa eget egestas purus viverra accumsan. Odio pellentesque diam volutpat commodo sed egestas. Integer eget aliquet nibh praesent tristique magna sit amet. Sit amet facilisis magna etiam tempor orci eu.</p>
+        <ComboChart @categorySelected="updateComboText" :chartWidth="'700px'" :chartHeight="'500px'" :chartMargin="'10px'" :transactions="myTransactionsArray" />
+        <p>{{ selectedComboText }}</p>
       </div>
       <div class="line-chart">
         <LineChart :chartWidth="'700px'" :chartHeight="'400px'" :chartMargin="'none'" :transactions="myTransactionsArray" />
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Leo integer malesuada nunc vel risus commodo. Vel turpis nunc eget lorem. Vitae elementum curabitur vitae nunc sed velit dignissim sodales ut. Ut tortor pretium viverra suspendisse potenti. Parturient montes nascetur ridiculus mus. Facilisi etiam dignissim diam quis enim. Enim blandit volutpat maecenas volutpat blandit aliquam etiam. Posuere ac ut consequat semper viverra nam libero. In tellus integer feugiat scelerisque varius. Est ultricies integer quis auctor elit sed vulputate mi sit. Est ullamcorper eget nulla facilisi etiam dignissim diam quis.</p>
+        <p>The line chart is a dynamic representation of your financial performance over time. It provides you with a historical perspective on your financial growth, savings, investments, or debt reduction efforts. With this chart, you can effortlessly track your financial trajectory, identify seasonal patterns, and measure your progress towards achieving your financial goals. Visualize the ups and downs of your finances, empowering you to make informed decisions about your future financial endeavors.</p>
       </div>
       <div class="table-chart">
         <TableChart :chartWidth="'750px'" :chartHeight="'500px'" :chartMargin="'0'" :transactions="myTransactionsArray" />
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Amet consectetur adipiscing elit duis tristique sollicitudin nibh sit amet. Convallis tellus id interdum velit. Nibh sed pulvinar proin gravida hendrerit. Sed vulputate odio ut enim blandit volutpat maecenas. Lorem sed risus ultricies tristique nulla aliquet. Sed turpis tincidunt id aliquet risus feugiat. Dictum varius duis at consectetur. Nulla aliquet enim tortor at. Metus dictum at tempor commodo ullamcorper a lacus. Ullamcorper dignissim cras tincidunt lobortis feugiat. At volutpat diam ut venenatis tellus in. Sapien faucibus et molestie ac feugiat sed lectus vestibulum. Tincidunt lobortis feugiat vivamus at augue. Facilisis magna etiam tempor orci eu lobortis elementum. Pretium fusce id velit ut tortor pretium. Etiam dignissim diam quis enim. Eu non diam phasellus vestibulum lorem sed.</p>
+        <p>The table chart simplifies your financial data by displaying the total expenses in key categories such as utilities, dining, travel, groceries, and entertainment. It provides a quick snapshot of your spending in these essential areas, helping you gauge your financial priorities at a glance. When logged in to the application, you can conveniently click on a category row in the chart to filter the recent transactions table, allowing for a more detailed examination of your expenses within that specific category. This feature enhances your ability to track and manage your financial activity efficiently.</p>
       </div>
     </div>
   </body>
@@ -70,7 +70,8 @@ export default {
   data() {
     return {
       currentChart: "Pie", // default to showing the current chart
-      selectedCategoryText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse semper sem dolor, id ullamcorper metus condimentum eget. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec eu efficitur neque. Nulla eget tincidunt purus. Nullam a dapibus sapien. Phasellus quis diam bibendum, fringilla erat eu, dictum quam. Donec eu elit libero. Cras condimentum vel quam et pulvinar. Vivamus a commodo odio. Nullam sollicitudin, sem vitae blandit iaculis, massa urna consectetur tortor, imperdiet bibendum urna dui at mauris. In hac habitasse platea dictumst. Duis pulvinar nunc felis, vulputate lobortis eros tincidunt non. Vestibulum finibus nulla scelerisque, viverra arcu at, faucibus enim.\n",
+      selectedPieText: " The pie chart is a powerful visualization tool that provides you with a comprehensive overview of your expenses. It elegantly breaks down your spending into various categories, allowing you to instantly grasp where your money is allocated. Whether it's groceries, entertainment, or utilities, this chart simplifies financial data, making it easier for you to identify areas where you can optimize your budget and make informed financial decisions.\n",
+      selectedComboText: "The combo chart is your go-to tool for a holistic view of your financial landscape. Combining both bar and line graphs, it offers an in-depth perspective on your income and expenses over time. Track your financial progress with precision, monitor fluctuations, and detect trends in your financial journey. By visualizing your financial data in this comprehensive chart, you gain valuable insights to steer your financial life in the right direction.",
     };
   },
   computed: {
@@ -79,8 +80,11 @@ export default {
     },
   },
   methods: {
-    updateText(category) {
-      this.selectedCategoryText = `${category}`;
+    updatePieText(category) {
+      this.selectedPieText = `${category}`;
+    },
+    updateComboText(category) {
+      this.selectedComboText = `${category}`;
     },
     handleChangeChart(chartType) {
       this.currentChart = chartType;

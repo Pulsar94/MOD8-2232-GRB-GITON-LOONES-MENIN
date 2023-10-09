@@ -8,16 +8,17 @@ import Settings from "./views/Settings.vue";
 import PrivacyPolicy from "./privacy/PrivacyPolicy.vue";
 import TermsOfService from "./privacy/TermsOfService.vue";
 import Signup from "./views/SignUp.vue";
+import { useStore } from "vuex";
 
 const routes = [
   { path: "/", component: Home },
-  { path: "/login", component: Login },
-  { path: "/dashboard", component: Dashboard },
+  { path: "/login", component: Login, meta: { requiresAuth: false }},
+  { path: "/dashboard", component: Dashboard, meta: { requiresAuth: true } },
   { path: "/about", component: About },
-  { path: "/settings", component: Settings },
+  { path: "/settings", component: Settings, meta: { requiresAuth: true } },
   { path: "/policy", component: PrivacyPolicy },
   { path: "/terms", component: TermsOfService },
-  { path: "/signup", component: Signup}
+  { path: "/signup", component: Signup, meta: { requiresAuth: false } },
 ];
 
 const router = createRouter({
@@ -31,5 +32,16 @@ const router = createRouter({
     }
   },
 });
+
+router.beforeEach((to, from, next) => {
+      const store = useStore();
+      const loggedIn = store.state.authenticated;
+
+      if (to.matched.some((record) => record.meta.requiresAuth) && !loggedIn) {
+        next("/login");
+      }
+      next();
+    }
+);
 
 export default router;
