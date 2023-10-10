@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "category": "none",
   "main": "../main.js",
+  "type": "module",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -19,12 +20,17 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "@vue/cli-service": "^5.0.8",
+    "nodemon": "^3.0.1",
     "vue-template-compiler": "^2.7.14"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "@vuepic/vue-datepicker": "^7.0.0",
+    "express": "^4.18.2",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4",
     "vuelidate": "^0.7.7",
