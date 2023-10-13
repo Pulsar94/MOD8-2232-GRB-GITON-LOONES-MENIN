@@ -58,7 +58,7 @@ const logIn = () => {
 </script>
 
 <style scoped>
-@import url("../assets/css/variables.css");
+@import url("../../assets/css/variables.css");
 #login-view {
   margin: 0 auto;
   width: 50%;

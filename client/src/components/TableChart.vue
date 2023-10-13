@@ -183,7 +183,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("../assets/css/variables.css");
+@import url("../../assets/css/variables.css");
 div.amount {
   align-content: flex-end;
 }
@@ -225,7 +225,7 @@ div.summary {
 </style>
 
 <style>
-@import url("../assets/css/variables.css");
+@import url("../../assets/css/variables.css");
 .header-row {
   background-color: var(--table-header);
   color: var(--black);

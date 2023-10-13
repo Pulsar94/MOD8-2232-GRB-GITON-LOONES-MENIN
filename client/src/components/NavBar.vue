@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("../assets/css/variables.css");
+@import url("../../assets/css/variables.css");
 .vertical-nav {
   margin-top: 25px;
   width: 150px; /* or your preferred width */

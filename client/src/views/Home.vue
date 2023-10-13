@@ -17,7 +17,7 @@
             <li><strong>24/7 Support:</strong> Need assistance or have questions? Our support team is here to help you whenever you need it.</li>
           </ul>
         </div>
-        <img src="../assets/img/home_image.svg" alt="Image" />
+        <img src="../../assets/img/home_image.svg" alt="Image" />
       </div>
 
       <p>Take the first step towards financial freedom and join Your Financial Companion today. Sign up now and start making informed financial decisions, achieving your goals, and securing your financial future. Your financial journey begins here.</p>
@@ -94,7 +94,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("../assets/css/variables.css");
+@import url("../../assets/css/variables.css");
 
 .description {
   margin: 0 auto;

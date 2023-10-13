@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
-import App from '../views/App.vue';  // adjust the path if App.vue is located elsewhere
+import App from './App.vue';  // adjust the path if App.vue is located elsewhere
 import { store } from './store.js';
-import router from '../router';  // if you have a router setup, ensure the path is correct
+import router from '../router.js';  // if you have a router setup, ensure the path is correct
 
 
 import VueDatePicker from '@vuepic/vue-datepicker';

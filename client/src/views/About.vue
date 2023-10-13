@@ -22,19 +22,19 @@
       <h2>Meet Our Team</h2>
       <div class="team-members">
         <div class="team-member">
-          <img src="../assets/img/member1.webp" alt="Team Member 1" />
+          <img src="../../assets/img/member1.webp" alt="Team Member 1" />
           <h3>Menin Thibaut</h3>
           <p><a href="https://fr.linkedin.com/in/thibaut-menin-04a70a221/">LinkedIn</a> | <a href="https://github.com/Pulsar94">GitHub</a></p>
         </div>
 
         <div class="team-member">
-          <img src="../assets/img/member2.webp" alt="Team Member 2" />
+          <img src="../../assets/img/member2.webp" alt="Team Member 2" />
           <h3>Giton Mathis</h3>
           <p><a href="https://fr.linkedin.com/in/mathis-giton-77316b233">LinkedIn</a> | <a href="https://github.com/MathisG179">GitHub</a></p>
         </div>
 
         <div class="team-member">
-          <img src="../assets/img/member3.webp" alt="Team Member 3" />
+          <img src="../../assets/img/member3.webp" alt="Team Member 3" />
           <h3>Loones Axel</h3>
           <p><a href="https://fr.linkedin.com/in/axel-loones-7a490321b">LinkedIn</a> | <a href="https://github.com/AxelLns">GitHub</a></p>
         </div>
@@ -44,7 +44,7 @@
 </template>
 
 <style scoped>
-@import url("../assets/css/variables.css");
+@import url("../../assets/css/variables.css");
 body {
   font-family: "Arial", sans-serif;
   margin: 0;

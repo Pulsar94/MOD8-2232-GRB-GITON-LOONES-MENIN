@@ -512,7 +512,7 @@ export default {
 };
 </script>
 <style scoped>
-@import url("../assets/css/variables.css");
+@import url("../../assets/css/variables.css");
 div.amount {
   align-content: flex-end;
 }

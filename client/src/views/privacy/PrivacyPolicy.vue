@@ -89,7 +89,7 @@
 </template>
 
 <style scoped>
-@import url("../assets/css/variables.css");
+@import url("../../../assets/css/variables.css");
 a {
   text-decoration: underline;
   color: var(--text);

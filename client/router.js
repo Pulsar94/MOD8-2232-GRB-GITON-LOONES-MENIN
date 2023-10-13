@@ -1,13 +1,13 @@
 // router/index.js
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "./views/Home.vue";
-import Login from "./views/Login.vue";
-import Dashboard from "./views/Dashboard.vue";
-import About from "./views/About.vue";
-import Settings from "./views/Settings.vue";
-import PrivacyPolicy from "./privacy/PrivacyPolicy.vue";
-import TermsOfService from "./privacy/TermsOfService.vue";
-import Signup from "./views/SignUp.vue";
+import Home from "./src/views/Home.vue";
+import Login from "./src/views/Login.vue";
+import Dashboard from "./src/views/Dashboard.vue";
+import About from "./src/views/About.vue";
+import Settings from "./src/views/Settings.vue";
+import PrivacyPolicy from "./src/views/privacy/PrivacyPolicy.vue";
+import TermsOfService from "./src/views/privacy/TermsOfService.vue";
+import Signup from "./src/views/SignUp.vue";
 import { useStore } from "vuex";
 
 const routes = [

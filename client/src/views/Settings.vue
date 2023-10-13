@@ -178,7 +178,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("../assets/css/variables.css");
+@import url("../../assets/css/variables.css");
 body {
   display: flex;
   flex-direction: column;

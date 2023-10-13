@@ -1,46 +1,58 @@
-import express from 'express';
-import logger from 'morgan';
-import helmet from 'helmet';
 import 'dotenv/config'
-import repository from './persistence/repository.js';
+import express from 'express'
+import logger from 'morgan'
+import helmet from 'helmet'
+import compression from 'compression'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
 
-const app = express();
-const port = process.env.PORT || 3000;
+// Get environment defined by cross-env in package.json
+// const environment = process.env.NODE_ENV
+// if (!environment) {
+//   throw new Error('Environment is not defined.')
+// }
 
-app.use(logger('dev'));
-app.use(helmet());
-app.use(express.json());
+// Create Express application object
+const app = express()
 
-app.get('/api/v1/health', (req, res) => {
-  res.send('The API is healthy');
-});
+// Morgan request logger middleware
+app.use(logger( 'dev'))
 
-app.post('/api/v1/transactions', async (req, res) => {
-  const transaction = await repository.createTransaction(req.body);
-  res.json(transaction);
-});
+// Helmet security middleware, configured with Content-Security-Policy response header
+// in order to enable client-side scripts to call API at origin specified in .env
 
-app.get('/api/v1/transactions/:userId', async (req, res) => {
-  const transactions = await repository.getTransactionsByUserId(req.params.userId);
-  res.json(transactions);
-});
+// app.use(helmet({ contentSecurityPolicy: { directives: { 'default-src': ["'self'", process.env.API_ORIGIN] } } }))
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+    "script-src": ["'self'", "https://www.gstatic.com"]
+  }
+}));
 
-app.get('/api/v1/users', async (req, res) => {
-  const users = await repository.getUsers();
-  res.json(users);
-});
+// Compression middleware for compressing response bodies
+app.use(compression())
 
-app.get('/api/v1/users/:mail', async (req, res) => {
-  const user = await repository.getUserByMail(req.params.mail);
-  res.json(user);
-});
+// Express static file middleware that serves files from Vue single-page application build path
+const clientBuildPath = join(dirname(fileURLToPath(import.meta.url)), '../client/dist')
+app.use(express.static(clientBuildPath))
 
-app.patch('/api/v1/users/:id', async (req, res) => {
-  const user = await repository.editUser(req.body);
-  res.json(user);
-});
+// GET request handler for all other URLs that returns index.html of Vue single-page application
+const indexPath = join(clientBuildPath, 'index.html')
+app.get('*', (req, res) => res.sendFile(indexPath))
 
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
-}
-);
+// Error handler middleware
+app.use((err, req, res, next) => {
+  const status = err.status ?? 500 // Get error status or use default status 500
+  const isServerError = status >= 500
+
+  console.error(isServerError ? err : `${status}: ${err.message}`) // Log error in server console
+  const message = isServerError ? 'Something went wrong.' : err.message // Create client-friendly message
+
+  res.status(status).send(message) // Send client-friendly error message
+})
+
+
+
+// Start listening for client requests
+const port = 8081//process.env.PORT
+app.listen(port, () => console.log(`Server running at http://localhost:${port}/`))
