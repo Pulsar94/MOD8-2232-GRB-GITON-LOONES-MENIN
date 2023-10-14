@@ -77,12 +77,12 @@ export default {
       return this.$store.state.chosenTime;
     },
     dataToDisplay() {
-      console.log(this.chosenTime)
+      console.log(this.chosenTime);
       // if (this.chosenTime === '-2'){
       //   this.chosenTime = '7'
       //   this.$store.commit("SET_CHOSEN_TIME" , '7')
       // }
-      if(this.$store.state.dateRange && this.chosenTime === "-2"){
+      if (this.$store.state.dateRange && this.chosenTime === "-2") {
         return this.customAmount;
       }
       switch (this.chosenTime) {
@@ -99,10 +99,10 @@ export default {
       }
     },
 
-    customAmount(){
+    customAmount() {
       const dailyAmounts = [];
 
-      const filteredTransactions = this.transactions//.filter(t => t.rawDate < this.$store.state.dateRange[1] && t.rawDate >= this.$store.state.dateRange[0])
+      const filteredTransactions = this.transactions; //.filter(t => t.rawDate < this.$store.state.dateRange[1] && t.rawDate >= this.$store.state.dateRange[0])
       const uniqueDatesSet = new Set();
       filteredTransactions.forEach((t) => {
         const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
@@ -110,30 +110,29 @@ export default {
       });
 
       uniqueDatesSet.forEach((dateStr) => {
-        const [year, month, day] = dateStr.split('/').map(Number);
+        const [year, month, day] = dateStr.split("/").map(Number);
         const date = new Date(year, month - 1, day);
         const amount = this.totalBeforeDate(date);
         dailyAmounts.push([date, amount]);
       });
 
-      if(this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0]  < 21 * 86400000){
+      if (this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 21 * 86400000) {
         this.ticks = dailyAmounts.map((item) => ({
           v: item[0],
-          f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`
+          f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`,
         }));
-      } else if(this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 92 * 86400000) {
+      } else if (this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 92 * 86400000) {
         //filter for the first day of the week
         this.ticks = dailyAmounts
-            .filter((item) => item[0].getDay() === 1) // Filter for the first day of the week
-            .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
+          .filter((item) => item[0].getDay() === 1) // Filter for the first day of the week
+          .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
       } else {
-        console.log("AAAAAAAAAAAAAAAAAA")
+        console.log("AAAAAAAAAAAAAAAAAA");
         this.ticks = dailyAmounts
-            .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
-            .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
+          .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
+          .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
       }
       return dailyAmounts;
-
     },
 
     dailyAmount() {
@@ -158,17 +157,17 @@ export default {
       }
       this.ticks = dailyAmounts.map((item) => ({
         v: item[0],
-        f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`
+        f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`,
       })); // Transform to desired format
       console.log(this.ticks);
 
-      console.log(dailyAmounts)
+      console.log(dailyAmounts);
       return dailyAmounts;
     },
     weeklyAmount() {
       const weeklyAmounts = []; //[['Date', 'Balance']];
-      if (this.$store.state.month){
-        const filteredTransactions = this.transactions
+      if (this.$store.state.month) {
+        const filteredTransactions = this.transactions;
         const uniqueDatesSet = new Set();
         filteredTransactions.forEach((t) => {
           const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
@@ -176,17 +175,17 @@ export default {
         });
 
         uniqueDatesSet.forEach((dateStr) => {
-          const [year, month, day] = dateStr.split('/').map(Number);
+          const [year, month, day] = dateStr.split("/").map(Number);
           const date = new Date(year, month - 1, day);
           const amount = this.totalBeforeDate(date);
           weeklyAmounts.push([date, amount]);
         });
 
         this.ticks = weeklyAmounts
-            .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
-            .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
+          .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
+          .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
       } else {
-        console.log(this.$store.state.month)
+        console.log(this.$store.state.month);
         const todayDate = new Date();
         const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth() + 1}/${todayDate.getDate()}`;
 
@@ -208,18 +207,18 @@ export default {
           i++;
         }
         this.ticks = weeklyAmounts
-            .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
-            .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
+          .filter((item) => item[0].getDay() === 1) // Filter for the first day of the month
+          .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
         // // console.log(ticks);
       }
 
-      console.log(weeklyAmounts)
+      console.log(weeklyAmounts);
       return weeklyAmounts;
     },
     monthlyAmount() {
       const monthlyAmounts = []; //[['Date', 'Balance']];
-      if (this.$store.state.year){
-        const filteredTransactions = this.transactions
+      if (this.$store.state.year) {
+        const filteredTransactions = this.transactions;
         const uniqueDatesSet = new Set();
         filteredTransactions.forEach((t) => {
           const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
@@ -227,18 +226,16 @@ export default {
         });
 
         uniqueDatesSet.forEach((dateStr) => {
-          const [year, month, day] = dateStr.split('/').map(Number);
+          const [year, month, day] = dateStr.split("/").map(Number);
           const date = new Date(year, month - 1, day);
           const amount = this.totalBeforeDate(date);
           monthlyAmounts.push([date, amount]);
         });
 
         this.ticks = monthlyAmounts
-            .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
-            .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
-
+          .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
+          .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` })); // Transform to desired format
       } else {
-
         const todayDate = new Date();
         const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth() + 1}/${todayDate.getDate()}`;
         const limitDate = this.chosenTime === "-1" ? this.transactions[this.transactions.length - 1].rawDate.getTime() : new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
@@ -261,22 +258,45 @@ export default {
           i++;
         }
         this.ticks = monthlyAmounts
-            .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
-            .map((item) => ({
-              v: item[0],
-              f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`
-            })); // Transform to desired format
+          .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
+          .map((item) => ({
+            v: item[0],
+            f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`,
+          })); // Transform to desired format
         // // console.log(ticks);
       }
-      console.log(monthlyAmounts)
+      console.log(monthlyAmounts);
       return monthlyAmounts;
     },
   },
-
   mounted() {
-    this.drawChart();
+    this.loadGoogleChartsAPI().then(() => {
+      this.drawChart();
+    });
   },
   methods: {
+    loadGoogleChartsAPI() {
+      return new Promise((resolve, reject) => {
+        if (typeof google !== "undefined") {
+          // Google charts already loaded
+          return resolve();
+        }
+        const script = document.createElement("script");
+        script.src = "https://www.gstatic.com/charts/loader.js";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          google.charts.load("current", { packages: ["corechart"] });
+          google.charts.setOnLoadCallback(() => {
+            resolve();
+          });
+        };
+        script.onerror = () => {
+          reject(new Error("Failed to load Google Charts API"));
+        };
+        document.head.appendChild(script);
+      });
+    },
     totalBeforeDate(date) {
       //date is of Date type
       const transactionsBeforeDate = this.$store.state.myInitialTransactionsArray.filter((t) => t.rawDate < date).sort((a, b) => new Date(b.date) - new Date(a.date));

@@ -69,16 +69,32 @@ export default {
     },
   },
   mounted() {
-    this.drawChart();
+    this.loadGoogleChartsAPI().then(() => {
+      this.drawChart();
+    });
   },
   methods: {
-    handleContainerClick(chart, data) {
-      const selection = chart.getSelection();
-      if (!selection.length) {
-        // If no selection, then user clicked outside a slice
-        this.$emit("filteredTransactions", this.transactions);
-        console.log("All transactions emitted");
-      }
+    loadGoogleChartsAPI() {
+      return new Promise((resolve, reject) => {
+        if (typeof google !== "undefined") {
+          // Google charts already loaded
+          return resolve();
+        }
+        const script = document.createElement("script");
+        script.src = "https://www.gstatic.com/charts/loader.js";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          google.charts.load("current", { packages: ["corechart"] });
+          google.charts.setOnLoadCallback(() => {
+            resolve();
+          });
+        };
+        script.onerror = () => {
+          reject(new Error("Failed to load Google Charts API"));
+        };
+        document.head.appendChild(script);
+      });
     },
     drawChart() {
       google.charts.load("current", { packages: ["corechart"] });

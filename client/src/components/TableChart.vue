@@ -4,7 +4,6 @@
   </div>
 </template>
 
-
 <script>
 export default {
   name: "TableChart",
@@ -54,10 +53,10 @@ export default {
   watch: {
     transactions: {
       handler(newVal, oldVal) {
-        this.drawChart()
+        this.drawChart();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   computed: {
     transactions() {
@@ -85,14 +84,38 @@ export default {
       return totals;
     },
   },
-
   mounted() {
-    this.drawChart();
+    this.loadGoogleChartsAPI().then(() => {
+      this.drawChart();
+    });
   },
   methods: {
+    loadGoogleChartsAPI() {
+      return new Promise((resolve, reject) => {
+        if (typeof google !== "undefined") {
+          // Google charts already loaded
+          return resolve();
+        }
+        const script = document.createElement("script");
+        script.src = "https://www.gstatic.com/charts/loader.js";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          google.charts.load("current", { packages: ["corechart"] });
+          google.charts.setOnLoadCallback(() => {
+            resolve();
+          });
+        };
+        script.onerror = () => {
+          reject(new Error("Failed to load Google Charts API"));
+        };
+        document.head.appendChild(script);
+      });
+    },
     handleContainerClick(chart, data) {
       const selection = chart.getSelection();
-      if (!selection.length) {  // If no selection, then user clicked outside a slice
+      if (!selection.length) {
+        // If no selection, then user clicked outside a slice
         this.$emit("filteredTransactions", this.transactions);
         // console.log("All transactions emitted");
       }
@@ -139,29 +162,29 @@ export default {
 
           table.draw(data, options);
 
-          google.visualization.events.addListener(table, 'select', onclickHandler);
+          google.visualization.events.addListener(table, "select", onclickHandler);
 
-          document.getElementById('tablechart').addEventListener('click', () => {
+          document.getElementById("tablechart").addEventListener("click", () => {
             this.handleContainerClick(table, data);
           });
-
 
           const vm = this;
 
           function onclickHandler() {
             setTimeout(() => {
-
               // console.log("Select event triggered");
 
               const selection = table.getSelection();
               // console.log("Current selection:", selection);
 
-              if (selection.length > 0 && typeof selection[0].row !== 'undefined') {
+              if (selection.length > 0 && typeof selection[0].row !== "undefined") {
                 // Pie slice is selected
                 const category = data.getValue(selection[0].row, 0);
-                const filteredTransactions = vm.transactions.filter((txn) => {
-                  return txn.category.includes(category);
-                }).sort((a, b) => new Date(b.date) - new Date(a.date));
+                const filteredTransactions = vm.transactions
+                  .filter((txn) => {
+                    return txn.category.includes(category);
+                  })
+                  .sort((a, b) => new Date(b.date) - new Date(a.date));
                 vm.$emit("filteredTransactions", filteredTransactions);
                 // console.log("Filtered transactions emitted:", filteredTransactions);
               } else {
@@ -171,8 +194,6 @@ export default {
               }
             }, 100);
           }
-
-
         } catch (error) {
           console.error("Error drawing the table:", error);
         }

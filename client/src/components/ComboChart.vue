@@ -124,12 +124,34 @@ export default {
       return totals;
     },
   },
-
   mounted() {
-    this.drawChart();
+    this.loadGoogleChartsAPI().then(() => {
+      this.drawChart();
+    });
   },
-
   methods: {
+    loadGoogleChartsAPI() {
+      return new Promise((resolve, reject) => {
+        if (typeof google !== "undefined") {
+          // Google charts already loaded
+          return resolve();
+        }
+        const script = document.createElement("script");
+        script.src = "https://www.gstatic.com/charts/loader.js";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          google.charts.load("current", { packages: ["corechart"] });
+          google.charts.setOnLoadCallback(() => {
+            resolve();
+          });
+        };
+        script.onerror = () => {
+          reject(new Error("Failed to load Google Charts API"));
+        };
+        document.head.appendChild(script);
+      });
+    },
     generateDailyDataTable() {
       const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
@@ -421,9 +443,8 @@ export default {
                     const txnDate = new Date(txn.date);
                     return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                   });
-                } else if(vm.chosenTime === '-2') {
+                } else if (vm.chosenTime === "-2") {
                   if (vm.$store.state.dateRange && vm.chosenTime === "-2") {
-
                     if (vm.$store.state.dateRange[1] - vm.$store.state.dateRange[0] < 21 * 86400000) {
                       console.log("777777777777");
                       filteredTransactions = vm.transactions.filter((txn) => {
@@ -464,7 +485,7 @@ export default {
                     const txnDate = new Date(txn.date);
                     return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear();
                   });
-                } else if(vm.chosenTime === '-2'){
+                } else if (vm.chosenTime === "-2") {
                   if (vm.$store.state.dateRange && vm.chosenTime === "-2") {
                     // console.log(this.$store.state.dateRange[1], this.$store.state.dateRange[0]);
                     // console.log(this.$store.state.dateRange[1] - this.$store.state.dateRange[0]);
