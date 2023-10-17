@@ -25,10 +25,10 @@ const getUser = async (user) => {
   return rows;
 }
 
-// const getUserByMail = async (mail) => {
-//   const [rows] = await database.query("SELECT * FROM users WHERE email = ?", [mail]);
-//   return rows;
-// };
+const getUserByEmail = async (email) => {
+  const [rows] = await database.query("SELECT * FROM users WHERE email = ?", [email]);
+  return rows[0]; // Assuming email is unique, so we return the first matching user
+};
 
 const editUser = async (user) => {
   const newData = [user.name, user.email, user.password, user.phone, user.age, user.account_limit, user.notification_preference];
@@ -54,7 +54,7 @@ export default {
   getTransactionsByUserId,
   getUsers,
   getUser,
-  // getUserByMail,
+  getUserByEmail,
   editUser,
   createUser,
 };

@@ -35,6 +35,7 @@
 import { useStore } from "vuex";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import axios from "axios";
 
 const name = ref("");
 const email = ref("");
@@ -77,18 +78,40 @@ function submitForm() {
   }
 }
 
-function addUser() {
+// function addUser() {
+//   const user = {
+//     id: users.value.length + 1,
+//     name: name.value,
+//     email: email.value,
+//     password: password.value,
+//     phone: phone.value,
+//     age: age.value,
+//   };
+
+//   store.commit("ADD_USER", user);
+//   alert("You successfully signed up");
+// }
+
+async function addUser() {
   const user = {
-    id: users.value.length + 1,
     name: name.value,
     email: email.value,
     password: password.value,
     phone: phone.value,
     age: age.value,
+    account_limit: 0,
+    notification_preference: "both",
   };
-
-  store.commit("ADD_USER", user);
-  alert("You successfully signed up");
+  try {
+    const response = await axios.post("http://localhost:8081/api/users", user);
+    if (response.status === 200) {
+      alert("You successfully signed up");
+    } else {
+      alert("Error occurred during sign up. Please try again later.");
+    }
+  } catch (error) {
+    alert("Error occurred during sign up. Please try again later.");
+  }
 }
 
 const logIn = () => {

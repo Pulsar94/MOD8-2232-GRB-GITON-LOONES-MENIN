@@ -96,17 +96,6 @@ app.post("/api/user", async (req, res, next) => {
   }
 });
 
-
-// // GET request handler for /api/users/:mail URL
-// app.get("/api/users/:mail", async (req, res, next) => {
-//   try {
-//     const user = await repository.getUserByMail(req.params.mail);
-//     res.json(user);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
 // POST request handler for /api/transactions URL
 app.post("/api/transactions", async (req, res, next) => {
   try {
@@ -127,16 +116,15 @@ app.put("/api/users", async (req, res, next) => {
   }
 });
 
-// // POST request handler for /api/users URL
-// app.post("/api/users", async (req, res, next) => {
-//   try {
-//     console.log("body", req);
-//     const user = await repository.createUser(req.body);
-//     res.json(user);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+// POST request handler for /api/users URL
+app.post("/api/users", async (req, res, next) => {
+  try {
+    const user = await repository.createUser(req.body);
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Start listening for client requests
 const port = 8081; //process.env.PORT
