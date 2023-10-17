@@ -55,6 +55,7 @@ import ComboChart from "../components/ComboChart.vue";
 import LineChart from "../components/LineChart.vue";
 import TableChart from "../components/TableChart.vue";
 import RecentTransactions from "../components/RecentTransactions.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -73,6 +74,16 @@ export default {
       selectedPieText: " The pie chart is a powerful visualization tool that provides you with a comprehensive overview of your expenses. It elegantly breaks down your spending into various categories, allowing you to instantly grasp where your money is allocated. Whether it's groceries, entertainment, or utilities, this chart simplifies financial data, making it easier for you to identify areas where you can optimize your budget and make informed financial decisions.\n",
       selectedComboText: "The combo chart is your go-to tool for a holistic view of your financial landscape. Combining both bar and line graphs, it offers an in-depth perspective on your income and expenses over time. Track your financial progress with precision, monitor fluctuations, and detect trends in your financial journey. By visualizing your financial data in this comprehensive chart, you gain valuable insights to steer your financial life in the right direction.",
     };
+  },
+  mounted() {
+    axios
+      .get("http://localhost:8081/api/transactions/1")
+      .then((response) => {
+        console.log("API Response:", response.data); // Log the response
+      })
+      .catch((error) => {
+        console.error("Error making the API request:", error);
+      });
   },
   computed: {
     myTransactionsArray() {

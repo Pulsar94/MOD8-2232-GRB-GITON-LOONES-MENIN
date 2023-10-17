@@ -148,9 +148,9 @@ export default {
             vm.$emit("categorySelected", "The pie chart is a powerful visualization tool that provides you with a comprehensive overview of your expenses. It elegantly breaks down your spending into various categories, allowing you to instantly grasp where your money is allocated. Whether it's groceries, entertainment, or utilities, this chart simplifies financial data, making it easier for you to identify areas where you can optimize your budget and make informed financial decisions.");
           }
 
-          document.getElementById("piechart").addEventListener("click", () => {
-            this.handleContainerClick(chart, data);
-          });
+          // document.getElementById("piechart").addEventListener("click", () => {
+          //   this.handleContainerClick(chart, data);
+          // });
 
           function onclickHandler() {
             setTimeout(() => {

@@ -26,6 +26,7 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "default-src": ["'self'", "http://localhost:8081"],
       "script-src": ["'self'", "https://www.gstatic.com", "'unsafe-eval'"],
     },
   })

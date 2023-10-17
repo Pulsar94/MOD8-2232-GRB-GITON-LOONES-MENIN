@@ -20,23 +20,41 @@ const getUsers = async () => {
   return rows;
 };
 
-const getUserByMail = async (mail) => {
-  const [rows] = await database.query("SELECT * FROM users WHERE email = ?", [mail]);
+const getUser = async (user) => {
+  const [rows] = await database.query("SELECT * FROM users WHERE email = ? AND password = ?", [user.email, user.password]);
   return rows;
-};
+}
+
+// const getUserByMail = async (mail) => {
+//   const [rows] = await database.query("SELECT * FROM users WHERE email = ?", [mail]);
+//   return rows;
+// };
 
 const editUser = async (user) => {
-  const newData = [user.name, user.email, user.password, user.phone, user.age, user.limit, user.notifications];
+  const newData = [user.name, user.email, user.password, user.phone, user.age, user.account_limit, user.notification_preference];
   const query = "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, age = ?, account_limit = ?, notification_preference = ? WHERE id = ?";
   const [rows] = await database.query(query, [...newData, user.id]);
   return rows;
 };
+
+const createUser = async (user) => {
+  try {
+    const [rows] = await database.query("INSERT INTO users (name, email, password, phone, age, account_limit, notification_preference) VALUES (?, ?, ?, ?, ?, ?, ?)", [user.name, user.email, user.password, user.phone, user.age, user.account_limit, user.notification_preference]);
+    return rows;
+  } catch (error) {
+    console.error("Error in createUser:", error);
+    throw error; // Rethrow the error to handle it in the calling function
+  }
+};
+
 
 export default {
   createTransaction,
   getTransactions,
   getTransactionsByUserId,
   getUsers,
-  getUserByMail,
+  getUser,
+  // getUserByMail,
   editUser,
+  createUser,
 };

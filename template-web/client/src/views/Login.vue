@@ -24,6 +24,7 @@
 import { useStore } from "vuex";
 import { ref } from "vue";
 import { useRouter, RouterLink } from "vue-router";
+import axios from "axios";
 
 const askedUsername = ref("");
 const askedPassword = ref("");
@@ -31,22 +32,30 @@ const store = useStore();
 const router = useRouter();
 const users = ref(store.state.user);
 
-function handleLogin() {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+async function handleLogin() {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+/;
+
   if (!emailRegex.test(askedUsername.value)) {
     alert("Please enter a valid email address");
     return;
   }
-  const user = ref(
-    users.value.map((user) => {
-      if (user.email === askedUsername.value && user.password === askedPassword.value) {
-        store.commit("SET_USER_ID_ACTIVE", askedUsername.value);
-        logIn();
-      }
-    })
-  );
-  if (!store.state.authenticated) {
-    alert("Invalid credentials");
+
+  try {
+    const response = await axios.get("http://localhost:8081/api/users", {
+      email: askedUsername.value,
+      password: askedPassword.value,
+    });
+
+    console.log("response", response);
+
+    if (response.status === 200) {
+      store.commit("SET_USER_ID_ACTIVE", askedUsername.value);
+      logIn();
+    } else {
+      alert("Invalid credentials");
+    }
+  } catch (error) {
+    alert("Error occurred during login. Please try again later.");
   }
 }
 

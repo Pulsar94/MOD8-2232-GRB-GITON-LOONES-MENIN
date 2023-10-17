@@ -83,15 +83,26 @@ app.get("/api/users", async (req, res, next) => {
   }
 });
 
-// GET request handler for /api/users/:mail URL
-app.get("/api/users/:mail", async (req, res, next) => {
+// POST request handler for /api/user URL
+app.post("/api/user", async (req, res, next) => {
   try {
-    const user = await repository.getUserByMail(req.params.mail);
+    const user = await repository.getUser(req.body);
     res.json(user);
   } catch (err) {
     next(err);
   }
 });
+
+
+// // GET request handler for /api/users/:mail URL
+// app.get("/api/users/:mail", async (req, res, next) => {
+//   try {
+//     const user = await repository.getUserByMail(req.params.mail);
+//     res.json(user);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 // POST request handler for /api/transactions URL
 app.post("/api/transactions", async (req, res, next) => {
@@ -113,11 +124,16 @@ app.put("/api/users", async (req, res, next) => {
   }
 });
 
-
-// // GET request handler for all other URLs that returns index.html of Vue single-page application
-// const indexPath = join(clientBuildPath, "index.html");
-// app.get("*", (req, res) => res.sendFile(indexPath));
-
+// // POST request handler for /api/users URL
+// app.post("/api/users", async (req, res, next) => {
+//   try {
+//     console.log("body", req);
+//     const user = await repository.createUser(req.body);
+//     res.json(user);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 // Start listening for client requests
 const port = 8081; //process.env.PORT
