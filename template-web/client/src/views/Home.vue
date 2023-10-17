@@ -79,7 +79,7 @@ export default {
     axios
       .get("http://localhost:8081/api/transactions/1")
       .then((response) => {
-        console.log("API Response:", response.data); // Log the response
+        // console.log("API Response:", response.data); // Log the response
       })
       .catch((error) => {
         console.error("Error making the API request:", error);

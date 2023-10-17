@@ -39,6 +39,9 @@ app.use(compression());
 const clientBuildPath = join(dirname(fileURLToPath(import.meta.url)), "../client/dist");
 app.use(express.static(clientBuildPath));
 
+// Express middleware that parses JSON request body
+app.use(express.json());
+
 // GET request handler for /api/health URL
 app.get("/api/health", (req, res) => res.json({ status: "UP" }));
 

@@ -41,14 +41,16 @@ async function handleLogin() {
   }
 
   try {
-    const response = await axios.get("http://localhost:8081/api/users", {
+    const response = await axios.post("http://localhost:8081/api/user", {
       email: askedUsername.value,
       password: askedPassword.value,
     });
 
-    console.log("response", response);
-
     if (response.status === 200) {
+      if (response.data.length === 0) {
+        alert("Invalid credentials");
+        return;
+      }
       store.commit("SET_USER_ID_ACTIVE", askedUsername.value);
       logIn();
     } else {

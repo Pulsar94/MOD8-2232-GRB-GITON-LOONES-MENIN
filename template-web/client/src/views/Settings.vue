@@ -75,13 +75,13 @@ export default {
     const editedNotifications = ref(user.notifications);
 
     const editing = ref(false);
-    console.log(editedPassword)
+    // console.log(editedPassword)
     const passwordShown = ref("•".repeat(editedPassword.value.length));
 
     const limit = ref(store.state.limit);
 
     const saveChanges = () => {
-      console.log(limit);
+      // console.log(limit);
       if (!editedName.value || !editedAge.value || !editedEmail.value || !editedPhone.value || !editedPassword.value) {
         alert("Please fill in  allfields");
         return;
@@ -115,7 +115,7 @@ export default {
         notifications: editedNotifications.value,
       };
 
-      console.log(updatedUser);
+      // console.log(updatedUser);
 
       store.commit("SET_LIMIT", limit.value);
       store.commit("UPDATE_USER", updatedUser);
