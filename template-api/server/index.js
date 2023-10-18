@@ -5,7 +5,7 @@ import helmet from "helmet";
 import compression from "compression";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import repository from "./persistence/repository.js";
+import routes from "./routes/index.js";
 
 // Get environment defined by cross-env in package.json
 // const environment = process.env.NODE_ENV
@@ -45,6 +45,8 @@ app.use(express.json());
 // GET request handler for /api/health URL
 app.get("/api/health", (req, res) => res.json({ status: "UP" }));
 
+app.use('/api', routes)
+
 // Error handler middleware
 app.use((err, req, res, next) => {
   const status = err.status ?? 500; // Get error status or use default status 500
@@ -54,76 +56,6 @@ app.use((err, req, res, next) => {
   const message = isServerError ? "Something went wrong." : err.message; // Create client-friendly message
 
   res.status(status).send(message); // Send client-friendly error message
-});
-
-// GET request handler for /api/transactions/:UserId URL
-app.get("/api/transactions/:userId", async (req, res, next) => {
-  try {
-    const transactions = await repository.getTransactionsByUserId(req.params.userId);
-    res.json(transactions);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// GET request handler for /api/transactions URL
-app.get("/api/transactions", async (req, res, next) => {
-  try {
-    const transactions = await repository.getTransactions();
-    res.json(transactions);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// GET request handler for /api/users URL
-app.get("/api/users", async (req, res, next) => {
-  try {
-    const users = await repository.getUsers();
-    res.json(users);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST request handler for /api/user URL
-app.post("/api/user", async (req, res, next) => {
-  try {
-    const user = await repository.getUser(req.body);
-    res.json(user);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST request handler for /api/transactions URL
-app.post("/api/transactions", async (req, res, next) => {
-  try {
-    const transaction = await repository.createTransaction(req.body);
-    res.json(transaction);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// PUT request handler for /api/users URL
-app.put("/api/users", async (req, res, next) => {
-  try {
-    const user = await repository.editUser(req.body);
-    res.json(user);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST request handler for /api/users URL
-app.post("/api/users", async (req, res, next) => {
-  try {
-    const user = await repository.createUser(req.body);
-    res.json(user);
-  } catch (err) {
-    next(err);
-  }
 });
 
 // Start listening for client requests

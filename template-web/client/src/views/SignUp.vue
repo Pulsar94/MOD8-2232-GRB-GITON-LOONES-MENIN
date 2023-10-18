@@ -101,6 +101,7 @@ async function addUser() {
     age: age.value,
     account_limit: 0,
     notification_preference: "both",
+    balance: 0,
   };
   try {
     const response = await axios.post("http://localhost:8081/api/users", user);
