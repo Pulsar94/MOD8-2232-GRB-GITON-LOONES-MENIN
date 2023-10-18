@@ -76,6 +76,7 @@ const logIn = async () => {
     const response = await axios.get("http://localhost:8081/api/sessions");
     if (response.data.length > 0) {
       store.commit("LOG_IN");
+      localStorage.setItem("authToken", "connected");
       const responseUser = await axios.get("http://localhost:8081/api/users/" + response.data[response.data.length - 1].email);
       store.commit("SET_USER_ID_ACTIVE", responseUser.data.email);
       const transactionsResponse = await axios.get("http://localhost:8081/api/transactions/" + responseUser.data.id);

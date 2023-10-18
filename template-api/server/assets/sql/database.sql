@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `sessions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sessions` (
-  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `start_time` datetime(6) NOT NULL,
   `extended_time` datetime(6) DEFAULT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE `users` (
   `notification_preference` enum('email','sms','both','none') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'none',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +102,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Patrick','patrick@gmail.com','1234567890',30,'123456',1000,0,'email'),(2,'Admin','admin@gmail.com','0000000000',100,'admin',-3000,0,'sms'),(3,'aa','aa@aa.aa','57',45,'aa',0,0,'both');
+INSERT INTO `users` VALUES (1,'Patrick','patrick@gmail.com','1234567890',30,'123456',1000,0,'email'),(2,'Admin','admin@gmail.com','0000000000',100,'admin',-3000,0,'sms');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -115,4 +115,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-18 11:48:08
+-- Dump completed on 2023-10-18 16:38:07

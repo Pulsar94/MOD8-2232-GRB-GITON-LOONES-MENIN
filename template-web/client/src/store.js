@@ -21,16 +21,8 @@ export const store = createStore({
         phone: "1234567890",
         age: 24,
       },
-      {
-        id: 2,
-        name: "admin",
-        email: "admin@gmail.com",
-        password: "admin",
-        phone: "0000000000",
-        age: 100,
-      },
     ],
-    authenticated: false,
+    // authenticated: false,
     limit: -3000,
     balance: 0,
     userIDActive: "",
@@ -105,13 +97,19 @@ export const store = createStore({
       try {
         const response = await axios.get("http://localhost:8081/api/sessions");
         if (response.data.length > 0) {
-          commit("LOG_IN");
-          const responseUser = await axios.get("http://localhost:8081/api/users/" + response.data[response.data.length - 1].email);
-          commit("SET_USER_ID_ACTIVE", responseUser.data.email);
-          const transactionsResponse = await axios.get("http://localhost:8081/api/transactions/" + responseUser.data.id);
-          commit("SET_TRANSACTIONS", transactionsResponse.data);
-          commit("SET_INITIAL_TRANSACTIONS", transactionsResponse.data);
-          commit("SET_BALANCE", responseUser.data.balance);
+          if (response.data[response.data.length - 1].expiryTime < Date.now()) {
+            commit("LOG_IN");
+            const responseUser = await axios.get("http://localhost:8081/api/users/" + response.data[response.data.length - 1].email);
+            commit("ADD_USER", responseUser.data);
+            commit("SET_USER_ID_ACTIVE", responseUser.data.email);
+            const transactionsResponse = await axios.get("http://localhost:8081/api/transactions/" + responseUser.data.id);
+            commit("SET_TRANSACTIONS", transactionsResponse.data);
+            commit("SET_INITIAL_TRANSACTIONS", transactionsResponse.data);
+            commit("SET_BALANCE", responseUser.data.balance);
+          } else {
+            commit("LOG_OUT");
+            localStorage.removeItem("authToken");
+          }
         }
       } catch (error) {
         console.error(error);
@@ -121,8 +119,18 @@ export const store = createStore({
 });
 
 async function initializeApp() {
-  await store.dispatch("fetchUserData");
-  console.log(store.state.userIDActive);
+  const authToken = localStorage.getItem("authToken");
+
+  if (authToken) {
+    store.commit("LOG_IN");
+  }
 }
 
-export default initializeApp();
+async function initializeStore() {
+  await store.dispatch("fetchUserData");
+}
+
+initializeApp();
+initializeStore();
+
+export default initializeApp;

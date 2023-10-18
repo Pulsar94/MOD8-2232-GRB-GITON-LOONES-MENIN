@@ -36,6 +36,7 @@ import { useStore } from "vuex";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import initializeApp from "../store.js";
 
 const name = ref("");
 const email = ref("");
@@ -61,9 +62,7 @@ async function submitForm() {
   }
 
   const response = await axios.get("http://localhost:8081/api/users");
-  console.log(response.data);
   response.data.forEach((oldUser) => {
-    console.log(oldUser.email);
     if (email.value.toLowerCase() === oldUser.email.toLowerCase()) {
       exist.value = true;
     }
@@ -75,33 +74,18 @@ async function submitForm() {
     return;
   } else {
     addUser();
-    store.commit("SET_USER_ID_ACTIVE", email.value);
     try {
       const response = await axios.post("http://localhost:8081/api/sessions", {
         email: email.value,
         startTime: new Date(Date.now()).toISOString().slice(0, 19).replace("T", " "),
         expiryTime: new Date(new Date().getTime() + 30 * 60000).toISOString().slice(0, 19).replace("T", " "),
       });
+      logIn();
     } catch (error) {
-      alert("Error occurred during login. Please try again later.");
+      alert("Error occurred during sign up. Please try again later.");
     }
-    logIn();
   }
 }
-
-// function addUser() {
-//   const user = {
-//     id: users.value.length + 1,
-//     name: name.value,
-//     email: email.value,
-//     password: password.value,
-//     phone: phone.value,
-//     age: age.value,
-//   };
-
-//   store.commit("ADD_USER", user);
-//   alert("You successfully signed up");
-// }
 
 async function addUser() {
   const user = {
@@ -118,6 +102,8 @@ async function addUser() {
     const response = await axios.post("http://localhost:8081/api/users", user);
     if (response.status === 200) {
       alert("You successfully signed up");
+      store.commit("ADD_USER", user);
+      console.log(store.state.user);
     } else {
       alert("Error occurred during sign up. Please try again later.");
     }
@@ -130,19 +116,20 @@ const logIn = async () => {
   try {
     const response = await axios.get("http://localhost:8081/api/sessions");
     if (response.data.length > 0) {
-      commit("LOG_IN");
+      store.commit("LOG_IN");
+      localStorage.setItem("authToken", "connected");
       const responseUser = await axios.get("http://localhost:8081/api/users/" + response.data[response.data.length - 1].email);
-      commit("SET_USER_ID_ACTIVE", responseUser.data.email);
+      store.commit("SET_USER_ID_ACTIVE", responseUser.data.email);
       const transactionsResponse = await axios.get("http://localhost:8081/api/transactions/" + responseUser.data.id);
-      commit("SET_TRANSACTIONS", transactionsResponse.data);
-      commit("SET_INITIAL_TRANSACTIONS", transactionsResponse.data);
-      commit("SET_BALANCE", transactionsResponse.data);
+      store.commit("SET_TRANSACTIONS", transactionsResponse.data);
+      store.commit("SET_INITIAL_TRANSACTIONS", transactionsResponse.data);
+      store.commit("SET_BALANCE", transactionsResponse.data);
+      initializeApp();
     }
   } catch (error) {
     console.error(error);
   }
-  alert("You successfully logged in");
-  router.push("/dashboard");
+  router.push("/settings");
 };
 </script>
 

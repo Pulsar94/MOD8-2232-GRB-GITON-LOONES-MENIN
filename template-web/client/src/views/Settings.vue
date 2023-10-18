@@ -137,6 +137,7 @@ export default {
 
     const logOut = () => {
       store.commit("LOG_OUT");
+      localStorage.removeItem("authToken");
       alert("You have been logged out");
       router.push("/");
     };

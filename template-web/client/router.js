@@ -12,13 +12,13 @@ import { useStore } from "vuex";
 
 const routes = [
   { path: "/", component: Home },
-  { path: "/login", component: Login, meta: { requiresAuth: false }},
+  { path: "/login", component: Login, meta: { notRequiresAuth: true }},
   { path: "/dashboard", component: Dashboard, meta: { requiresAuth: true } },
   { path: "/about", component: About },
   { path: "/settings", component: Settings, meta: { requiresAuth: true } },
   { path: "/policy", component: PrivacyPolicy },
   { path: "/terms", component: TermsOfService },
-  { path: "/signup", component: Signup, meta: { requiresAuth: false } },
+  { path: "/signup", component: Signup, meta: { notRequiresAuth: true } },
 ];
 
 const router = createRouter({
@@ -33,15 +33,18 @@ const router = createRouter({
   },
 });
 
-// router.beforeEach((to, from, next) => {
-//       const store = useStore();
-//       const loggedIn = store.state.authenticated;
+router.beforeEach(async (to, from, next) => {
+      const store = useStore();
+      const loggedIn = store.state.authenticated;
 
-//       if (to.matched.some((record) => record.meta.requiresAuth) && !loggedIn) {
-//         next("/login");
-//       }
-//       next();
-//     }
-// );
+      if (to.matched.some((record) => record.meta.requiresAuth) && !loggedIn) {
+        next("/login");
+      }
+      if (to.matched.some((record) => record.meta.notRequiresAuth) && loggedIn) {
+        next("/dashboard");
+      }
+      next();
+    }
+);
 
 export default router;
