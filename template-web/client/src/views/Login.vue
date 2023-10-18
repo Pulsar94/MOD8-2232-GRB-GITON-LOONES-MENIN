@@ -25,6 +25,7 @@ import { useStore } from "vuex";
 import { ref } from "vue";
 import { useRouter, RouterLink } from "vue-router";
 import axios from "axios";
+import initializeApp from "../store.js";
 
 const askedUsername = ref("");
 const askedPassword = ref("");
@@ -52,6 +53,15 @@ async function handleLogin() {
         return;
       }
       store.commit("SET_USER_ID_ACTIVE", askedUsername.value);
+      try {
+        const response = await axios.post("http://localhost:8081/api/sessions", {
+          email: askedUsername.value,
+          startTime: new Date(Date.now()).toISOString().slice(0, 19).replace("T", " "),
+          expiryTime: new Date(new Date().getTime() + 30 * 60000).toISOString().slice(0, 19).replace("T", " "),
+        });
+      } catch (error) {
+        alert("Error occurred during login. Please try again later.");
+      }
       logIn();
     } else {
       alert("Invalid credentials");
@@ -61,8 +71,22 @@ async function handleLogin() {
   }
 }
 
-const logIn = () => {
-  store.commit("LOG_IN");
+const logIn = async () => {
+  try {
+    const response = await axios.get("http://localhost:8081/api/sessions");
+    if (response.data.length > 0) {
+      store.commit("LOG_IN");
+      const responseUser = await axios.get("http://localhost:8081/api/users/" + response.data[response.data.length - 1].email);
+      store.commit("SET_USER_ID_ACTIVE", responseUser.data.email);
+      const transactionsResponse = await axios.get("http://localhost:8081/api/transactions/" + responseUser.data.id);
+      store.commit("SET_TRANSACTIONS", transactionsResponse.data);
+      store.commit("SET_INITIAL_TRANSACTIONS", transactionsResponse.data);
+      store.commit("SET_BALANCE", transactionsResponse.data);
+      initializeApp();
+    }
+  } catch (error) {
+    console.error(error);
+  }
   alert("You successfully logged in");
   router.push("/dashboard");
 };

@@ -9,7 +9,7 @@ const findSession = async (id) => {
 function mapSession(row) {
   return {
     id: row.id,
-    username: row.username,
+    email: row.email,
     startTime: row.start_time,
     extendedTime: row.extended_time,
     expiryTime: row.expiry_time,
@@ -17,8 +17,8 @@ function mapSession(row) {
 }
 
 const createSession = async (session) => {
-  const query = "INSERT INTO sessions (id, email, start_time, expiry_time) VALUES (?, ?, ?, ?);";
-  const [result] = await database.execute(query, [session.id, session.email, session.startTime, session.expiryTime]);
+  const query = "INSERT INTO sessions (email, start_time, expiry_time) VALUES (?, ?, ?);";
+  const [result] = await database.execute(query, [session.email, session.startTime, session.expiryTime]);
   if (result.affectedRows > 0) {
     return session;
   }
@@ -40,9 +40,16 @@ const deleteSession = async (id) => {
   return result.affectedRows > 0;
 };
 
+const findAllSessions = async () => {
+  const query = "SELECT id, email, start_time, extended_time, expiry_time FROM sessions;";
+  const [rows] = await database.execute(query);
+  return rows.map(mapSession);
+};
+
 export default {
   findSession,
   createSession,
   extendSession,
   deleteSession,
+  findAllSessions,
 };

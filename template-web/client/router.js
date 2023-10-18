@@ -33,15 +33,15 @@ const router = createRouter({
   },
 });
 
-router.beforeEach((to, from, next) => {
-      const store = useStore();
-      const loggedIn = store.state.authenticated;
+// router.beforeEach((to, from, next) => {
+//       const store = useStore();
+//       const loggedIn = store.state.authenticated;
 
-      if (to.matched.some((record) => record.meta.requiresAuth) && !loggedIn) {
-        next("/login");
-      }
-      next();
-    }
-);
+//       if (to.matched.some((record) => record.meta.requiresAuth) && !loggedIn) {
+//         next("/login");
+//       }
+//       next();
+//     }
+// );
 
 export default router;

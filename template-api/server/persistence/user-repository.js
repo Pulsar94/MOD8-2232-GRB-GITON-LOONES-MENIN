@@ -10,6 +10,11 @@ const getUser = async (user) => {
   return rows;
 };
 
+const getUserById = async (id) => {
+  const [rows] = await database.query("SELECT * FROM users WHERE id = ?", [id]);
+  return rows[0]; // Assuming id is unique, so we return the first matching user
+};
+
 const getUserByEmail = async (email) => {
   const [rows] = await database.query("SELECT * FROM users WHERE email = ?", [email]);
   return rows[0]; // Assuming email is unique, so we return the first matching user
@@ -38,4 +43,5 @@ export default {
   getUserByEmail,
   editUser,
   createUser,
+  getUserById,
 };

@@ -46,10 +46,9 @@ const confirmPassword = ref("");
 
 const store = useStore();
 const router = useRouter();
-const users = ref(store.state.user);
 const exist = ref(false);
 
-function submitForm() {
+async function submitForm() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email.value)) {
     alert("Please enter a valid email address");
@@ -61,8 +60,11 @@ function submitForm() {
     return;
   }
 
-  users.value.forEach((oldUser) => {
-    if (email.value === oldUser.email) {
+  const response = await axios.get("http://localhost:8081/api/users");
+  console.log(response.data);
+  response.data.forEach((oldUser) => {
+    console.log(oldUser.email);
+    if (email.value.toLowerCase() === oldUser.email.toLowerCase()) {
       exist.value = true;
     }
   });
@@ -74,6 +76,15 @@ function submitForm() {
   } else {
     addUser();
     store.commit("SET_USER_ID_ACTIVE", email.value);
+    try {
+      const response = await axios.post("http://localhost:8081/api/sessions", {
+        email: email.value,
+        startTime: new Date(Date.now()).toISOString().slice(0, 19).replace("T", " "),
+        expiryTime: new Date(new Date().getTime() + 30 * 60000).toISOString().slice(0, 19).replace("T", " "),
+      });
+    } catch (error) {
+      alert("Error occurred during login. Please try again later.");
+    }
     logIn();
   }
 }
@@ -115,8 +126,22 @@ async function addUser() {
   }
 }
 
-const logIn = () => {
-  store.commit("LOG_IN");
+const logIn = async () => {
+  try {
+    const response = await axios.get("http://localhost:8081/api/sessions");
+    if (response.data.length > 0) {
+      commit("LOG_IN");
+      const responseUser = await axios.get("http://localhost:8081/api/users/" + response.data[response.data.length - 1].email);
+      commit("SET_USER_ID_ACTIVE", responseUser.data.email);
+      const transactionsResponse = await axios.get("http://localhost:8081/api/transactions/" + responseUser.data.id);
+      commit("SET_TRANSACTIONS", transactionsResponse.data);
+      commit("SET_INITIAL_TRANSACTIONS", transactionsResponse.data);
+      commit("SET_BALANCE", transactionsResponse.data);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  alert("You successfully logged in");
   router.push("/dashboard");
 };
 </script>

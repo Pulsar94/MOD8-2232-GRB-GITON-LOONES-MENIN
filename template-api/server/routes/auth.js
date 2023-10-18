@@ -43,4 +43,15 @@ router.delete("/sessions/:id", async (req, res, next) => {
   }
 });
 
+// GET request handler for /api/sessions URL
+router.get("/sessions", async (req, res, next) => {
+  try {
+    const sessions = await repository.findAllSessions();
+    console.log(sessions);
+    res.json(sessions);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
