@@ -33,4 +33,14 @@ router.post("/transactions", async (req, res, next) => {
   }
 });
 
+// DELETE request handler for /api/transactions/:id URL
+router.delete("/transactions/:id", async (req, res, next) => {
+  try {
+    const success = await repository.deleteTransaction(req.params.id);
+    res.json(success);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

@@ -28,6 +28,7 @@
           <th class="libelle">Libelle</th>
           <th class="date">Date</th>
           <th class="amount">Amount</th>
+          <th class="delete">Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -36,6 +37,9 @@
           <td class="libelle">{{ txn.libelle }}</td>
           <td>{{ new Date(txn.transaction_date).getFullYear() }}/{{ ("0" + (new Date(txn.transaction_date).getMonth() + 1)).slice(-2) }}/{{ ("0" + new Date(txn.transaction_date).getDate()).slice(-2) }}</td>
           <td class="amount">$ {{ txn.amount }}</td>
+          <td class="delete">
+            <button @click="deleteTransaction(txn)" class="delete-button"><i class="fa-regular fa-trash-can"></i></button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -71,8 +75,7 @@ export default {
     };
   },
   watch: {
-    chosenTime(newValue) {
-    },
+    chosenTime(newValue) {},
   },
   computed: {
     pagedTransactions() {
@@ -117,7 +120,7 @@ export default {
     async addTransaction() {
       // Generating unique ID using Date.now()
       this.newTransaction.id = Date.now();
-      this.newTransaction.transaction_date = this.formatDate(new Date(this.newTransaction.transaction_date));//.replace(/-/g, "/")));
+      this.newTransaction.transaction_date = this.formatDate(new Date(this.newTransaction.transaction_date)); //.replace(/-/g, "/")));
       if (this.newTransaction.category === "Received bonus" || this.newTransaction.category === "Refund" || this.newTransaction.category === "Gift received" || this.newTransaction.category === "Sold item" || this.newTransaction.category === "Salary") this.newTransaction.amount = Math.abs(this.newTransaction.amount);
       else {
         this.newTransaction.amount = -Math.abs(this.newTransaction.amount);
@@ -130,7 +133,7 @@ export default {
         this.$store.commit("addTransaction", this.newTransaction);
       }
 
-      console.log(this.newTransaction)
+      console.log(this.newTransaction);
 
       const email = this.$store.state.userIDActive;
 
@@ -161,6 +164,28 @@ export default {
         amount: 1000,
         date: "",
       };
+    },
+    async deleteTransaction(txn) {
+      const email = this.$store.state.userIDActive;
+
+      const user = await axios.get("http://localhost:8081/api/users/" + email);
+
+      console.log(user);
+
+      // const newDatabaseTransaction = {
+      //   id: this.newTransaction.id,
+      //   category: this.newTransaction.category,
+      //   libelle: this.newTransaction.libelle,
+      //   amount: this.newTransaction.amount,
+      //   transaction_date: new Date(this.newTransaction.date).toISOString().slice(0, 19).replace("T", " "),
+      //   user_id: user.data.id,
+      // };
+
+      console.log("id", txn);
+      const response = await axios.delete("http://localhost:8081/api/transactions/" + txn.transaction_id);
+      console.log(response);
+
+      this.$emit("updateTransactions");
     },
   },
 };
@@ -276,7 +301,7 @@ tbody tr:last-child td {
 
 td:last-child,
 th:last-child {
-  text-align: right;
+  text-align: center;
 }
 
 input {
@@ -311,6 +336,14 @@ button {
 
 button:hover {
   background-color: var(--form-button-hover);
+}
+
+.delete-button {
+  background-color: transparent;
+  border: none;
+  color: var(--delete-button);
+  padding: 0%;
+  margin: 0%;
 }
 
 @media (max-width: 670px) {

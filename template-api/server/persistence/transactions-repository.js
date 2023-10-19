@@ -15,9 +15,15 @@ const getTransactionsByUserId = async (userId) => {
   return rows;
 };
 
+const deleteTransaction = async (id) => {
+  const query = "DELETE FROM transactions WHERE transaction_id = ?;";
+  const [result] = await database.execute(query, [id]);
+  return result.affectedRows > 0;
+};
 
 export default {
   createTransaction,
   getTransactions,
   getTransactionsByUserId,
+  deleteTransaction,
 };

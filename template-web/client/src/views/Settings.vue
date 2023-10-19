@@ -48,6 +48,7 @@
 import { useStore } from "vuex";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import axios from "axios";
 
 export default {
   setup() {
@@ -135,9 +136,24 @@ export default {
       editing.value = false;
     };
 
-    const logOut = () => {
+    async function logOut(){
+      const sessionID = ref("");
       store.commit("LOG_OUT");
       localStorage.removeItem("authToken");
+      try {
+        const sessions = await axios.get("http://localhost:8081/api/sessions");
+        for (let index = sessions.data.length - 1; index >= 0; index--) {
+          const element = sessions.data[index];
+          if (element.email === user.email) {
+            sessionID.value = element.id;
+            break;
+          }
+        }
+        console.log(sessionID.value);
+        const response = await axios.put("http://localhost:8081/api/sessions/" + sessionID.value);
+      } catch (error) {
+        console.error(error);
+      }
       alert("You have been logged out");
       router.push("/");
     };
@@ -162,6 +178,9 @@ export default {
       logOut,
       limit,
     };
+  },
+  mounted() {
+    this.users = this.$store.state.user;
   },
   data: () => ({
     editedName: "",

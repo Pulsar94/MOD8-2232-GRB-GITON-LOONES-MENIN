@@ -8,7 +8,6 @@ import { fileURLToPath } from "url";
 import routes from "./routes/index.js";
 import cors from "cors";
 
-
 // Get environment defined by cross-env in package.json
 // const environment = process.env.NODE_ENV
 // if (!environment) {
@@ -20,6 +19,12 @@ const app = express();
 
 // Morgan request logger middleware
 app.use(logger("dev"));
+
+
+app.use(cors({
+  origin: "http://localhost:8080",  // Replace with your frontend's URL
+}));
+
 
 // Helmet security middleware, configured with Content-Security-Policy response header
 // in order to enable client-side scripts to call API at origin specified in .env
