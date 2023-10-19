@@ -16,7 +16,16 @@ Look no further than Your Financial Companion, your all-in-one solution for mana
 
 # Use
 
-### Milestone 2: tests
+### Instructions
+
+- In the `/template-api/server/assets/sql/database.sql` you will find the script SQL to set up the data base.
+- In the `/template-api/.env` file you need to put your password of your SQL workbench.
+- You need to install `node_modules` at `template-api`, `template-web` and `template-web/client`.
+- In `template-web/client` you must run the command `npm run build`
+- In `template-web` and `template-api` you must run `npm run dev`
+- After that, you have made all the job : go to our [web site](http://localhost:8080/)
+
+### Tests : Sample's Users informations
 
 Here some users to test the log in and access to the dashboard
 * User 1:
@@ -26,4 +35,3 @@ Here some users to test the log in and access to the dashboard
 * User 2:
     * Email: admin@gmail.com
     * Password: admin
-
