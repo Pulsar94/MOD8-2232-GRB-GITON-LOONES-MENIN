@@ -97,7 +97,7 @@ export const store = createStore({
       try {
         const response = await axios.get("http://localhost:8081/api/sessions");
         if (response.data.length > 0) {
-          if (response.data[response.data.length - 1].expiryTime < Date.now()) {
+          if (new Date(response.data[response.data.length - 1].expiryTime).getTime() > new Date(new Date().toISOString().slice(0, 19).replace("T", " ")).getTime()) {
             commit("LOG_IN");
             const responseUser = await axios.get("http://localhost:8081/api/users/" + response.data[response.data.length - 1].email);
             commit("ADD_USER", responseUser.data);
@@ -110,6 +110,9 @@ export const store = createStore({
             commit("LOG_OUT");
             localStorage.removeItem("authToken");
           }
+        } else {
+          commit("LOG_OUT");
+          localStorage.removeItem("authToken");
         }
       } catch (error) {
         console.error(error);
