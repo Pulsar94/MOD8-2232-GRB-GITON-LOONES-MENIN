@@ -7,7 +7,8 @@ export const store = createStore({
   state: {
     myInitialTransactionsArray: [],
     myTransactionsArray: [],
-    numberOfDays: 0,
+    filteredTransactions: [],
+    numberOfDays: 31,
     chosenTime: "31",
     month: null,
     year: null,
@@ -33,6 +34,9 @@ export const store = createStore({
     },
     SET_INITIAL_TRANSACTIONS(state, transactions) {
       state.myInitialTransactionsArray = transactions;
+    },
+    SET_FILTERED_TRANSACTIONS(state, transactions) {
+      state.filteredTransactions = transactions;
     },
     SET_TRANSACTIONS(state, transactions) {
       state.myTransactionsArray = transactions;
@@ -93,7 +97,7 @@ export const store = createStore({
     transactions: (state) => state.myTransactionsArray,
   },
   actions: {
-    async fetchUserData({ commit }) {
+    async fetchUserData({ commit, state }) {
       try {
         const response = await axios.get("http://localhost:8081/api/sessions");
         if (response.data.length > 0) {
@@ -103,8 +107,19 @@ export const store = createStore({
             commit("ADD_USER", responseUser.data);
             commit("SET_USER_ID_ACTIVE", responseUser.data.email);
             const transactionsResponse = await axios.get("http://localhost:8081/api/transactions/" + responseUser.data.id);
+
+            const tempTransactions = transactionsResponse.data;
+            tempTransactions.forEach((t) => {
+                t.transaction_date =  new Date(t.transaction_date);
+            }, tempTransactions);
+
             commit("SET_TRANSACTIONS", transactionsResponse.data);
-            commit("SET_INITIAL_TRANSACTIONS", transactionsResponse.data);
+            commit("SET_FILTERED_TRANSACTIONS", tempTransactions
+                .filter((t) => t.transaction_date < new Date())
+                .filter((t) => t.transaction_date > new Date(new Date().getTime() - state.chosenTime * 24 * 60 * 60 * 1000))
+                .sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date))
+            );
+            commit("SET_INITIAL_TRANSACTIONS", tempTransactions);
             commit("SET_BALANCE", responseUser.data.balance);
           } else {
             commit("LOG_OUT");

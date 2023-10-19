@@ -135,6 +135,7 @@ export default {
           google.visualization.events.addListener(chart, "select", onclickHandler);
 
           const vm = this;
+          const s = this.$store
 
           function mouseoverHandler(e) {
             if (e.row != null) {
@@ -160,14 +161,21 @@ export default {
               if (selection.length > 0 && typeof selection[0].row !== "undefined") {
                 // Pie slice is selected
                 const category = data.getValue(selection[0].row, 0);
-                const filteredTransactions = vm.transactions.filter((txn) => {
-                  return txn.category.includes(category);
-                });
+                const filteredTransactions = vm.transactions
+                    .filter((txn) => {return txn.category.includes(category);});
+                    // .filter((t) => t.transaction_date < new Date())
+                    // .filter((t) => t.transaction_date > new Date(new Date().getTime() - s.state.chosenTime * 24 * 60 * 60 * 1000))
+                    // .sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date));
+
+                console.log(typeof filteredTransactions)
                 vm.$emit("filteredTransactions", filteredTransactions);
                 console.log("Filtered transactions emitted:", filteredTransactions);
               } else {
                 // Nothing is selected, or something other than a pie slice is selected
                 vm.$emit("filteredTransactions", vm.transactions);
+                    // .filter((t) => t.transaction_date < new Date())
+                    // .filter((t) => t.transaction_date > new Date(new Date().getTime() - s.state.chosenTime * 24 * 60 * 60 * 1000))
+                    // .sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date)));
                 console.log("All transactions emitted");
               }
             }, 100);

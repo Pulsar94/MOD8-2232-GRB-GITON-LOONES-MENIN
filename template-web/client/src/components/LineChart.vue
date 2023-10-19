@@ -102,10 +102,10 @@ export default {
     customAmount() {
       const dailyAmounts = [];
 
-      const filteredTransactions = this.transactions; //.filter(t => t.rawDate < this.$store.state.dateRange[1] && t.rawDate >= this.$store.state.dateRange[0])
+      const filteredTransactions = this.transactions; //.filter(t => t.transaction_date < this.$store.state.dateRange[1] && t.transaction_date >= this.$store.state.dateRange[0])
       const uniqueDatesSet = new Set();
       filteredTransactions.forEach((t) => {
-        const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
+        const dateStr = `${t.transaction_date.getFullYear()}/${t.transaction_date.getMonth() + 1}/${t.transaction_date.getDate()}`;
         uniqueDatesSet.add(dateStr);
       });
 
@@ -117,24 +117,92 @@ export default {
       });
 
       if (this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 21 * 86400000) {
-        this.ticks = dailyAmounts.map((item) => ({
-          v: item[0],
-          f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`,
+        // Find the start (min) and end (max) dates in dailyAmounts
+        let minDate = this.$store.state.dateRange[0];//new Date(Math.min.apply(null, dailyAmounts.map(item => item[0])));
+        let maxDate = this.$store.state.dateRange[1];//new Date(Math.max.apply(null, dailyAmounts.map(item => item[0])));
+
+        // Generate an array of all dates between minDate and maxDate
+        let currentDate = new Date(minDate);
+        let allDates = [];
+        while (currentDate <= maxDate) {
+          allDates.push(new Date(currentDate));
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        // Map over this array to produce the ticks format
+        this.ticks = allDates.map(date => ({
+          v: date,
+          f: `${date.getFullYear()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${("0" + date.getDate()).slice(-2)}`
         }));
+
+        // this.ticks = dailyAmounts.map((item) => ({
+        //   v: item[0],
+        //   f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`,
+        // }));
       } else if (this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 92 * 86400000) {
         //filter for the first day of the week
-        this.ticks = dailyAmounts
-          .filter((item) => item[0].getDay() === 1) // Filter for the first day of the week
-          .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
+
+        // Find the start (min) and end (max) dates in dailyAmounts
+        let minDate = this.$store.state.dateRange[0];//new Date(Math.min.apply(null, dailyAmounts.map(item => item[0])));
+        let maxDate = this.$store.state.dateRange[1];//new Date(Math.max.apply(null, dailyAmounts.map(item => item[0])));
+
+        // Adjust the minDate to the next Monday if it's not already a Monday
+        while (minDate.getDay() !== 1) {
+          minDate.setDate(minDate.getDate() + 1);
+        }
+
+        // Generate an array of all Mondays between minDate and maxDate
+        let currentDate = new Date(minDate);
+        let allMondays = [];
+        while (currentDate <= maxDate) {
+          allMondays.push(new Date(currentDate));
+          currentDate.setDate(currentDate.getDate() + 7); // Jump to next Monday
+        }
+
+        // Map over this array to produce the ticks format
+        this.ticks = allMondays.map(date => ({
+          v: date,
+          f: `${date.getFullYear()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${("0" + date.getDate()).slice(-2)}`
+        }));
+
+
+        // this.ticks = dailyAmounts
+        //   .filter((item) => item[0].getDay() === 1) // Filter for the first day of the week
+        //   .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
       } else {
         console.log("AAAAAAAAAAAAAAAAAA");
-        this.ticks = dailyAmounts
-          .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
-          .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
+
+        // Find the start (min) and end (max) dates in dailyAmounts
+        let minDate = this.$store.state.dateRange[0];//new Date(Math.min.apply(null, dailyAmounts.map(item => item[0])));
+        let maxDate = this.$store.state.dateRange[1];//new Date(Math.max.apply(null, dailyAmounts.map(item => item[0])));
+
+        // Adjust the minDate to the first day of the next month if it's not already the first day
+        if (minDate.getDate() !== 1) {
+          minDate.setMonth(minDate.getMonth() + 1); // Move to the next month
+          minDate.setDate(1); // Set to the first day of that month
+        }
+
+        // Generate an array of all the first days of each month between minDate and maxDate
+        let currentDate = new Date(minDate);
+        let allFirstDays = [];
+        while (currentDate <= maxDate) {
+          allFirstDays.push(new Date(currentDate));
+          currentDate.setMonth(currentDate.getMonth() + 1); // Jump to next month
+        }
+
+        // Map over this array to produce the ticks format
+        this.ticks = allFirstDays.map(date => ({
+          v: date,
+          f: `${date.getFullYear()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${("0" + date.getDate()).slice(-2)}`
+        }));
+
+
+        // this.ticks = dailyAmounts
+        //   .filter((item) => item[0].getDate() === 1) // Filter for the first day of the month
+        //   .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
       }
       return dailyAmounts;
     },
-
     dailyAmount() {
       const dailyAmounts = [];
       const todayDate = new Date();
@@ -170,7 +238,7 @@ export default {
         const filteredTransactions = this.transactions;
         const uniqueDatesSet = new Set();
         filteredTransactions.forEach((t) => {
-          const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
+          const dateStr = `${t.transaction_date.getFullYear()}/${t.transaction_date.getMonth() + 1}/${t.transaction_date.getDate()}`;
           uniqueDatesSet.add(dateStr);
         });
 
@@ -221,7 +289,7 @@ export default {
         const filteredTransactions = this.transactions;
         const uniqueDatesSet = new Set();
         filteredTransactions.forEach((t) => {
-          const dateStr = `${t.rawDate.getFullYear()}/${t.rawDate.getMonth() + 1}/${t.rawDate.getDate()}`;
+          const dateStr = `${t.transaction_date.getFullYear()}/${t.transaction_date.getMonth() + 1}/${t.transaction_date.getDate()}`;
           uniqueDatesSet.add(dateStr);
         });
 
@@ -238,12 +306,12 @@ export default {
       } else {
         const todayDate = new Date();
         const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth() + 1}/${todayDate.getDate()}`;
-        const limitDate = this.chosenTime === "-1" ? this.transactions[this.transactions.length - 1].rawDate.getTime() : new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
+        const limitDate = this.chosenTime === "-1" ? this.transactions[this.transactions.length - 1].transaction_date.getTime() : new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000;
 
         const limitDateObj = new Date(limitDate);
         const limitDateStr = `${limitDateObj.getFullYear()}/${limitDateObj.getMonth() + 1}/${limitDateObj.getDate()}`;
 
-        const days = Math.round(((this.chosenTime === "-1" ? this.transactions[0].rawDate.getTime() : todayDate.getTime()) - limitDate) / (1000 * 60 * 60 * 24));
+        const days = Math.round(((this.chosenTime === "-1" ? this.transactions[0].transaction_date.getTime() : todayDate.getTime()) - limitDate) / (1000 * 60 * 60 * 24));
         let date = limitDateObj;
 
         let amount = 0;
@@ -299,9 +367,9 @@ export default {
     },
     totalBeforeDate(date) {
       //date is of Date type
-      const transactionsBeforeDate = this.$store.state.myInitialTransactionsArray.filter((t) => t.rawDate < date).sort((a, b) => new Date(b.date) - new Date(a.date));
-      const total = transactionsBeforeDate.reduce((sum, txn) => sum + txn.amount, 0);
-      //console.log(total);
+      const transactionsBeforeDate = this.$store.state.myInitialTransactionsArray.filter((t) => t.transaction_date < date).sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date));
+      const total = transactionsBeforeDate.reduce((sum, txn) => sum + parseInt(txn.amount), 0);
+      // console.log(total);
       return total;
     },
 
@@ -854,7 +922,7 @@ export default {
       const todayDate = new Date();
       const todayDateStr = `${todayDate.getFullYear()}/${todayDate.getMonth()+1}/${todayDate.getDate()}`;
       const limitDate = this.chosenTime === '-1' ?
-          this.transactions[this.transactions.length - 1].rawDate.getTime() :
+          this.transactions[this.transactions.length - 1].transaction_date.getTime() :
           (new Date().getTime() - this.chosenTime * 24 * 60 * 60 * 1000);
 
       const limitDateObj = new Date(limitDate);
@@ -864,7 +932,7 @@ export default {
           (
               (
                   this.chosenTime === '-1' ?
-                  this.transactions[0].rawDate.getTime() :
+                  this.transactions[0].transaction_date.getTime() :
                   todayDate.getTime()
               )
               - limitDate
@@ -894,7 +962,7 @@ export default {
 
   methods: {
     totalBeforeDate(date) { //date is of Date type
-      const transactionsBeforeDate = this.transactions.filter((t) => t.rawDate < date).sort((a, b) => new Date(b.date) - new Date(a.date));
+      const transactionsBeforeDate = this.transactions.filter((t) => t.transaction_date < date).sort((a, b) => new Date(b.date) - new Date(a.date));
       const total = transactionsBeforeDate.reduce((sum, txn) => sum + txn.amount, 0);
       //console.log(total);
       return total;

@@ -60,14 +60,15 @@ async function handleLogin() {
           expiryTime: new Date(new Date().getTime() + 30 * 60000).toISOString().slice(0, 19).replace("T", " "),
         });
       } catch (error) {
+        console.log(error);
         alert("Error occurred during login. Please try again later.");
       }
-      logIn();
+      await logIn();
     } else {
       alert("Invalid credentials");
     }
   } catch (error) {
-    alert("Error occurred during login. Please try again later.");
+    alert("Error occurred during login. Please try again later." + error);
   }
 }
 

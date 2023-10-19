@@ -33,7 +33,7 @@ CREATE TABLE `sessions` (
   PRIMARY KEY (`id`),
   KEY `email` (`email`),
   CONSTRAINT `sessions_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,6 +42,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
+INSERT INTO `sessions` VALUES (1,'admin@gmail.com','2023-10-18 20:11:23.000000',NULL,'2023-10-18 20:41:23.000000');
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -70,8 +71,70 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
-INSERT INTO `transactions` VALUES (1,1,'Groceries','Grocery shopping',50.00,'2023-09-01'),(2,1,'Utilities','Electric bill',75.00,'2023-09-05'),(3,2,'Dining','Dinner with friends',30.00,'2023-09-02');
-/*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
+INSERT INTO transactions (user_id, category, libelle, amount, transaction_date) VALUES
+    (2, 'Groceries', 'Grocery shopping', -50.00, '2023-08-01'),
+    (2, 'Utilities', 'Electric bill', -75.00, '2022-09-05'),
+    (2, 'Dining', 'Dinner with friends', -30.00, '2020-09-02'),
+    (2, 'Travel', 'Trip to Paris', -500.00, '2023-09-06'),
+    (2, 'Entertainment', 'Movie night', -15.00, '2023-09-07'),
+    (2, 'Groceries', 'Weekly groceries', -60.00, '2023-09-08'),
+    (2, 'Dining', 'Lunch at cafe', -20.00, '2023-09-09'),
+    (2, 'Utilities', 'Water bill', -45.00, '2023-09-10'),
+    (2, 'Travel', 'Train tickets', -80.00, '2023-09-11'),
+    (2, 'Entertainment', 'Concert tickets', -100.00, '2023-09-12'),
+    (2, 'Groceries', 'Fruits and veggies', -35.00, '2023-09-25'),
+    (2, 'Utilities', 'Gas bill', -55.00, '2023-09-26'),
+    (2, 'Dining', 'Sushi restaurant', -40.00, '2023-09-27'),
+    (2, 'Travel', 'Flight to Tokyo', -700.00, '2023-09-28'),
+    (2, 'Entertainment', 'Theater show', -70.00, '2023-09-29'),
+    (2, 'Groceries', 'Meat purchase', -50.00, '2023-09-30'),
+    (2, 'Utilities', 'Internet bill', -65.00, '2023-10-01'),
+    (2, 'Dining', 'Pizza night', -25.00, '2023-10-02'),
+    (2, 'Travel', 'Bus to countryside', -30.00, '2023-10-03'),
+    (2, 'Entertainment', 'Amusement park', -95.00, '2023-10-04'),
+    (2, 'Groceries', 'Grocery shopping', -50.00, '2023-09-01'),
+    (2, 'Utilities', 'Electric bill', -75.00, '2023-09-05'),
+    (2, 'Dining', 'Dinner with friends', -30.00, '2023-09-02'),
+    (2, 'Travel', 'Trip to Paris', -500.00, '2023-09-06'),
+    (2, 'Entertainment', 'Movie night', -15.00, '2023-09-07'),
+    (2, 'Groceries', 'Weekly groceries', -60.00, '2023-09-08'),
+    (2, 'Dining', 'Lunch at cafe', -20.00, '2023-09-09'),
+    (2, 'Utilities', 'Water bill', -45.00, '2023-09-10'),
+    (2, 'Travel', 'Train tickets', -80.00, '2023-09-11'),
+    (2, 'Entertainment', 'Concert tickets', -100.00, '2023-09-12'),
+    (2, 'Groceries', 'Fruits and veggies', -35.00, '2023-09-25'),
+    (2, 'Utilities', 'Gas bill', -55.00, '2023-09-26'),
+    (2, 'Dining', 'Sushi restaurant', -40.00, '2023-09-27'),
+    (2, 'Travel', 'Flight to Tokyo', -700.00, '2023-09-28'),
+    (2, 'Entertainment', 'Theater show', -70.00, '2023-09-29'),
+    (2, 'Groceries', 'Meat purchase', -50.00, '2023-09-30'),
+    (2, 'Utilities', 'Internet bill', -65.00, '2023-10-01'),
+    (2, 'Dining', 'Pizza night', -25.00, '2023-10-02'),
+    (2, 'Travel', 'Bus to countryside', -30.00, '2023-10-03'),
+    (2, 'Entertainment', 'Amusement park', -95.00, '2023-10-04'),
+    (2, 'Groceries', 'Grocery shopping', -50.00, '2023-09-01'),
+    (2, 'Utilities', 'Electric bill', -75.00, '2023-09-05'),
+    (2, 'Dining', 'Dinner with friends', -30.00, '2023-09-02'),
+    (2, 'Travel', 'Trip to Paris', -500.00, '2023-09-06'),
+    (2, 'Entertainment', 'Movie night', -15.00, '2023-09-07'),
+    (2, 'Groceries', 'Weekly groceries', -60.00, '2023-09-08'),
+    (2, 'Dining', 'Lunch at cafe', -20.00, '2023-09-09'),
+    (2, 'Utilities', 'Water bill', -45.00, '2023-09-10'),
+    (2, 'Travel', 'Train tickets', -80.00, '2023-09-11'),
+    (2, 'Entertainment', 'Concert tickets', -100.00, '2023-09-12'),
+    (2, 'Groceries', 'Fruits and veggies', -35.00, '2023-09-25'),
+    (2, 'Utilities', 'Gas bill', -55.00, '2023-09-26'),
+    (2, 'Dining', 'Sushi restaurant', -40.00, '2023-09-27'),
+    (2, 'Travel', 'Flight to Tokyo', -700.00, '2023-09-28'),
+    (2, 'Entertainment', 'Theater show', -70.00, '2023-09-29'),
+    (2, 'Groceries', 'Meat purchase', -50.00, '2023-09-30'),
+    (2, 'Utilities', 'Internet bill', -65.00, '2023-10-01'),
+    (2, 'Dining', 'Pizza night', -25.00, '2023-10-02'),
+    (2, 'Travel', 'Bus to countryside', -30.00, '2023-10-03'),
+    (2, 'Entertainment', 'Amusement park', -95.00, '2023-10-04'),
+    (2, 'Salary', 'SALARY', 3000, '2023-10-04'),
+    (2, 'Groceries', 'Bakery products', -20.00, '2023-10-30');
+    /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

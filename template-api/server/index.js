@@ -6,6 +6,8 @@ import compression from "compression";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import routes from "./routes/index.js";
+import cors from "cors";
+
 
 // Get environment defined by cross-env in package.json
 // const environment = process.env.NODE_ENV
@@ -31,6 +33,11 @@ app.use(
     },
   })
 );
+app.use(cors({
+    origin: "http://localhost:8080",  // allow only your frontend to access
+    methods: ["GET", "POST", "PUT", "DELETE"], // or whichever methods you want to allow
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 // Compression middleware for compressing response bodies
 app.use(compression());

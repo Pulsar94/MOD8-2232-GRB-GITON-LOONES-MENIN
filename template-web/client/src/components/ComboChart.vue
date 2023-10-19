@@ -16,7 +16,7 @@ export default {
     },
     chartHeight: {
       type: String,
-      default: "700px",
+      default: "500px",
     },
     chartMargin: {
       type: String,

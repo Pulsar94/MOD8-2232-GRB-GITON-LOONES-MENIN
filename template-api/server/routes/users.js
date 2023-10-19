@@ -54,7 +54,7 @@ router.get("/users/:email", async (req, res, next) => {
 });
 
 // GET request handler for /api/users/:id URL
-router.get("/id/:id", async (req, res, next) => {
+router.get("/users/:id", async (req, res, next) => {
   try {
     const user = await repository.getUserById(req.params.id);
     res.json(user);

@@ -14,7 +14,7 @@
 <!--    <h2>limit: {{limit}},balance: {{balance}} </h2>-->
     <h1 v-if="balance < limit">You are over your limit</h1>
 
-    <RecentTransactions class="transactions" :transactions="filteredTransactions" />
+    <RecentTransactions @updateTransactions="updateTransactions" class="transactions" :transactions="filteredTransactions" />
   </div>
 </template>
 
@@ -27,6 +27,7 @@ import Table from "../components/TableChart.vue";
 import RecentTransactions from "../components/RecentTransactions.vue";
 import TotalAndAverageExpenses from "../components/TotalAndAverageExpenses.vue";
 import {mapState} from "vuex";
+import axios from "axios";
 
 export default {
   components: {
@@ -42,7 +43,6 @@ export default {
   data() {
     return {
       currentChart: "Pie",
-      filteredTransactions: this.$store.state.myTransactionsArray,
       limit: this.$store.state.limit,
       balance: this.$store.state.balance,
     };
@@ -58,10 +58,10 @@ export default {
 
       return this.$store.state.balance;
     },
-    LineChart() {
-      return LineChart
-    },
 
+    filteredTransactions() {
+      return this.$store.state.filteredTransactions;
+    },
     myTransactionsArray() {
       return this.$store.state.myTransactionsArray;
     },
@@ -75,7 +75,31 @@ export default {
       this.currentChart = chartType;
     },
     updateRecentTransactions(filteredTransactions) {
-      this.filteredTransactions = filteredTransactions;
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      this.$store.commit("SET_FILTERED_TRANSACTIONS", filteredTransactions);
+      console.log(this.$store.state.filteredTransactions);
+      console.log(this.$store.state.myTransactionsArray);  //magic 🧙‍♂️ (do not remove pls)
+    },
+    async updateTransactions() {
+      const email = this.$store.state.userIDActive;
+
+      const user = await axios.get("http://localhost:8081/api/users/" + email);
+
+      const transactionsResponse = await axios.get("http://localhost:8081/api/transactions/" + user.data.id);
+
+      const tempTransactions = transactionsResponse.data;
+      tempTransactions.forEach((t) => {
+        t.transaction_date =  new Date(t.transaction_date);
+      }, tempTransactions);
+
+      console.log(tempTransactions);
+
+      this.$store.commit("SET_TRANSACTIONS", tempTransactions);
+      this.$store.commit("SET_FILTERED_TRANSACTIONS", tempTransactions
+          .filter((t) => t.transaction_date < new Date())
+          .filter((t) => t.transaction_date > new Date(new Date().getTime() - this.$store.state.chosenTime * 24 * 60 * 60 * 1000))
+          .sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date))
+      );
     },
   },
 };

@@ -17,7 +17,7 @@
       </select>
       <input v-model="newTransaction.libelle" placeholder="Libelle" type="text" />
       <input v-model="newTransaction.amount" placeholder="Amount" type="number" />
-      <!--  <input v-model="newTransaction.date" placeholder="Date" type="date" />-->
+      <!--  <input v-model="newTransaction.transaction_date" placeholder="Date" type="date" />-->
       <VueDatePicker class="datepicker" :dark="true" v-model="newTransaction.date" auto-apply :max-date="new Date()"></VueDatePicker>
       <button class="addbutton" @click.prevent="addTransaction">Add</button>
     </form>
@@ -34,8 +34,8 @@
         <tr v-for="txn in pagedTransactions" :key="txn.id">
           <td class="category">{{ txn.category }}</td>
           <td class="libelle">{{ txn.libelle }}</td>
-          <td>{{ new Date(txn.date).getFullYear() }}/{{ ("0" + (new Date(txn.date).getMonth() + 1)).slice(-2) }}/{{ ("0" + new Date(txn.date).getDate()).slice(-2) }}</td>
-          <td class="amount">$ {{ txn.amount.toFixed(2) }}</td>
+          <td>{{ new Date(txn.transaction_date).getFullYear() }}/{{ ("0" + (new Date(txn.transaction_date).getMonth() + 1)).slice(-2) }}/{{ ("0" + new Date(txn.transaction_date).getDate()).slice(-2) }}</td>
+          <td class="amount">$ {{ txn.amount }}</td>
         </tr>
       </tbody>
     </table>
@@ -47,6 +47,7 @@
 <script>
 import { integer } from "@vuelidate/validators";
 import VueDatePicker from "@vuepic/vue-datepicker";
+import axios from "axios";
 export default {
   components: { VueDatePicker },
   props: {
@@ -80,7 +81,8 @@ export default {
       return this.sortedTransactions.slice(start, end);
     },
     sortedTransactions() {
-      return this.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+      console.log(typeof this.transactions);
+      return this.transactions.sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date));
     },
   },
   methods: {
@@ -112,21 +114,45 @@ export default {
       const year = date.getFullYear();
       return `${year}/${month}/${day}`;
     },
-    addTransaction() {
+    async addTransaction() {
       // Generating unique ID using Date.now()
       this.newTransaction.id = Date.now();
-      this.newTransaction.date = this.formatDate(new Date(this.newTransaction.date));//.replace(/-/g, "/")));
+      this.newTransaction.transaction_date = this.formatDate(new Date(this.newTransaction.transaction_date));//.replace(/-/g, "/")));
       if (this.newTransaction.category === "Received bonus" || this.newTransaction.category === "Refund" || this.newTransaction.category === "Gift received" || this.newTransaction.category === "Sold item" || this.newTransaction.category === "Salary") this.newTransaction.amount = Math.abs(this.newTransaction.amount);
       else {
         this.newTransaction.amount = -Math.abs(this.newTransaction.amount);
       }
 
-      const transactionDate = new Date(this.newTransaction.date).getTime();
+      const transactionDate = new Date(this.newTransaction.transaction_date).getTime();
       const limitDate = new Date().getTime() - this.$store.state.chosenTime * 24 * 60 * 60 * 1000;
 
       if (transactionDate > limitDate) {
         this.$store.commit("addTransaction", this.newTransaction);
       }
+
+      console.log(this.newTransaction)
+
+      const email = this.$store.state.userIDActive;
+
+      const user = await axios.get("http://localhost:8081/api/users/" + email);
+
+      console.log(user);
+
+      this.newTransaction.date = new Date(this.newTransaction.date);
+
+      const newDatabaseTransaction = {
+        id: this.newTransaction.id,
+        category: this.newTransaction.category,
+        libelle: this.newTransaction.libelle,
+        amount: this.newTransaction.amount,
+        transaction_date: new Date(this.newTransaction.date).toISOString().slice(0, 19).replace("T", " "),
+        user_id: user.data.id,
+      };
+
+      const response = await axios.post("http://localhost:8081/api/transactions", newDatabaseTransaction);
+      console.log(response);
+
+      this.$emit("updateTransactions");
 
       this.clicked = false;
       this.newTransaction = {
