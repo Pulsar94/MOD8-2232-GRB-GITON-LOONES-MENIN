@@ -87,7 +87,7 @@ export default {
       }
       switch (this.chosenTime) {
         case "7":
-          return this.dailyAmount;
+          return this.customAmount;
         case "31":
           return this.weeklyAmount;
         case "365":
@@ -116,6 +116,7 @@ export default {
         dailyAmounts.push([date, amount]);
       });
 
+      //daily
       if (this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 21 * 86400000) {
         // Find the start (min) and end (max) dates in dailyAmounts
         let minDate = this.$store.state.dateRange[0];//new Date(Math.min.apply(null, dailyAmounts.map(item => item[0])));
@@ -134,12 +135,9 @@ export default {
           v: date,
           f: `${date.getFullYear()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${("0" + date.getDate()).slice(-2)}`
         }));
-
-        // this.ticks = dailyAmounts.map((item) => ({
-        //   v: item[0],
-        //   f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}`,
-        // }));
-      } else if (this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 92 * 86400000) {
+      }
+      //weekly
+      else if (this.$store.state.dateRange[1].getTime() - this.$store.state.dateRange[0] < 92 * 86400000) {
         //filter for the first day of the week
 
         // Find the start (min) and end (max) dates in dailyAmounts
@@ -158,6 +156,7 @@ export default {
           allMondays.push(new Date(currentDate));
           currentDate.setDate(currentDate.getDate() + 7); // Jump to next Monday
         }
+        console.log(allMondays);
 
         // Map over this array to produce the ticks format
         this.ticks = allMondays.map(date => ({
@@ -169,7 +168,9 @@ export default {
         // this.ticks = dailyAmounts
         //   .filter((item) => item[0].getDay() === 1) // Filter for the first day of the week
         //   .map((item) => ({ v: item[0], f: `${item[0].getFullYear()}/${("0" + (item[0].getMonth() + 1)).slice(-2)}/${("0" + item[0].getDate()).slice(-2)}` }));
-      } else {
+      }
+      //monthly
+      else {
         console.log("AAAAAAAAAAAAAAAAAA");
 
         // Find the start (min) and end (max) dates in dailyAmounts

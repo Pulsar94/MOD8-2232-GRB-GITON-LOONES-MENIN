@@ -152,6 +152,7 @@ export default {
         document.head.appendChild(script);
       });
     },
+
     generateDailyDataTable() {
       const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
@@ -159,28 +160,30 @@ export default {
       const totalsByDate = {};
 
       this.transactions.forEach((transaction) => {
-        const date = transaction.date;
+        const date = new Date(transaction.transaction_date);  // Convert to a Date object
+
+        const formattedDate = `${date.getFullYear()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${("0" + date.getDate()).slice(-2)}`;  // Format to AAAA/MM/DD
 
         // Initialize the date if not yet created
-        if (!totalsByDate[date]) {
-          totalsByDate[date] = {};
+        if (!totalsByDate[formattedDate]) {
+          totalsByDate[formattedDate] = {};
           this.categories.forEach((c) => {
-            totalsByDate[date][c.name] = 0; // Initialize every category for the date
+            totalsByDate[formattedDate][c.name] = 0; // Initialize every category for the date
           });
         }
 
         // Check if the category exists in the transaction's category
         for (const category of this.categories) {
           if (transaction.category.includes(category.name)) {
-            totalsByDate[date][category.name] += -transaction.amount;
+            totalsByDate[formattedDate][category.name] += -transaction.amount;
             break; // Stop looping once we found a matching category
           }
         }
       });
 
       // Convert the object into an array format for Google Charts
-      for (const [date, categories] of Object.entries(totalsByDate)) {
-        const row = [date];
+      for (const [formattedDate, categories] of Object.entries(totalsByDate)) {
+        const row = [formattedDate];
         let sum = 0;
 
         this.categories.forEach((c) => {
@@ -197,13 +200,60 @@ export default {
       dataTable = [headers, ...dataTable.slice(1).reverse()];
       return dataTable;
     },
+
+
+    // generateDailyDataTable() {
+    //   const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
+    //   let dataTable = [headers];
+    //
+    //   const totalsByDate = {};
+    //
+    //   this.transactions.forEach((transaction) => {
+    //     const date = transaction.transaction_date;
+    //
+    //     // Initialize the date if not yet created
+    //     if (!totalsByDate[date]) {
+    //       totalsByDate[date] = {};
+    //       this.categories.forEach((c) => {
+    //         totalsByDate[date][c.name] = 0; // Initialize every category for the date
+    //       });
+    //     }
+    //
+    //     // Check if the category exists in the transaction's category
+    //     for (const category of this.categories) {
+    //       if (transaction.category.includes(category.name)) {
+    //         totalsByDate[date][category.name] += -transaction.amount;
+    //         break; // Stop looping once we found a matching category
+    //       }
+    //     }
+    //   });
+    //
+    //   // Convert the object into an array format for Google Charts
+    //   for (const [date, categories] of Object.entries(totalsByDate)) {
+    //     const row = [date];
+    //     let sum = 0;
+    //
+    //     this.categories.forEach((c) => {
+    //       const value = categories[c.name] || 0;
+    //       row.push({ v: value, f: `$${Math.round(value)}` });
+    //       sum += value;
+    //     });
+    //     const mean = sum / this.categories.length;
+    //     row.push({ v: mean, f: `$${mean.toFixed(2)}` });
+    //
+    //     dataTable.push(row);
+    //   }
+    //
+    //   dataTable = [headers, ...dataTable.slice(1).reverse()];
+    //   return dataTable;
+    // },
     generateWeeklyDataTable() {
       const headers = ["Date", ...this.categories.map((c) => c.name), "Mean"];
       let dataTable = [headers];
       const totalsByWeek = {};
 
       this.transactions.forEach((transaction) => {
-        const date = new Date(transaction.date);
+        const date = new Date(transaction.transaction_date);
         const startOfWeek = date;
         let dayOfWeek = date.getDay();
         if (dayOfWeek === 0) {
@@ -252,7 +302,7 @@ export default {
       const totalsByMonth = {};
 
       this.transactions.forEach((transaction) => {
-        const date = new Date(transaction.date);
+        const date = new Date(transaction.transaction_date);
         const monthYearKey = `${date.getFullYear()}/${("0" + (date.getMonth() + 1)).slice(-2)}`;
 
         // Initialize the date if not yet created
@@ -291,17 +341,16 @@ export default {
       const selection = chart.getSelection();
       // console.log("Selection length: ", selection.length);
       if (selection.length) {
-        this.$emit("filteredTransactions", this.transactions);
-        // console.log("All transactions emitted");
+        this.$emit("filteredTransactions", this.transactions.sort((a, b) => new Date(a.transaction_date) - new Date(b.transaction_date)));
+        console.log("All transactions emitteeeeeeed");
       }
     },
     drawChart() {
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(() => {
         try {
-          // Some raw data (not necessarily accurate)
           const dataArray = this.dataToDisplay;
-          //console.log(typeof dataArray, dataArray);
+          console.log(typeof dataArray, dataArray().sort((a, b) => new Date(a[0]) - new Date(b[0])));
           const data = google.visualization.arrayToDataTable(dataArray());
 
           const options = {
@@ -428,19 +477,19 @@ export default {
                 if (vm.chosenTime === "7") {
                   console.log("777777777777");
                   filteredTransactions = vm.transactions.filter((txn) => {
-                    const txnDate = new Date(txn.date);
+                    const txnDate = new Date(txn.transaction_date);
                     return txnDate.getTime() === mondayDate.getTime() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                   });
                 } else if (vm.chosenTime === "31") {
                   console.log("3131313131313");
                   filteredTransactions = vm.transactions.filter((txn) => {
-                    const txnDate = new Date(txn.date);
+                    const txnDate = new Date(txn.transaction_date);
                     return txnDate >= mondayDate && txnDate <= sundayDate && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                   });
                 } else if (vm.chosenTime === "365" || vm.chosenTime === "-1") {
                   console.log("365365365365365");
                   filteredTransactions = vm.transactions.filter((txn) => {
-                    const txnDate = new Date(txn.date);
+                    const txnDate = new Date(txn.transaction_date);
                     return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                   });
                 } else if (vm.chosenTime === "-2") {
@@ -448,19 +497,19 @@ export default {
                     if (vm.$store.state.dateRange[1] - vm.$store.state.dateRange[0] < 21 * 86400000) {
                       console.log("777777777777");
                       filteredTransactions = vm.transactions.filter((txn) => {
-                        const txnDate = new Date(txn.date);
+                        const txnDate = new Date(txn.transaction_date);
                         return txnDate.getTime() === mondayDate.getTime() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                       });
                     } else if (vm.$store.state.dateRange[1] - vm.$store.state.dateRange[0] < 92 * 86400000) {
                       console.log("3131313131313");
                       filteredTransactions = vm.transactions.filter((txn) => {
-                        const txnDate = new Date(txn.date);
+                        const txnDate = new Date(txn.transaction_date);
                         return txnDate >= mondayDate && txnDate <= sundayDate && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                       });
                     } else {
                       console.log("365365365365365");
                       filteredTransactions = vm.transactions.filter((txn) => {
-                        const txnDate = new Date(txn.date);
+                        const txnDate = new Date(txn.transaction_date);
                         return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear() && txn.category.toLowerCase() === clickedCategory.toLowerCase();
                       });
                     }
@@ -470,19 +519,19 @@ export default {
                 if (vm.chosenTime === "7") {
                   console.log("777777777777");
                   filteredTransactions = vm.transactions.filter((txn) => {
-                    const txnDate = new Date(txn.date);
+                    const txnDate = new Date(txn.transaction_date);
                     return txnDate.getTime() === mondayDate.getTime();
                   });
                 } else if (vm.chosenTime === "31") {
                   console.log("3131313131313");
                   filteredTransactions = vm.transactions.filter((txn) => {
-                    const txnDate = new Date(txn.date);
+                    const txnDate = new Date(txn.transaction_date);
                     return txnDate >= mondayDate && txnDate <= sundayDate;
                   });
                 } else if (vm.chosenTime === "365" || vm.chosenTime === "-1") {
                   console.log("365365365365365");
                   filteredTransactions = vm.transactions.filter((txn) => {
-                    const txnDate = new Date(txn.date);
+                    const txnDate = new Date(txn.transaction_date);
                     return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear();
                   });
                 } else if (vm.chosenTime === "-2") {
@@ -495,19 +544,19 @@ export default {
                     if (vm.$store.state.dateRange[1] - vm.$store.state.dateRange[0] < 21 * 86400000) {
                       console.log("777777777777");
                       filteredTransactions = vm.transactions.filter((txn) => {
-                        const txnDate = new Date(txn.date);
+                        const txnDate = new Date(txn.transaction_date);
                         return txnDate.getTime() === mondayDate.getTime();
                       });
                     } else if (vm.$store.state.dateRange[1] - vm.$store.state.dateRange[0] < 92 * 86400000) {
                       console.log("3131313131313");
                       filteredTransactions = vm.transactions.filter((txn) => {
-                        const txnDate = new Date(txn.date);
+                        const txnDate = new Date(txn.transaction_date);
                         return txnDate >= mondayDate && txnDate <= sundayDate;
                       });
                     } else {
                       console.log("365365365365365");
                       filteredTransactions = vm.transactions.filter((txn) => {
-                        const txnDate = new Date(txn.date);
+                        const txnDate = new Date(txn.transaction_date);
                         return txnDate.getMonth() === mondayDate.getMonth() && txnDate.getFullYear() === mondayDate.getFullYear();
                       });
                     }

@@ -15,10 +15,10 @@
     <div>Difference: ${{ totalGain + totalExpenses }}</div>
     <div>Average Daily Expense: ${{ Math.abs(averageDailyExpense) }}</div>
     <div class="datepicker" v-if="this.router.currentRoute.path === `/dashboard`">
-      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '-2'" v-model="dateRange" auto-apply :min-date="this.myInitialTransactionsArray[0].transaction_date" :max-date="new Date()" range :format="'yyyy-MM-dd'"></VueDatePicker>
-      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '7'" v-model="dateRange" auto-apply :min-date="this.myInitialTransactionsArray[0].transaction_date" :max-date="new Date()" week-picker :format="'yyyy-MM-dd'"></VueDatePicker>
-      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '31'" v-model="month" auto-apply :min-date="this.myInitialTransactionsArray[0].transaction_date" :max-date="new Date()" month-picker :format="'yyyy-MM'"></VueDatePicker>
-      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '365'" v-model="year" auto-apply :min-date="this.myInitialTransactionsArray[0].transaction_date" :max-date="new Date()" year-picker :format="'yyyy'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '-2' && this.myInitialTransactionsArray && this.myInitialTransactionsArray.length > 0" v-model="dateRange" auto-apply :min-date="this.myInitialTransactionsArray?.[0]?.transaction_date" :max-date="new Date()" range :format="'yyyy-MM-dd'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '7' && this.myInitialTransactionsArray && this.myInitialTransactionsArray.length > 0" v-model="dateRange" auto-apply :min-date="this.myInitialTransactionsArray?.[0]?.transaction_date" :max-date="new Date()" week-picker :format="'yyyy-MM-dd'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '31' && this.myInitialTransactionsArray && this.myInitialTransactionsArray.length > 0" v-model="month" auto-apply :min-date="this.myInitialTransactionsArray?.[0]?.transaction_date" :max-date="new Date()" month-picker :format="'yyyy-MM'"></VueDatePicker>
+      <VueDatePicker :dark="isDarkMode" class="dp__theme_dark" v-if="chosenTime === '365' && this.myInitialTransactionsArray && this.myInitialTransactionsArray.length > 0" v-model="year" auto-apply :min-date="this.myInitialTransactionsArray?.[0]?.transaction_date" :max-date="new Date()" year-picker :format="'yyyy'"></VueDatePicker>
     </div>
   </div>
 </template>
@@ -57,10 +57,10 @@ export default {
     chosenTime(newValue) {
       const todayDate = new Date();
       this.$store.commit("SET_CHOSEN_TIME", newValue);
-      this.transaction_dateRange = null;
+      this.dateRange = null;
       if (newValue === "-2" || newValue === "7") {
         console.log(this);
-        this.transaction_dateRange = [new Date(todayDate.getTime() - 1000 * 60 * 60 * 24 * 6), todayDate];
+        this.dateRange = [new Date(todayDate.getTime() - 1000 * 60 * 60 * 24 * 6), todayDate];
       }
       if (newValue !== "-1") {
         this.$emit(
@@ -78,8 +78,23 @@ export default {
             .sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date))
         );
       } else {
-        this.$emit("filteredTransactions", this.$store.state.myInitialTransactionsArray);
-        this.$store.commit("SET_TRANSACTIONS", this.$store.state.myInitialTransactionsArray);
+        // this.$emit("filteredTransactions",
+        //     this.$store.state.myInitialTransactionsArray
+        //     .sort((a, b) => new Date(a.transaction_date) - new Date(b.transaction_date))
+        // );
+        // this.$store.commit("SET_TRANSACTIONS",
+        //     this.$store.state.myInitialTransactionsArray
+        //         .sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date))
+        // );
+        const sortedTransactions = [...this.$store.state.myInitialTransactionsArray].sort((a, b) => { //magic 🧙‍
+          return new Date(a.transaction_date) - new Date(b.transaction_date);
+        });
+
+        this.$emit("filteredTransactions", sortedTransactions);
+        this.$store.commit("SET_TRANSACTIONS", sortedTransactions);
+
+
+        console.log("DDDDDDDDDDDDDDDDDD",this.$store.state.myTransactionsArray);
       }
       this.$forceUpdate();
     },
@@ -203,8 +218,8 @@ export default {
       if (this.chosenTime !== "-1") {
         return Math.round(this.totalExpenses / (this.numberOfDays() < this.chosenTime ? this.numberOfDays() : this.chosenTime));
       } else {
-        const firstDate = this.$store.state.myInitialTransactionsArray.at(0).transaction_date;
-        const lastDate = this.$store.state.myInitialTransactionsArray.at(this.$store.state.myInitialTransactionsArray.length - 1).transaction_date;
+        const firstDate = this.$store.state.myInitialTransactionsArray[0].transaction_date;
+        const lastDate = this.$store.state.myInitialTransactionsArray[this.$store.state.myInitialTransactionsArray.length - 1].transaction_date;
         this.$store.commit("SET_DAYS", Math.round((lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24)));
         return Math.round(this.totalExpenses / this.numberOfDays());
       }
