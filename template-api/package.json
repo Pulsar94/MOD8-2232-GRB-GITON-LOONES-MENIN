@@ -1,0 +1,46 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "category": "none",
+  "main": "./server/index.js",
+  "type": "module",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "start": "vue-cli-service serve",
+    "dev": "nodemon ./server/index.js'",
+    "build:dev": "bin/vite build",
+    "serve:dev": "bin/vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "idk"
+  ],
+  "author": "GITON",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@vue/cli-service": "^5.0.8",
+    "nodemon": "^3.0.1",
+    "vue-template-compiler": "^2.7.14"
+  },
+  "dependencies": {
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
+    "@vuepic/vue-datepicker": "^7.0.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "helmet": "^7.0.0",
+    "joi": "^17.11.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.1",
+    "vite": "^4.4.11",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4",
+    "vuelidate": "^0.7.7",
+    "vuex": "^4.1.0"
+  }
+}
