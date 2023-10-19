@@ -81,7 +81,7 @@ export default {
 
     const limit = ref(store.state.limit);
 
-    const saveChanges = () => {
+    const saveChanges = async () => {
       // console.log(limit);
       if (!editedName.value || !editedAge.value || !editedEmail.value || !editedPhone.value || !editedPassword.value) {
         alert("Please fill in  allfields");
@@ -121,6 +121,18 @@ export default {
       store.commit("SET_LIMIT", limit.value);
       store.commit("UPDATE_USER", updatedUser);
 
+      const updatedUserWeb = {
+        name: editedName.value,
+        age: editedAge.value,
+        email: editedEmail.value,
+        phone: editedPhone.value,
+        password: editedPassword.value,
+        notification_preference: editedNotifications.value,
+        account_limit: limit.value,
+      };
+      const response = await axios.put("http://localhost:8081/api/users/", updatedUserWeb);
+      // console.log(response);
+
       editing.value = false;
 
       passwordShown.value = "•".repeat(editedPassword.value.length);
@@ -136,7 +148,7 @@ export default {
       editing.value = false;
     };
 
-    async function logOut(){
+    async function logOut() {
       const sessionID = ref("");
       store.commit("LOG_OUT");
       localStorage.removeItem("authToken");
@@ -156,7 +168,7 @@ export default {
       }
       alert("You have been logged out");
       router.push("/");
-    };
+    }
 
     return {
       initialName,

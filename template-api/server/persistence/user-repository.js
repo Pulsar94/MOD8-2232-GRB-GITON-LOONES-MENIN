@@ -22,8 +22,8 @@ const getUserByEmail = async (email) => {
 
 const editUser = async (user) => {
   const newData = [user.name, user.email, user.password, user.phone, user.age, user.account_limit, user.notification_preference];
-  const query = "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, age = ?, account_limit = ?, notification_preference = ?, balance = ? WHERE id = ?";
-  const [rows] = await database.query(query, [...newData, user.id]);
+  const query = "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, age = ?, account_limit = ?, notification_preference = ? WHERE email = ?";
+  const [rows] = await database.query(query, [...newData, user.email]);
   return rows;
 };
 
