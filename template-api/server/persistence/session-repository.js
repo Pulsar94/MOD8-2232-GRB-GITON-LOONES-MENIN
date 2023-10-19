@@ -26,11 +26,21 @@ const createSession = async (session) => {
   throw new Error(`Failed to create session ${session.id}.`);
 };
 
-const extendSession = async (id, extendedTime, expiryTime) => {
-  const query = "UPDATE sessions SET extended_time = ?, expiry_time = ? WHERE id = ?;";
-  const [result] = await database.execute(query, [extendedTime, expiryTime, id]);
+// const extendSession = async (id, extendedTime, expiryTime) => {
+//   const query = "UPDATE sessions SET extended_time = ?, expiry_time = ? WHERE id = ?;";
+//   const [result] = await database.execute(query, [extendedTime, expiryTime, id]);
+//   if (result.affectedRows === 0) {
+//     throw new Error(`Failed to extend session ${id}.`);
+//   }
+// };
+
+const endSession = async (id) => {
+  const query = "UPDATE sessions SET expiry_time = ? WHERE id = ?;";
+  const date = new Date(Date.now()).toISOString().slice(0, 19).replace("T", " ");
+  console.log(date);
+  const [result] = await database.execute(query, [new Date(Date.now()).toISOString().slice(0, 19).replace("T", " "), id]);
   if (result.affectedRows === 0) {
-    throw new Error(`Failed to extend session ${id}.`);
+    throw new Error(`Failed to end session ${id}.`);
   }
 };
 
@@ -49,7 +59,8 @@ const findAllSessions = async () => {
 export default {
   findSession,
   createSession,
-  extendSession,
+  // extendSession,
   deleteSession,
   findAllSessions,
+  endSession,
 };

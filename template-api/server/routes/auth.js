@@ -23,15 +23,15 @@ router.post("/sessions", async (req, res, next) => {
   }
 });
 
-// PUT request handler for /api/sessions/:id URL
-router.put("/sessions/:id", async (req, res, next) => {
-  try {
-    const session = await repository.extendSession(req.params.id, req.body.extendedTime, req.body.expiryTime);
-    res.json(session);
-  } catch (err) {
-    next(err);
-  }
-});
+// // PUT request handler for /api/sessions/:id URL
+// router.put("/sessions/:id", async (req, res, next) => {
+//   try {
+//     const session = await repository.extendSession(req.params.id, req.body.extendedTime, req.body.expiryTime);
+//     res.json(session);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 // DELETE request handler for /api/sessions/:id URL
 router.delete("/sessions/:id", async (req, res, next) => {
@@ -49,6 +49,17 @@ router.get("/sessions", async (req, res, next) => {
     const sessions = await repository.findAllSessions();
     console.log(sessions);
     res.json(sessions);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PUT request handler for /api/sessions/:id URL
+router.put("/sessions/:id", async (req, res, next) => {
+  try {
+    console.log("here", req.params.id);
+    const session = await repository.endSession(req.params.id);
+    res.json(session);
   } catch (err) {
     next(err);
   }
